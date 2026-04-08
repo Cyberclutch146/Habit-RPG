@@ -20,10 +20,10 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
     }
   };
 
-  const handleComplete = async () => {
+  const handleComplete = async (e: React.MouseEvent) => {
     if (completed || isClicking) return;
     setIsClicking(true);
-    await completeHabit(habit.id);
+    await completeHabit(habit.id, { clientX: e.clientX, clientY: e.clientY });
     setIsClicking(false);
   };
 

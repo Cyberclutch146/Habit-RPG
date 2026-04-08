@@ -29,8 +29,8 @@ export const BottomNav: React.FC = () => {
       </NavLink>
 
       <NavLink 
-        to="/profile"
-        className={({ isActive }) => `flex flex-col items-center justify-center transition-all active:scale-90 duration-200 ${isActive ? "text-red-400" : "text-neutral-500 hover:text-red-400"}`}
+        to="/vault"
+        className={({ isActive }) => `flex flex-col items-center justify-center transition-all active:scale-90 duration-200 ${isActive ? "text-primary" : "text-neutral-500 hover:text-primary"}`}
       >
         <span className="material-symbols-outlined">shield</span>
         <span className="font-headline text-[10px] font-bold uppercase tracking-widest mt-1">Vault</span>

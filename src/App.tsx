@@ -4,6 +4,9 @@ import { Dashboard } from './pages/Dashboard';
 import { Boss } from './pages/Boss';
 import { Login } from './pages/Login';
 import { Stats } from './pages/Stats';
+import { Vault } from './pages/Vault';
+import { Settings } from './pages/Settings';
+import { JuiceOverlay } from './components/JuiceOverlay';
 import { useAuthStore } from './store/useAuthStore';
 import { useUserStore } from './store/useUserStore';
 import { useHabitStore } from './store/useHabitStore';
@@ -57,9 +60,7 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
   return <>{children}</>;
 };
 
-// Temporary placeholders for our pages.
-const Profile = () => <div className="text-center pt-32">Profile Working</div>;
-
+// Main App Component
 function App() {
   const initAuthListener = useAuthStore(state => state.initAuthListener);
   const fbUser = useAuthStore(state => state.fbUser);
@@ -93,6 +94,7 @@ function App() {
     <ErrorBoundary>
       <div className="max-w-md mx-auto w-full min-h-[100dvh] relative bg-background shadow-2xl sm:border-x sm:border-neutral-900 overflow-x-hidden flex flex-col">
         <Router>
+          <JuiceOverlay />
           <Routes>
             <Route path="/login" element={!fbUser ? <Login /> : <Navigate to="/dashboard" replace />} />
             
@@ -100,7 +102,8 @@ function App() {
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
             <Route path="/boss" element={<AuthGuard><Boss /></AuthGuard>} />
             <Route path="/stats" element={<AuthGuard><Stats /></AuthGuard>} />
-            <Route path="/profile" element={<AuthGuard><Profile /></AuthGuard>} />
+            <Route path="/vault" element={<AuthGuard><Vault /></AuthGuard>} />
+            <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
             
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

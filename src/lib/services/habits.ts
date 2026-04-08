@@ -23,15 +23,14 @@ export const habitsService = {
   /**
    * Logs a completion record for a specific habit
    */
-  createLog: async (userId: string, logId: string, habitId: string): Promise<HabitLog> => {
+  createLog: async (userId: string, log: HabitLog): Promise<HabitLog> => {
+    // If it doesn't have a timestamp, set one for the server
     const newLog: HabitLog = {
-      id: logId,
-      habitId,
-      timestamp: serverTimestamp(),
-      completed: true,
+      ...log,
+      timestamp: log.timestamp || serverTimestamp(),
     };
 
-    await LogsDB.create(logId, newLog, userId);
+    await LogsDB.create(log.id, newLog, userId);
     return newLog;
   }
 };

@@ -23,18 +23,28 @@ export const gameEngine = {
    * Evaluates the new streak based on the last checkin Date and today.
    * If they checked in today already, streak remains unchanged.
    * If they checked in yesterday, streak + 1.
-   * If they checked in < yesterday, streak = 0 (reset).
+   * If they missed days, it checks if they have a streak shield to burn.
+   * Rules: Cannot protect multiple consecutive missed days (daysDiff > 2 breaks streak).
    */
-  calculateNewStreak: (currentStreak: number, lastCheckInMs: number, nowMs: number = Date.now()) => {
+  calculateNewStreak: (currentStreak: number, lastCheckInMs: number, nowMs: number = Date.now(), streakShields: number = 0) => {
     const daysDiff = differenceInDays(
       new Date(format(nowMs, "yyyy-MM-dd")),
       new Date(format(lastCheckInMs, "yyyy-MM-dd"))
     );
 
-    if (daysDiff === 0) return currentStreak; // Already logged today
-    if (daysDiff === 1) return currentStreak + 1; // Logged yesterday, maintained!
+    if (daysDiff === 0) return { streak: currentStreak, shields: streakShields }; 
+    if (daysDiff === 1) return { streak: currentStreak + 1, shields: streakShields }; 
     
-    return 1; // Streak broken, restart at 1
+    // They missed a day. Can they shield it?
+    // Rule: Cannot trigger 2 days in a row. So daysDiff MUST be exactly 2 (missed precisely 1 day).
+    if (daysDiff === 2 && streakShields > 0) {
+      // Shield consumed. Streak remains the same (effectively pausing it for the missed day)
+      // Since they are checking in *today*, we also add 1 for today's checkin!
+      return { streak: currentStreak + 1, shields: streakShields - 1 };
+    }
+
+    // Streak broken, shield couldn't save it or no shields left. Restart at 1.
+    return { streak: 1, shields: streakShields };
   },
 
   /**

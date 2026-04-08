@@ -22,6 +22,8 @@ export const userSchema = z.object({
   xp: z.number().min(0),
   streak: z.number().min(0),
   lastCheckInDate: z.any().nullable(), // ServerTimestamp or null
+  hardMode: z.boolean().optional(),
+  streakShields: z.number().min(0).max(2).optional(),
 });
 export type User = z.infer<typeof userSchema>;
 
@@ -40,6 +42,9 @@ export const logSchema = z.object({
   habitId: z.string(),
   timestamp: z.any(), // ServerTimestamp
   completed: z.boolean(),
+  xpAwarded: z.number().optional(),
+  idempotencyKey: z.string().optional(),
+  source: z.enum(["HABIT", "BOSS", "BONUS"]).optional(),
 });
 export type HabitLog = z.infer<typeof logSchema>;
 

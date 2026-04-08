@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Habit, HabitLog, User } from '../lib/db';
 import { gameEngine } from '../lib/gameEngine';
+import { useJuiceStore } from './useJuiceStore';
 import { trackEvent } from '../lib/analytics';
 import { onSnapshot, collection } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -12,6 +13,7 @@ interface HabitStore {
   logs: HabitLog[];
   user: User | null;
   loading: boolean;
+  syncStatus: Record<string, "pending" | "failed">;
   
   // Setters for initialization
   setInitialData: (user: User, habits: Habit[], logs: HabitLog[]) => void;
@@ -19,7 +21,7 @@ interface HabitStore {
   initDataSync: (userId: string) => () => void;
   
   // Actions with Debounce/Optimistic UI
-  completeHabit: (habitId: string) => Promise<void>;
+  completeHabit: (habitId: string, clickEvent?: { clientX: number, clientY: number }) => Promise<void>;
   addHabit: (data: Omit<Habit, 'id' | 'createdAt'>) => Promise<void>;
   
   // Derived state helpers
@@ -34,6 +36,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
   logs: [],
   user: null,
   loading: false,
+  syncStatus: {},
 
   setInitialData: (user, habits, logs) => set({ user, habits, logs }),
   setUser: (user) => set({ user }),
@@ -107,7 +110,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     }
   },
 
-  completeHabit: async (habitId: string) => {
+  completeHabit: async (habitId: string, clickEvent?: { clientX: number, clientY: number }) => {
     const { user, habits, logs } = get();
     if (!user) return; 
     
@@ -131,42 +134,62 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
       id: logId,
       habitId,
       timestamp: new Date(), 
-      completed: true
+      completed: true,
+      xpAwarded: habit.xpReward,
+      idempotencyKey: logId,
+      source: "HABIT"
     };
 
-    const newStreak = gameEngine.calculateNewStreak(user.streak, user.lastCheckInDate?.toMillis ? user.lastCheckInDate.toMillis() : Date.now());
+    const streakResult = gameEngine.calculateNewStreak(
+      user.streak, 
+      user.lastCheckInDate?.toMillis ? user.lastCheckInDate.toMillis() : Date.now(),
+      Date.now(),
+      user.streakShields || 0
+    );
     const leveledResult = gameEngine.evaluateLevelUp(user.level, user.xp, habit.xpReward);
 
-    const backupUser = { ...user };
-    const backupLogs = [...logs];
-
-    set({
-      logs: [...logs, newLog],
+    set((state) => ({
+      logs: [...state.logs.filter(l => l.id !== logId), newLog], // Merge filter to prevent duplicates
       user: {
         ...user,
         xp: leveledResult.xp,
         level: leveledResult.level,
-        streak: newStreak,
-        lastCheckInDate: new Date()
-      }
-    });
+        streak: streakResult.streak,
+        streakShields: streakResult.shields,
+        lastCheckInDate: new Date() as any
+      },
+      syncStatus: { ...state.syncStatus, [logId]: "pending" }
+    }));
 
-    // -- 2. Server Sync --
-    try {
-      await Promise.all([
-        habitsService.createLog(user.id, logId, habitId),
-        usersService.updateUserStats(user.id, leveledResult.xp, leveledResult.level, newStreak)
-      ]);
+    // -- 2. Server Sync (Non-blocking) --
+    Promise.all([
+      habitsService.createLog(user.id, newLog),
+      usersService.updateUserStats(user.id, leveledResult.xp, leveledResult.level, streakResult.streak, streakResult.shields)
+    ]).then(() => {
+      set(state => {
+        const nextStatus = { ...state.syncStatus };
+        delete nextStatus[logId];
+        return { syncStatus: nextStatus };
+      });
 
       trackEvent("habit_completed", { habitId, xpReward: habit.xpReward });
-      if (leveledResult.didLevelUp) trackEvent("level_up", { newLevel: leveledResult.level });
-      if (newStreak === 1 && backupUser.streak > 1) trackEvent("streak_broken", { oldStreak: backupUser.streak });
-
-    } catch (e) {
-      console.error("Failed to sync completion, rolling back", e);
-      set({ logs: backupLogs, user: backupUser });
-    } finally {
+      if (clickEvent) {
+         useJuiceStore.getState().spawnFloatingXP(habit.xpReward, clickEvent.clientX, clickEvent.clientY);
+      }
+      
+      if (leveledResult.didLevelUp) {
+         trackEvent("level_up", { newLevel: leveledResult.level });
+         useJuiceStore.getState().spawnLevelUp(leveledResult.level);
+      }
+      if (streakResult.streak === 1 && user.streak > 1) trackEvent("streak_broken", { oldStreak: user.streak });
+    }).catch(e => {
+      console.error("Failed to sync completion for", logId, e);
+      set(state => ({ 
+        syncStatus: { ...state.syncStatus, [logId]: "failed" } 
+        // No naive rollback! Let the user press 'retry'.
+      }));
+    }).finally(() => {
       activeRequests.delete(logId);
-    }
+    });
   }
 }));

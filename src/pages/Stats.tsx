@@ -10,13 +10,13 @@ export const Stats: React.FC = () => {
     <>
       <TopBar />
       
-      <main className="pt-24 pb-32 px-6 max-w-7xl mx-auto space-y-8">
+      <main className="pt-20 pb-32 px-6 w-full flex-1 overflow-y-auto space-y-8 custom-scrollbar">
         {/* Hero Stats Row */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="flex flex-col gap-4">
           <div className="bg-surface-container-high p-6 rounded-xl border-l-4 border-primary-container shadow-xl">
             <p className="font-label text-xs tracking-widest text-secondary uppercase mb-1">Combat Level</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-black text-on-surface tracking-tighter">LVL {user?.level || 1}</span>
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-3xl font-black text-on-surface tracking-tighter">LVL {user?.level || 1}</span>
               <span className="text-primary font-bold text-sm">EXP: {user?.xp || 0}</span>
             </div>
             <div className="mt-4 w-full bg-surface-container-lowest h-1 rounded-full overflow-hidden">
@@ -24,20 +24,20 @@ export const Stats: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-surface-container-high p-6 rounded-xl border-l-4 border-primary-container shadow-xl">
+          <div className="bg-surface-container-high p-6 rounded-xl border-l-4 border-secondary shadow-xl">
             <p className="font-label text-xs tracking-widest text-secondary uppercase mb-1">Current Streak</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-black text-on-surface tracking-tighter">{user?.streak || 0} DAYS</span>
-              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
+              <span className="text-3xl font-black text-on-surface tracking-tighter">{user?.streak || 0} DAYS</span>
+              <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
             </div>
-            <p className="text-secondary text-xs mt-2 italic">Keep it going to maximize multipliers!</p>
+            <p className="text-secondary text-xs mt-2">Keep it going to maximize multipliers!</p>
           </div>
           
-          <div className="bg-surface-container-high p-6 rounded-xl border-l-4 border-primary-container shadow-xl">
+          <div className="bg-surface-container-high p-6 rounded-xl border-l-4 border-outline-variant shadow-xl">
             <p className="font-label text-xs tracking-widest text-secondary uppercase mb-1">Global Rank</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-black text-on-surface tracking-tighter">#---</span>
-              <span className="text-primary font-bold text-sm">UNRANKED</span>
+              <span className="text-3xl font-black text-on-surface tracking-tighter">#---</span>
+              <span className="text-outline font-bold text-sm">UNRANKED</span>
             </div>
             <p className="text-secondary text-xs mt-2">Leaderboards unlocking soon</p>
           </div>
@@ -67,11 +67,11 @@ export const Stats: React.FC = () => {
         </section>
 
         {/* Bento Stats Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <section className="flex flex-col gap-6">
           {/* Habit Heatmap (Left/Large) */}
-          <div className="md:col-span-8 bg-surface-container p-6 rounded-xl shadow-xl">
+          <div className="bg-surface-container p-6 rounded-xl shadow-xl border border-surface-bright/20">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-black tracking-tighter uppercase text-on-surface">Habit Matrix</h2>
+              <h2 className="text-base font-black tracking-tighter uppercase text-on-surface">Habit Matrix</h2>
               <div className="flex items-center gap-2 text-[10px] font-bold text-secondary">
                 <span>LESS</span>
                 <div className="flex gap-1">
@@ -92,8 +92,8 @@ export const Stats: React.FC = () => {
           </div>
           
           {/* Streak History (Right/Small) */}
-          <div className="md:col-span-4 bg-surface-container p-6 rounded-xl shadow-xl space-y-4">
-            <h2 className="text-lg font-black tracking-tighter uppercase text-on-surface">Streak History</h2>
+          <div className="bg-surface-container p-6 rounded-xl shadow-xl space-y-4 border border-surface-bright/20">
+            <h2 className="text-base font-black tracking-tighter uppercase text-on-surface">Streak History</h2>
             <div className="space-y-3">
               <div className="flex justify-between items-center bg-surface-container-low p-3 rounded-lg border border-outline-variant/10">
                 <div>
