@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Habit } from '../../lib/db';
 import { useHabitStore } from '../../store/useHabitStore';
+import { m } from 'framer-motion';
 
 interface Props {
   habit: Habit;
@@ -28,47 +29,52 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   };
 
   return (
-    <div 
+    <m.div 
       onClick={handleComplete}
-      className={`group relative overflow-hidden rounded-2xl p-5 mb-4 transition-all duration-300 transform ${
+      layout
+      whileTap={!completed ? { scale: 0.96, rotate: -1 } : {}}
+      className={`group relative overflow-hidden rounded-2xl p-5 mb-4 border transition-colors duration-500 ${
         completed 
-          ? "bg-neutral-900 border border-green-500/20 opacity-70 cursor-default shadow-none" 
-          : "bg-gradient-to-br from-neutral-900 to-neutral-950 border border-red-900/30 hover:border-red-500/50 hover:shadow-[0_8px_30px_rgba(220,38,38,0.15)] cursor-pointer active:scale-[0.98] shadow-lg"
+          ? "bg-surface-container border-outline/10 opacity-60 cursor-default" 
+          : "bg-surface-container-high border-outline-variant/30 hover:border-primary/50 cursor-pointer shadow-lg shadow-surface-dim/20"
       }`}
     >
-      {/* Decorative background glow for incomplete state */}
+      {/* Premium Spotlight / Glow internal effect */}
       {!completed && (
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all duration-500" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[40px] group-hover:bg-primary/30 transition-all duration-700 pointer-events-none" />
       )}
 
       <div className="relative z-10 flex justify-between items-start mb-4">
-        <div className={`p-2 rounded-xl backdrop-blur-md ${completed ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-500 group-hover:bg-red-500/20 transition-colors"}`}>
-          <span className="material-symbols-outlined text-2xl drop-shadow-md">
+        <div className={`p-2.5 rounded-xl transition-colors duration-500 ${completed ? "bg-secondary-container text-on-secondary-container" : "bg-primary-container/20 text-primary group-hover:bg-primary-container/30"}`}>
+          <span className="material-symbols-outlined text-[24px]">
             {getIcon(habit.type)}
           </span>
         </div>
-        <span className={`text-[10px] uppercase tracking-wider font-black px-2 py-1 rounded bg-black/40 border ${completed ? "text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.2)] border-green-500/20" : "text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.2)] border-amber-500/20"}`}>
+        <span className={`text-[10px] uppercase tracking-wider font-black px-2 py-1 rounded border transition-colors duration-500 ${completed ? "bg-surface-container-highest text-on-surface-variant border-outline-variant/20" : "bg-inverse-surface text-inverse-on-surface shadow-sm border-outline-variant/20"}`}>
           +{habit.xpReward} XP
         </span>
       </div>
       
       <div className="relative z-10">
-        <h3 className={`font-bold text-lg mb-1 leading-tight tracking-wide transition-colors ${completed ? "text-green-500" : "text-white group-hover:text-red-50"}`}>
+        <m.h3 layout="position" className={`font-bold text-lg mb-1 leading-tight tracking-tight transition-colors duration-500 ${completed ? "text-on-surface-variant line-through decoration-outline/50" : "text-on-surface group-hover:text-primary"}`}>
           {habit.title}
-        </h3>
-        <p className="text-xs text-neutral-400 mb-5 font-medium tracking-wide uppercase">{habit.difficulty}</p>
+        </m.h3>
+        <p className="text-[10px] text-on-surface-variant mb-5 font-bold tracking-widest uppercase">{habit.difficulty}</p>
         
-        <div className="flex items-center gap-3 bg-black/20 p-1.5 rounded-full border border-white/5">
-          <div className="flex-grow h-1.5 bg-black/50 rounded-full overflow-hidden ml-1 shadow-inner">
-            <div 
-              className={`h-full rounded-full transition-all duration-700 ease-out ${completed ? "bg-gradient-to-r from-green-600 to-green-400 w-full shadow-[0_0_10px_rgba(74,222,128,0.5)]" : "bg-gradient-to-r from-red-600 to-red-400 w-0"}`} 
+        <div className="flex items-center gap-3 bg-surface-container-lowest p-1.5 rounded-full border border-outline-variant/10">
+          <div className="flex-grow h-[4px] bg-surface-container-highest rounded-full overflow-hidden ml-1 relative">
+            <m.div 
+              initial={false}
+              animate={{ width: completed ? "100%" : "0%" }}
+              transition={{ duration: 0.6, ease: "circOut" }}
+              className="absolute top-0 left-0 bottom-0 bg-primary shadow-[0_0_12px_rgba(var(--color-primary),0.8)]" 
             />
           </div>
-          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 ${completed ? "text-green-400" : "text-neutral-500"}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 transition-colors duration-500 ${completed ? "text-primary" : "text-on-surface-variant"}`}>
             {completed ? "Done" : "Todo"}
           </span>
         </div>
       </div>
-    </div>
+    </m.div>
   );
 };

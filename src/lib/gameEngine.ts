@@ -65,5 +65,30 @@ export const gameEngine = {
     }
 
     return { level: newLevel, xp: newXp, didLevelUp: leveledUp };
+  },
+
+  /**
+   * Evaluates the text description of the player's Rank based on their level.
+   * UNRANKED (1-3) -> BRONZE (4-6) -> IRON -> SILVER -> GOLD -> PLATINUM -> DIAMOND -> MASTER -> APEX -> LEGEND -> WARLORD -> GOD (34+)
+   */
+  getUserRank: (level: number): string => {
+    if (level < 4) return "UNRANKED";
+    if (level >= 34) return "GOD";
+
+    const index = Math.floor((level - 4) / 3);
+    const sub = (level - 4) % 3; // 0 -> III, 1 -> II, 2 -> I
+
+    const RANKS = [
+      "BRONZE", "IRON", "SILVER", "GOLD", 
+      "PLATINUM", "DIAMOND", "MASTER", 
+      "APEX", "LEGEND", "WARLORD"
+    ];
+
+    const SUBDIVISIONS = ["III", "II", "I"];
+    
+    // Bounds safety
+    const safeIndex = Math.min(Math.max(index, 0), RANKS.length - 1);
+    
+    return `${RANKS[safeIndex]} ${SUBDIVISIONS[sub]}`;
   }
 };

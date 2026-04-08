@@ -1,61 +1,141 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TopBar } from '../components/layout/TopBar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserStore } from '../store/useUserStore';
+import { UsersDB } from '../lib/db';
+import { m, AnimatePresence } from 'framer-motion';
+import { gameEngine } from '../lib/gameEngine';
 
 export const Settings: React.FC = () => {
   const logout = useAuthStore(state => state.logout);
   const user = useUserStore(state => state.user);
+  
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState(user?.name || '');
+  const [showManual, setShowManual] = useState(false);
+
+  if (!user) return null;
+
+  const handleUpdateUser = async (updates: Partial<typeof user>) => {
+    try {
+      await UsersDB.update(user.id, updates);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleExport = () => {
-    if (!user) return;
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(user));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", "habit_rpg_export.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
+    document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   };
+
+  const saveName = () => {
+    if (newName.trim() && newName !== user.name) {
+      handleUpdateUser({ name: newName.trim() });
+    }
+    setEditingName(false);
+  };
+
+  const Toggle = ({ active, onClick, label, description }: { active: boolean, onClick: () => void, label: string, description: string }) => (
+    <div onClick={onClick} className="bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20 cursor-pointer active:scale-[0.98] transition-transform">
+      <div>
+        <p className="font-bold text-on-surface">{label}</p>
+        <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">{description}</p>
+      </div>
+      <div className={`w-12 h-6 rounded-full p-1 relative transition-colors ${active ? 'bg-primary border-primary' : 'bg-surface-container-highest border-outline-variant/30 border'}`}>
+        <m.div 
+          layout
+          initial={false}
+          animate={{ x: active ? 24 : 0 }}
+          className={`w-4 h-4 rounded-full ${active ? 'bg-on-primary' : 'bg-outline-variant'}`} 
+        />
+      </div>
+    </div>
+  );
 
   return (
     <>
       <TopBar />
       
-      <main className="pt-20 pb-32 px-6 w-full flex-1 overflow-y-auto space-y-6 custom-scrollbar">
+      <main className="pt-[100px] pb-32 px-6 w-full flex-1 overflow-y-auto space-y-6 custom-scrollbar">
         <div className="mb-8">
-          <h1 className="text-3xl font-black tracking-tighter uppercase text-on-surface">Settings</h1>
+          <m.h1 layoutId="page-title" className="text-3xl font-black tracking-tighter uppercase text-on-surface">Settings</m.h1>
           <p className="text-on-surface-variant font-body text-sm mt-1">Configure your HUD.</p>
         </div>
 
-        <section className="space-y-4">
-          <h2 className="text-sm font-bold tracking-widest text-on-surface-variant uppercase">Preferences</h2>
-          
-          <div className="bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20">
-            <div>
-              <p className="font-bold text-on-surface">Hard Mode</p>
-              <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">Lose XP on broken streaks. Higher rewards.</p>
-            </div>
-            <div className="w-12 h-6 bg-surface-container-highest rounded-full p-1 relative border border-outline-variant/30">
-              <div className="w-4 h-4 bg-outline-variant rounded-full absolute left-1"></div>
-            </div>
-          </div>
+        {/* Profile Card */}
+        <section className="bg-gradient-to-br from-surface-container to-surface-container-high border border-surface-bright/20 rounded-2xl p-6 relative overflow-hidden">
+           <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-xl pointer-events-none" />
+           <div className="flex items-start justify-between">
+             <div>
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Operative</p>
+                {editingName ? (
+                  <input 
+                    autoFocus
+                    value={newName}
+                    onChange={e => setNewName(e.target.value)}
+                    onBlur={saveName}
+                    onKeyDown={e => e.key === 'Enter' && saveName()}
+                    className="bg-surface-container-highest text-on-surface px-3 py-1 rounded outline-none border border-primary/50 text-xl font-bold w-full max-w-[200px]"
+                  />
+                ) : (
+                  <h2 onClick={() => setEditingName(true)} className="text-2xl font-black text-on-surface tracking-tight cursor-pointer hover:text-primary transition-colors flex items-center gap-2">
+                    {user.name} <span className="material-symbols-outlined text-[16px] text-on-surface-variant">edit</span>
+                  </h2>
+                )}
+             </div>
+             <div className="text-right">
+                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Rank</p>
+                <div className="bg-primary/10 px-3 py-1 rounded border border-primary/20 text-primary font-bold tracking-widest text-sm">
+                  {gameEngine.getUserRank(user.level)}
+                </div>
+             </div>
+           </div>
+        </section>
 
-          <div className="bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20">
-            <div>
-              <p className="font-bold text-on-surface">Reduced Motion</p>
-              <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">Disables heavy Framer animations for low-end devices.</p>
-            </div>
-            <div className="w-12 h-6 bg-surface-container-highest rounded-full p-1 relative border border-outline-variant/30">
-              <div className="w-4 h-4 bg-outline-variant rounded-full absolute left-1"></div>
-            </div>
-          </div>
+        <section className="space-y-4">
+          <h2 className="text-sm font-bold tracking-widest text-on-surface-variant uppercase mt-8">Preferences</h2>
+          
+          <Toggle 
+            active={user.theme === 'light'} 
+            onClick={() => handleUpdateUser({ theme: user.theme === 'light' ? 'dark' : 'light' })}
+            label="Light Mode"
+            description="Activate day-walker retinal burning mode."
+          />
+
+          <Toggle 
+            active={!!user.hardMode} 
+            onClick={() => handleUpdateUser({ hardMode: !user.hardMode })}
+            label="Hard Mode"
+            description="Lose XP on broken streaks. Higher rewards."
+          />
+
+          <Toggle 
+            active={!!user.reducedMotion} 
+            onClick={() => handleUpdateUser({ reducedMotion: !user.reducedMotion })}
+            label="Reduced Motion"
+            description="Disables heavy animations for low-end devices."
+          />
         </section>
 
         <section className="space-y-4 mt-8">
           <h2 className="text-sm font-bold tracking-widest text-on-surface-variant uppercase">Data Management</h2>
           
+          <button onClick={() => setShowManual(true)} className="w-full bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20 hover:bg-surface-container-high transition-colors text-left relative overflow-hidden group">
+            <div className="absolute inset-0 bg-primary/5 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
+            <div className="relative">
+              <p className="font-bold text-on-surface">Instruction Manual</p>
+              <p className="text-[10px] text-on-surface-variant mt-1">Learn system mechanics and ranks.</p>
+            </div>
+            <span className="material-symbols-outlined text-on-surface-variant relative">menu_book</span>
+          </button>
+
           <button onClick={handleExport} className="w-full bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20 hover:bg-surface-container-high transition-colors text-left">
             <div>
               <p className="font-bold text-primary">Export JSON Data</p>
@@ -76,12 +156,44 @@ export const Settings: React.FC = () => {
         <section className="pt-8">
            <button 
              onClick={logout}
-             className="w-full py-4 rounded-lg bg-surface-container-high text-on-surface-variant font-bold uppercase tracking-widest text-sm hover:text-white transition-colors border border-outline-variant/20"
+             className="w-full flex items-center justify-center gap-2 py-4 rounded-lg bg-surface-container-high text-on-surface-variant font-bold uppercase tracking-widest text-sm hover:text-white transition-colors border border-outline-variant/20"
            >
-             Log Out
+             <span className="material-symbols-outlined text-[18px]">logout</span> Log Out
            </button>
         </section>
       </main>
+
+      <AnimatePresence>
+        {showManual && (
+          <m.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-6"
+            onClick={() => setShowManual(false)}
+          >
+            <m.div 
+              initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              className="bg-surface-container border border-outline/20 p-6 rounded-2xl w-full max-w-md max-h-[80vh] overflow-y-auto"
+            >
+              <h2 className="text-2xl font-black mb-4 uppercase tracking-tight text-primary">System Manual</h2>
+              
+              <div className="space-y-4 text-sm text-on-surface-variant font-body mb-6">
+                <p><strong className="text-on-surface">Ranks:</strong> Progress from UNRANKED to GOD by completing habits and gaining XP. Ranks have 3 subdivisions (III, II, I).</p>
+                <p><strong className="text-on-surface">Streaks:</strong> Keep checking in daily to multiply XP gains.</p>
+                <p><strong className="text-on-surface">Shields:</strong> Reaching 7 and 30 day streaks grants a shield that protects you from losing your streak if you miss precisely one day.</p>
+                <p><strong className="text-on-surface">Hard Mode:</strong> Miss a habit and physically lose XP values. Are you ready?</p>
+              </div>
+
+              <button 
+                onClick={() => setShowManual(false)}
+                className="w-full py-3 bg-primary text-on-primary rounded font-bold uppercase tracking-widest text-sm active:scale-95 transition-transform"
+              >
+                Acknowledge
+              </button>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
 
       <BottomNav />
     </>

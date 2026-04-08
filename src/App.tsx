@@ -66,11 +66,20 @@ function App() {
   const fbUser = useAuthStore(state => state.fbUser);
   const initialized = useAuthStore(state => state.initialized);
   const initUserListener = useUserStore(state => state.initUserListener);
+  const user = useUserStore(state => state.user);
   const initDataSync = useHabitStore(state => state.initDataSync);
 
   useEffect(() => {
     initAuthListener();
   }, [initAuthListener]);
+
+  useEffect(() => {
+    if (user?.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  }, [user?.theme]);
 
   useEffect(() => {
     if (fbUser) {

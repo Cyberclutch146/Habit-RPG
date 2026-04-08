@@ -24,6 +24,8 @@ export const userSchema = z.object({
   lastCheckInDate: z.any().nullable(), // ServerTimestamp or null
   hardMode: z.boolean().optional(),
   streakShields: z.number().min(0).max(2).optional(),
+  theme: z.enum(["dark", "light"]).optional(),
+  reducedMotion: z.boolean().optional(),
 });
 export type User = z.infer<typeof userSchema>;
 

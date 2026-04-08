@@ -90,10 +90,10 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     const { user, habits } = get();
     if (!user) return;
     
-    const pessimisticId = crypto.randomUUID().split('-')[0];
+    const id = crypto.randomUUID().split('-')[0];
     const optimisticHabit: Habit = {
       ...data,
-      id: pessimisticId,
+      id,
       createdAt: new Date(),
     };
     
@@ -102,7 +102,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     set({ habits: [optimisticHabit, ...habits] });
     
     try {
-      await habitsService.createHabit(user.id, data);
+      await habitsService.createHabit(user.id, optimisticHabit);
       trackEvent("habit_created", { type: data.type, difficulty: data.difficulty });
     } catch(e) {
       console.error("Failed to add habit", e);

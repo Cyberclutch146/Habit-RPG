@@ -1,4 +1,5 @@
 import React from 'react';
+import { m } from 'framer-motion';
 
 interface FABProps {
   onClick: () => void;
@@ -6,13 +7,15 @@ interface FABProps {
 
 export const FAB: React.FC<FABProps> = ({ onClick }) => {
   return (
-    <button
+    <m.button
+      whileTap={{ scale: 0.9, rotate: 15 }}
+      whileHover={{ scale: 1.05 }}
       onClick={onClick}
-      className="absolute bottom-28 right-6 w-14 h-14 bg-gradient-to-tr from-red-600 to-red-500 rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(220,38,38,0.4)] text-white hover:scale-105 active:scale-90 active:rotate-[15deg] transition-all duration-300 z-40 border border-red-400/30 group"
+      className="absolute bottom-[104px] right-6 w-14 h-14 bg-primary text-on-primary rounded-[20px] flex items-center justify-center shadow-[0_8px_32px_rgba(var(--color-primary),0.4)] z-40 border border-inverse-surface/10 group"
     >
-      <span className="material-symbols-outlined font-light text-3xl group-hover:rotate-90 transition-transform duration-300 text-white drop-shadow-md">
+      <span className="material-symbols-outlined font-light text-[32px] group-hover:rotate-90 transition-transform duration-500 drop-shadow-sm">
         add
       </span>
-    </button>
+    </m.button>
   );
 };

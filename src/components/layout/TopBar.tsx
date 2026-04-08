@@ -1,33 +1,53 @@
 import React from 'react';
-import { useHabitStore } from '../../store/useHabitStore';
+import { useUserStore } from '../../store/useUserStore';
+import { useNavigate } from 'react-router-dom';
+import { gameEngine } from '../../lib/gameEngine';
+import { m } from 'framer-motion';
 
 export const TopBar: React.FC = () => {
-  const user = useHabitStore(state => state.user);
+  const user = useUserStore(state => state.user);
+  const navigate = useNavigate();
   
-  // Dummy data if offline or unloaded
+  if (!user) return null;
   const streak = user?.streak || 0;
   
   return (
-    <header className="sticky top-0 w-full z-50 bg-neutral-950/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(209,54,57,0.08)] flex justify-between items-center px-6 py-4 border-b border-white/5">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full border-2 border-red-600 overflow-hidden">
+    <m.header 
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="sticky top-0 w-full z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-6 py-4 border-b border-outline-variant/10 shadow-sm"
+    >
+      <div className="flex items-center gap-3 active:scale-95 transition-transform" onClick={() => navigate('/dashboard')}>
+        <div className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden relative group">
           <img 
             alt="User Profile" 
             className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBroGboYbDeiZF1X4DUDDHb91465SjdGSpNW_9gceBWsK5QDprKP8np2o2VpwJfKk6iocrbv5P6vcPr9tLOFpotw-FbrErXoD78SZRgA1kIJrlW8dbRH2stIoTRBFf2O-NkUehEWpnPwtt3sWozKxrrCcqyyEW-RjMgJc0RWMpRCEmfWnN9C0z0bTHvxwwTzryVvoSSushyAWL8q8RqA0SE0GlKabicWEmlEPMaSr0UOzLnBRyf5x1QL7eTSEerQEE_3Qm9cZw78eI"
+            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4"
           />
         </div>
-        <span className="text-2xl font-black italic tracking-tighter text-red-600 uppercase font-headline">ASCEND</span>
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant/20">
-          <span className="material-symbols-outlined text-red-500 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
-          <span className="text-xs font-bold font-label tracking-widest uppercase">{streak} DAY STREAK</span>
+        <div className="flex flex-col">
+          <span className="text-sm font-black tracking-tight text-on-surface leading-none">{user.name}</span>
+          <span className="text-[10px] font-bold text-primary tracking-widest uppercase">{gameEngine.getUserRank(user.level)}</span>
         </div>
-        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-800 transition-colors active:scale-95 duration-150">
-          <span className="material-symbols-outlined text-neutral-400">settings</span>
-        </button>
       </div>
-    </header>
+      
+      <div className="flex items-center gap-3">
+        <m.div 
+          whileTap={{ scale: 0.9 }}
+          className="flex items-center gap-1 px-3 py-1 bg-surface-container rounded-full border border-outline-variant/20 shadow-inner"
+        >
+          <span className="material-symbols-outlined text-primary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
+          <span className="text-xs font-bold font-label tracking-widest text-on-surface uppercase">{streak}</span>
+        </m.div>
+        
+        <m.button 
+          whileTap={{ scale: 0.9 }}
+          onClick={() => navigate('/settings')}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/20 shadow-sm"
+        >
+          <span className="material-symbols-outlined text-on-surface-variant">settings</span>
+        </m.button>
+      </div>
+    </m.header>
   );
 };

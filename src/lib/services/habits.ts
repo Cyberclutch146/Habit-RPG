@@ -5,18 +5,14 @@ export const habitsService = {
   /**
    * Creates a new Habit for the user
    */
-  createHabit: async (userId: string, data: Omit<Habit, 'id' | 'createdAt'>): Promise<Habit> => {
-    // Generate an aggressive nanoid/uuid
-    const id = crypto.randomUUID().split('-')[0];
-    
-    // Validate schema compliance
+  createHabit: async (userId: string, data: Habit): Promise<Habit> => {
+    // Validate schema compliance, overriding optimistic createdAt with serverTimestamp
     const habit: Habit = {
       ...data,
-      id,
       createdAt: serverTimestamp(),
     };
 
-    await HabitsDB.create(id, habit, userId);
+    await HabitsDB.create(habit.id, habit, userId);
     return habit;
   },
 
