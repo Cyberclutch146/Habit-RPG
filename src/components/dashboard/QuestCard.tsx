@@ -30,30 +30,44 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   return (
     <div 
       onClick={handleComplete}
-      className={`group bg-surface-container-high rounded-lg p-5 border-l-4 transition-all ${completed ? "border-green-600 opacity-60 cursor-default" : "border-red-600 hover:bg-surface-bright cursor-pointer active:scale-95"}`}
+      className={`group relative overflow-hidden rounded-2xl p-5 mb-4 transition-all duration-300 transform ${
+        completed 
+          ? "bg-neutral-900 border border-green-500/20 opacity-70 cursor-default shadow-none" 
+          : "bg-gradient-to-br from-neutral-900 to-neutral-950 border border-red-900/30 hover:border-red-500/50 hover:shadow-[0_8px_30px_rgba(220,38,38,0.15)] cursor-pointer active:scale-[0.98] shadow-lg"
+      }`}
     >
-      <div className="flex justify-between items-start mb-4">
-        <span className={`material-symbols-outlined text-3xl ${completed ? "text-green-500" : "text-red-500"}`}>
-          {getIcon(habit.type)}
-        </span>
-        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${completed ? "text-green-400 bg-green-400/10" : "text-red-400 bg-red-400/10"}`}>
+      {/* Decorative background glow for incomplete state */}
+      {!completed && (
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all duration-500" />
+      )}
+
+      <div className="relative z-10 flex justify-between items-start mb-4">
+        <div className={`p-2 rounded-xl backdrop-blur-md ${completed ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-500 group-hover:bg-red-500/20 transition-colors"}`}>
+          <span className="material-symbols-outlined text-2xl drop-shadow-md">
+            {getIcon(habit.type)}
+          </span>
+        </div>
+        <span className={`text-[10px] uppercase tracking-wider font-black px-2 py-1 rounded bg-black/40 border ${completed ? "text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.2)] border-green-500/20" : "text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.2)] border-amber-500/20"}`}>
           +{habit.xpReward} XP
         </span>
       </div>
-      <h3 className={`font-bold text-lg mb-1 transition-colors ${completed ? "text-green-500" : "group-hover:text-red-400"}`}>
-        {habit.title}
-      </h3>
-      <p className="text-xs text-secondary mb-4 line-clamp-2">{habit.difficulty} difficulty</p>
       
-      <div className="flex items-center gap-3">
-        <div className="flex-grow h-1.5 bg-neutral-900 rounded-full overflow-hidden">
-          <div 
-            className={`h-full transition-all duration-500 ${completed ? "bg-green-600 w-full" : "bg-red-600 w-0"}`} 
-          />
+      <div className="relative z-10">
+        <h3 className={`font-bold text-lg mb-1 leading-tight tracking-wide transition-colors ${completed ? "text-green-500" : "text-white group-hover:text-red-50"}`}>
+          {habit.title}
+        </h3>
+        <p className="text-xs text-neutral-400 mb-5 font-medium tracking-wide uppercase">{habit.difficulty}</p>
+        
+        <div className="flex items-center gap-3 bg-black/20 p-1.5 rounded-full border border-white/5">
+          <div className="flex-grow h-1.5 bg-black/50 rounded-full overflow-hidden ml-1 shadow-inner">
+            <div 
+              className={`h-full rounded-full transition-all duration-700 ease-out ${completed ? "bg-gradient-to-r from-green-600 to-green-400 w-full shadow-[0_0_10px_rgba(74,222,128,0.5)]" : "bg-gradient-to-r from-red-600 to-red-400 w-0"}`} 
+            />
+          </div>
+          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 ${completed ? "text-green-400" : "text-neutral-500"}`}>
+            {completed ? "Done" : "Todo"}
+          </span>
         </div>
-        <span className={`text-[10px] font-bold uppercase ${completed ? "text-green-500" : "text-neutral-500"}`}>
-          {completed ? "Done" : "Ready"}
-        </span>
       </div>
     </div>
   );

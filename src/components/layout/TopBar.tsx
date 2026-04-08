@@ -8,7 +8,7 @@ export const TopBar: React.FC = () => {
   const streak = user?.streak || 0;
   
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-neutral-950/80 backdrop-blur-lg shadow-[0_10px_40px_rgba(209,54,57,0.08)] flex justify-between items-center px-6 py-4">
+    <header className="sticky top-0 w-full z-50 bg-neutral-950/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(209,54,57,0.08)] flex justify-between items-center px-6 py-4 border-b border-white/5">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full border-2 border-red-600 overflow-hidden">
           <img 

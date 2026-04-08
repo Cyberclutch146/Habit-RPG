@@ -1,9 +1,11 @@
 import { create } from 'zustand';
-import { Habit, HabitLog, LogsDB, UsersDB, User } from '../lib/db';
+import { Habit, HabitLog, User } from '../lib/db';
 import { gameEngine } from '../lib/gameEngine';
 import { trackEvent } from '../lib/analytics';
-import { serverTimestamp, onSnapshot, collection } from 'firebase/firestore';
+import { onSnapshot, collection } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { habitsService } from '../lib/services/habits';
+import { usersService } from '../lib/services/users';
 
 interface HabitStore {
   habits: Habit[];
@@ -18,13 +20,13 @@ interface HabitStore {
   
   // Actions with Debounce/Optimistic UI
   completeHabit: (habitId: string) => Promise<void>;
+  addHabit: (data: Omit<Habit, 'id' | 'createdAt'>) => Promise<void>;
   
-  // Derived state helper to prevent components from computing things
-  getTodayCompletedHabits: () => string[]; // returns array of habitIds
+  // Derived state helpers
+  getTodayCompletedHabits: () => string[];
   getWeeklyProgress: () => number;
 }
 
-// In-memory debounce tracking to prevent spam clicking before server responds
 const activeRequests = new Set<string>();
 
 export const useHabitStore = create<HabitStore>((set, get) => ({
@@ -39,6 +41,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
   initDataSync: (userId: string) => {
     set({ loading: true });
     
+    // We keep onSnapshot directly here since it's real-time boundary
     const unsubHabits = onSnapshot(collection(db, 'users', userId, 'habits'), (snap) => {
       const habits = snap.docs.map(d => d.data() as Habit);
       set({ habits });
@@ -59,7 +62,6 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     const todayStr = new Date().toISOString().split('T')[0];
     return get().logs
       .filter(l => {
-        // Handle firestore Timestamp safely if needed, fallback to Date
         const dateStr = l.timestamp?.toDate ? l.timestamp.toDate().toISOString().split('T')[0] : 
                        (l.timestamp instanceof Date ? l.timestamp.toISOString().split('T')[0] : 
                        new Date(l.timestamp).toISOString().split('T')[0]);
@@ -81,36 +83,54 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     }).length;
   },
 
+  addHabit: async (data) => {
+    const { user, habits } = get();
+    if (!user) return;
+    
+    const pessimisticId = crypto.randomUUID().split('-')[0];
+    const optimisticHabit: Habit = {
+      ...data,
+      id: pessimisticId,
+      createdAt: new Date(),
+    };
+    
+    const backupHabits = [...habits];
+    // Optimistic push
+    set({ habits: [optimisticHabit, ...habits] });
+    
+    try {
+      await habitsService.createHabit(user.id, data);
+      trackEvent("habit_created", { type: data.type, difficulty: data.difficulty });
+    } catch(e) {
+      console.error("Failed to add habit", e);
+      set({ habits: backupHabits }); // Rollback!
+    }
+  },
+
   completeHabit: async (habitId: string) => {
     const { user, habits, logs } = get();
-    if (!user) return; // Must be authenticated
+    if (!user) return; 
     
     const habit = habits.find(h => h.id === habitId);
     if (!habit) return;
     
-    // Generate Idempotency key
     const logId = gameEngine.generateLogId(user.id, habitId);
     
-    // Debounce / Spammability check client-side
     if (activeRequests.has(logId)) {
-      console.warn("Request already in flight for", logId);
-      return;
+      return; // Debounced
     }
     
-    // Check if already completed today
     if (logs.some(l => l.id === logId && l.completed)) {
-      console.warn("Habit already completed today");
-      return;
+      return; 
     }
 
     activeRequests.add(logId);
 
     // -- 1. Optimistic UI Update --
-    // Compute what the new state SHOULD look like
     const newLog: HabitLog = {
       id: logId,
       habitId,
-      timestamp: new Date(), // Local fallback during optimistic time
+      timestamp: new Date(), 
       completed: true
     };
 
@@ -120,7 +140,6 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     const backupUser = { ...user };
     const backupLogs = [...logs];
 
-    // Apply Optimistic State
     set({
       logs: [...logs, newLog],
       user: {
@@ -134,29 +153,18 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
 
     // -- 2. Server Sync --
     try {
-      // Parallel execution for fast updates
       await Promise.all([
-        LogsDB.create(logId, newLog, user.id), // Ensure schema validation passes
-        
-        // Update User Doc
-        UsersDB.update(user.id, {
-          xp: leveledResult.xp,
-          level: leveledResult.level,
-          streak: newStreak,
-          lastCheckInDate: serverTimestamp() as any
-        })
+        habitsService.createLog(user.id, logId, habitId),
+        usersService.updateUserStats(user.id, leveledResult.xp, leveledResult.level, newStreak)
       ]);
 
-      // Trigger analytics
       trackEvent("habit_completed", { habitId, xpReward: habit.xpReward });
       if (leveledResult.didLevelUp) trackEvent("level_up", { newLevel: leveledResult.level });
       if (newStreak === 1 && backupUser.streak > 1) trackEvent("streak_broken", { oldStreak: backupUser.streak });
 
     } catch (e) {
       console.error("Failed to sync completion, rolling back", e);
-      // Rollback
       set({ logs: backupLogs, user: backupUser });
-      // TODO: Expose toast error to UI wrapper
     } finally {
       activeRequests.delete(logId);
     }

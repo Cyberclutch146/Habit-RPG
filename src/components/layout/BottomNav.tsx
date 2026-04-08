@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-neutral-950/90 backdrop-blur-xl border-t border-neutral-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-xl">
+    <nav className="sticky bottom-0 w-full z-50 mt-auto flex justify-around items-center px-4 pt-3 pb-8 bg-neutral-950/90 backdrop-blur-xl border-t border-neutral-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-2xl">
       <NavLink 
         to="/dashboard"
         className={({ isActive }) => `flex flex-col items-center justify-center transition-all active:scale-90 duration-200 ${isActive ? "text-red-400" : "text-neutral-500 hover:text-red-400"}`}

@@ -50,6 +50,13 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
+// Protected Route Wrapper
+const AuthGuard = ({ children }: { children: ReactNode }) => {
+  const fbUser = useAuthStore(state => state.fbUser);
+  if (!fbUser) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+};
+
 // Temporary placeholders for our pages.
 const Profile = () => <div className="text-center pt-32">Profile Working</div>;
 
@@ -84,26 +91,21 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Navigate to={fbUser ? "/dashboard" : "/login"} replace />} />
-          <Route path="/login" element={!fbUser ? <Login /> : <Navigate to="/dashboard" replace />} />
-          
-          {/* Protected Routes */}
-          {fbUser ? (
-            <>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/boss" element={<Boss />} />
-              <Route path="/stats" element={<Stats />} />
-              <Route path="/profile" element={<Profile />} />
-            </>
-          ) : (
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
+      <div className="max-w-md mx-auto w-full min-h-[100dvh] relative bg-background shadow-2xl sm:border-x sm:border-neutral-900 overflow-x-hidden flex flex-col">
+        <Router>
+          <Routes>
+            <Route path="/login" element={!fbUser ? <Login /> : <Navigate to="/dashboard" replace />} />
+            
+            <Route path="/" element={<AuthGuard><Dashboard /></AuthGuard>} />
+            <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
+            <Route path="/boss" element={<AuthGuard><Boss /></AuthGuard>} />
+            <Route path="/stats" element={<AuthGuard><Stats /></AuthGuard>} />
+            <Route path="/profile" element={<AuthGuard><Profile /></AuthGuard>} />
+            
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Router>
+      </div>
     </ErrorBoundary>
   );
 }
