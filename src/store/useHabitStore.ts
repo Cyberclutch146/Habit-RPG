@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Habit, HabitLog, User } from '../lib/db';
+import { Habit, HabitLog } from '../lib/db';
 import { gameEngine } from '../lib/gameEngine';
 import { useJuiceStore } from './useJuiceStore';
 import { trackEvent } from '../lib/analytics';
@@ -7,17 +7,16 @@ import { onSnapshot, collection } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { habitsService } from '../lib/services/habits';
 import { usersService } from '../lib/services/users';
+import { useUserStore } from './useUserStore';
 
 interface HabitStore {
   habits: Habit[];
   logs: HabitLog[];
-  user: User | null;
   loading: boolean;
   syncStatus: Record<string, "pending" | "failed">;
   
   // Setters for initialization
-  setInitialData: (user: User, habits: Habit[], logs: HabitLog[]) => void;
-  setUser: (user: User | null) => void;
+  setInitialData: (habits: Habit[], logs: HabitLog[]) => void;
   initDataSync: (userId: string) => () => void;
   
   // Actions with Debounce/Optimistic UI
@@ -34,12 +33,10 @@ const activeRequests = new Set<string>();
 export const useHabitStore = create<HabitStore>((set, get) => ({
   habits: [],
   logs: [],
-  user: null,
   loading: false,
   syncStatus: {},
 
-  setInitialData: (user, habits, logs) => set({ user, habits, logs }),
-  setUser: (user) => set({ user }),
+  setInitialData: (habits, logs) => set({ habits, logs }),
 
   initDataSync: (userId: string) => {
     set({ loading: true });
@@ -87,7 +84,8 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
   },
 
   addHabit: async (data) => {
-    const { user, habits } = get();
+    const user = useUserStore.getState().user;
+    const { habits } = get();
     if (!user) return;
     
     const id = crypto.randomUUID().split('-')[0];
@@ -111,7 +109,8 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
   },
 
   completeHabit: async (habitId: string, clickEvent?: { clientX: number, clientY: number }) => {
-    const { user, habits, logs } = get();
+    const user = useUserStore.getState().user;
+    const { habits, logs } = get();
     if (!user) return; 
     
     const habit = habits.find(h => h.id === habitId);
@@ -148,8 +147,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     );
     const leveledResult = gameEngine.evaluateLevelUp(user.level, user.xp, habit.xpReward);
 
-    set((state) => ({
-      logs: [...state.logs.filter(l => l.id !== logId), newLog], // Merge filter to prevent duplicates
+    useUserStore.setState({
       user: {
         ...user,
         xp: leveledResult.xp,
@@ -157,7 +155,11 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
         streak: streakResult.streak,
         streakShields: streakResult.shields,
         lastCheckInDate: new Date() as any
-      },
+      }
+    });
+
+    set((state) => ({
+      logs: [...state.logs.filter(l => l.id !== logId), newLog], // Merge filter to prevent duplicates
       syncStatus: { ...state.syncStatus, [logId]: "pending" }
     }));
 
