@@ -3,6 +3,9 @@ import { TopBar } from '../components/layout/TopBar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { useHabitStore } from '../store/useHabitStore';
 import { GlitchText } from '../components/animations/GlitchText';
+import { AuroraBackground } from '../components/animations/AuroraBackground';
+import { StarBorder } from '../components/animations/StarBorder';
+import { DecryptedText } from '../components/animations/DecryptedText';
 
 export const Boss: React.FC = () => {
   const getWeeklyProgress = useHabitStore(state => state.getWeeklyProgress);
@@ -18,10 +21,10 @@ export const Boss: React.FC = () => {
     <>
       <TopBar />
       
-      <main className="flex-grow pt-24 pb-32 px-6 kinetic-bg relative overflow-hidden min-h-screen">
-        {/* Background Decor */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-primary-container/5 blur-[120px] rounded-full pointer-events-none"></div>
+      <main className="flex-grow pt-24 pb-32 px-6 relative overflow-hidden min-h-screen">
+        <div className="absolute inset-0 z-0">
+          <AuroraBackground />
+        </div>
         
         <div className="max-w-4xl mx-auto space-y-8 relative z-10">
           
@@ -39,34 +42,37 @@ export const Boss: React.FC = () => {
           </div>
 
           {/* Kinetic Boss Card */}
-          <div className="relative group">
-            <div className="absolute inset-0 bg-primary-container/20 blur-xl group-hover:bg-primary-container/30 transition-all duration-500 rounded-xl"></div>
-            <div className="relative bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant/20 shadow-[0_0_60px_rgba(209,54,57,0.2)]">
-              <div className="aspect-[16/9] md:aspect-[21/9] relative">
-                <img 
-                  alt="The Sloth Demon" 
-                  className="w-full h-full object-cover scale-105 transition-transform duration-1000" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNMdVhAtmmQqxrnOQWrAHF8YRWwIKDNWotl9JFbFniXEuI_LP2AKbyowpXo8bOsHbciAdhTnC6k33nBFYPVkbHnVNNP_ZrCh9CbU_mqYpAzGe6ycA4Q-iN4_hS7_IYe8pLRPWxjYFRRtVx18GythakiZ7efVlOa0USaIMGjfxkUzSroHiPP1tZgZsDPpkVbQsSOwnk8OFsgDotACku0aU5wul9AdWGbN3ualAt7Fvtwf6Zqh4APWAoo9cQsyIQhjw52kOXx9n5Fd4"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-container-high via-transparent to-transparent"></div>
-                <div className="absolute inset-0 border-[4px] border-primary/20 opacity-40 mix-blend-overlay"></div>
-              </div>
-              
-              <div className="p-6 md:p-8 space-y-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-end">
-                    <div className="font-label text-xs tracking-widest text-secondary uppercase">Damage Inflicted</div>
-                    <div className="text-2xl font-black italic text-primary-container font-headline">{progressPercent}%</div>
-                  </div>
+          <div className="relative group w-full flex justify-center">
+            <div className="absolute inset-0 bg-primary-container/20 blur-xl group-hover:bg-primary-container/30 transition-all duration-500 rounded-xl" />
+            <StarBorder speed="3s" className="w-full">
+              <div className="relative bg-surface-container-high rounded-xl overflow-hidden shadow-[0_0_60px_rgba(209,54,57,0.2)]">
+                <div className="aspect-[16/9] md:aspect-[21/9] relative">
+                  <img 
+                    alt="The Sloth Demon" 
+                    className="w-full h-full object-cover scale-105 transition-transform duration-1000" 
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNMdVhAtmmQqxrnOQWrAHF8YRWwIKDNWotl9JFbFniXEuI_LP2AKbyowpXo8bOsHbciAdhTnC6k33nBFYPVkbHnVNNP_ZrCh9CbU_mqYpAzGe6ycA4Q-iN4_hS7_IYe8pLRPWxjYFRRtVx18GythakiZ7efVlOa0USaIMGjfxkUzSroHiPP1tZgZsDPpkVbQsSOwnk8OFsgDotACku0aU5wul9AdWGbN3ualAt7Fvtwf6Zqh4APWAoo9cQsyIQhjw52kOXx9n5Fd4"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-container-high via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 border-[4px] border-primary/20 opacity-40 mix-blend-overlay"></div>
+                </div>
+                
+                <div className="p-6 md:p-8 space-y-6">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-end">
+                      <div className="font-label text-xs tracking-widest text-secondary uppercase">Damage Inflicted</div>
+                      <div className="text-2xl font-black italic text-primary-container font-headline">
+                        <DecryptedText text={`${progressPercent}%`} speed={80} />
+                      </div>
+                    </div>
                   <div className="h-4 w-full bg-surface-container-lowest rounded-full p-1 shadow-inner overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-primary-container to-primary rounded-full relative transition-all duration-1000" style={{ width: `${progressPercent}%` }}>
                       <div className="absolute top-0 right-0 h-full w-4 bg-white/30 blur-sm animate-pulse"></div>
                     </div>
                   </div>
-                  <p className="text-sm text-neutral-500 font-body italic text-center">Complete {goal - Math.min(current, goal)} more habits this week to execute the finisher move.</p>
                 </div>
               </div>
             </div>
+            </StarBorder>
           </div>
 
           {/* Rewards Grid */}
