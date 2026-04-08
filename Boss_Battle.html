@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ASCEND - Boss Battle</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#1b1c1c",
+                    "on-surface-variant": "#e3bebb",
+                    "outline": "#aa8986",
+                    "on-tertiary-fixed": "#1b1c1c",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "on-secondary-container": "#b5b5b5",
+                    "on-tertiary-fixed-variant": "#474746",
+                    "on-background": "#e5e2e1",
+                    "background": "#131313",
+                    "outline-variant": "#5a403e",
+                    "on-tertiary-container": "#f9f7f6",
+                    "error": "#ffb4ab",
+                    "on-primary": "#68000c",
+                    "primary-fixed": "#ffdad7",
+                    "on-tertiary": "#303030",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#e3e2e2",
+                    "surface-container-highest": "#353534",
+                    "surface-container": "#201f1f",
+                    "on-primary-fixed": "#410004",
+                    "surface-tint": "#ffb3ae",
+                    "primary": "#ffb3ae",
+                    "tertiary-fixed-dim": "#c8c6c5",
+                    "primary-container": "#d13639",
+                    "on-primary-fixed-variant": "#930015",
+                    "inverse-primary": "#b62129",
+                    "tertiary-fixed": "#e4e2e1",
+                    "inverse-on-surface": "#313030",
+                    "surface-container-low": "#1c1b1b",
+                    "tertiary": "#c8c6c5",
+                    "secondary-container": "#464747",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary": "#c7c6c6",
+                    "surface": "#131313",
+                    "on-surface": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-bright": "#3a3939",
+                    "on-secondary": "#303031",
+                    "inverse-surface": "#e5e2e1",
+                    "tertiary-container": "#727171",
+                    "on-primary-container": "#fff4f3",
+                    "on-secondary-fixed-variant": "#464747",
+                    "primary-fixed-dim": "#ffb3ae",
+                    "secondary-fixed-dim": "#c7c6c6",
+                    "surface-variant": "#353534"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(209, 54, 57, 0.15) 0%, rgba(19, 19, 19, 1) 70%);
+        }
+        .boss-glow {
+            box-shadow: 0 0 60px rgba(209, 54, 57, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-neutral-950/80 backdrop-blur-lg flex justify-between items-center px-6 py-4 shadow-[0_10px_40px_rgba(209,54,57,0.08)]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="cinematic close-up portrait of a gritty warrior with facial scars and glowing red eyes, digital art gaming style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7D651GgatJzlscYvYNriu8DzMZytFz5XF9plVHCdQAfOOc39dutXp1t29ehiBNCegiak5ULcx8o_d-gLEw-htyxznXXA01RxHbbpqhyqWBdautsuu3HD_0tDFZpS6Az1WTL-ovNyrgWYww-RW-ywoNKvETxbA1XikOJRAe_D9bfAhyNSZ7AQ6RuhFNWg80UCBL4a_6eQVP5H_gUsj48ru04f9RoXzoEGXu57hf_-vYq6QIwaehVSfg0GwwpY-4lIbgRiGX91k8Bg"/>
+</div>
+<h1 class="text-2xl font-black italic tracking-tighter text-red-600 font-inter uppercase">ASCEND</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-neutral-800 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-neutral-400">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 pb-32 px-6 kinetic-bg relative overflow-hidden">
+<!-- Background Decor -->
+<div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-primary-container/5 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="max-w-4xl mx-auto space-y-8 relative z-10">
+<!-- Boss Identity Header -->
+<div class="text-center space-y-2">
+<span class="font-label text-sm tracking-[0.2em] text-primary font-bold uppercase">Legendary Encounter</span>
+<h2 class="text-5xl md:text-7xl font-headline font-black tracking-tighter uppercase text-on-surface">The Sloth Demon</h2>
+<div class="flex items-center justify-center gap-2 text-neutral-500 font-label text-xs uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">skull</span>
+                    Level 42 World Boss
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">skull</span>
+</div>
+</div>
+<!-- Kinetic Boss Card -->
+<div class="relative group">
+<div class="absolute inset-0 bg-primary-container/20 blur-xl group-hover:bg-primary-container/30 transition-all duration-500 rounded-xl"></div>
+<div class="relative bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant/20 boss-glow">
+<div class="aspect-[16/9] md:aspect-[21/9] relative">
+<img alt="The Sloth Demon" class="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000" data-alt="dark monstrous creature made of shadows and smoke sitting on a throne of stone, glowing embers, high contrast cinematic gaming lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNMdVhAtmmQqxrnOQWrAHF8YRWwIKDNWotl9JFbFniXEuI_LP2AKbyowpXo8bOsHbciAdhTnC6k33nBFYPVkbHnVNNP_ZrCh9CbU_mqYpAzGe6ycA4Q-iN4_hS7_IYe8pLRPWxjYFRRtVx18GythakiZ7efVlOa0USaIMGjfxkUzSroHiPP1tZgZsDPpkVbQsSOwnk8OFsgDotACku0aU5wul9AdWGbN3ualAt7Fvtwf6Zqh4APWAoo9cQsyIQhjw52kOXx9n5Fd4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-high via-transparent to-transparent"></div>
+<!-- Damage Overlay Effect -->
+<div class="absolute inset-0 border-[4px] border-primary/20 opacity-40 mix-blend-overlay"></div>
+</div>
+<div class="p-6 md:p-8 space-y-6">
+<!-- Progress Bar (The Health/Workout Bar) -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<div class="font-label text-xs tracking-widest text-secondary uppercase">Battle Progress</div>
+<div class="text-2xl font-black italic text-primary-container font-headline">74%</div>
+</div>
+<div class="h-4 w-full bg-surface-container-lowest rounded-full p-1 shadow-inner overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-primary rounded-full relative" style="width: 74%">
+<div class="absolute top-0 right-0 h-full w-4 bg-white/30 blur-sm animate-pulse"></div>
+</div>
+</div>
+<p class="text-sm text-neutral-500 font-body italic text-center">Complete 12 more reps to execute the finisher move.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Rewards Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<div>
+<div class="text-2xl font-black text-on-surface">1,250</div>
+<div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">XP Gained</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-amber-500 text-4xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<div class="text-sm font-black text-on-surface uppercase tracking-tight">Vanquisher Badge</div>
+<div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Legendary Drop</div>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="pt-4">
+<button class="w-full py-6 bg-primary-container text-on-primary-container rounded-full font-headline font-black uppercase tracking-widest text-xl flex items-center justify-center gap-4 shadow-[0_0_40px_rgba(209,54,57,0.4)] hover:shadow-[0_0_60px_rgba(209,54,57,0.6)] hover:scale-[1.02] active:scale-95 transition-all duration-200">
+                    Continue Fight
+                    <span class="material-symbols-outlined text-3xl">swords</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-neutral-950/90 backdrop-blur-xl border-t border-neutral-800/50 flex justify-around items-center px-4 pt-3 pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-red-400 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">swords</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest">Quests</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-red-600 text-white rounded-md px-4 py-1 shadow-[0_0_20px_rgba(209,54,57,0.3)] active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">castle</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest">Boss</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-red-400 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-red-400 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest">Vault</span>
+</a>
+</nav>
+</body></html>
