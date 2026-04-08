@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { UsersDB } from '../lib/db';
+import { ParticleBackground } from '../components/animations/ParticleBackground';
+import { SpotlightCard } from '../components/animations/SpotlightCard';
+import { GlitchText } from '../components/animations/GlitchText';
+import { AnimatedText } from '../components/animations/AnimatedText';
 
 export const Login: React.FC = () => {
   const [isRegister, setIsRegister] = useState(false);
@@ -36,7 +40,9 @@ export const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Google Auth Failed.');
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        setError('Connection severed by command.');
+      }
     } finally {
       setLoading(false);
     }
@@ -66,7 +72,10 @@ export const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Authentication failed. Matrix compromised.');
+      if (err.code === 'auth/email-already-in-use') setError('Hero credential already claimed.');
+      else if (err.code === 'auth/wrong-password') setError('Access denied. Invalid cipher.');
+      else if (err.code === 'auth/user-not-found') setError('Hero not discovered in the archives.');
+      else setError('Authentication failed. Matrix compromised.');
     } finally {
       setLoading(false);
     }
@@ -75,11 +84,8 @@ export const Login: React.FC = () => {
   return (
     <div className="bg-background text-on-background font-body overflow-hidden min-h-screen relative">
       <div className="fixed inset-0 z-0 overflow-hidden">
-        <img 
-          className="w-full h-full object-cover scale-110 opacity-40 mix-blend-lighten" 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWfJPmeSLVRqB8TC03F6-0SVUbqUEI7nWMxCSSMg261c9kByqeGUmhmQmm-XgKjZrUK4ORqmyYATeL6uKA1dQ8pWabg32vL4EZzzmJNAUmQYb-DPWe-tUpXVQ3wrk1H7CVLj08TFVH_2wX1G4VqYHUQRZTUMzfCaD5RakyMxYfcqLkcEeDsb_lDjtffajRsRrj7-HuyU3yiD_db5EA8GvUHUHxW0rdFt95jomaU6HMWgZyNFxHfQQLf2fCY0Jv4Vn6fG6RlemsG5Y" 
-          alt="Dark landscape"
-        />
+        <div className="absolute inset-0 bg-background" />
+        <ParticleBackground />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
         <div className="absolute inset-0 kinetic-gradient" />
       </div>
@@ -90,58 +96,67 @@ export const Login: React.FC = () => {
           <div className="mb-4">
             <span className="material-symbols-outlined text-primary-container text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>swords</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-headline font-black tracking-tighter uppercase italic text-on-surface text-glow leading-none">
-            ASCEND
-          </h1>
+          <GlitchText text="ASCEND" className="text-6xl md:text-8xl font-headline font-black tracking-tighter uppercase italic text-on-surface text-glow leading-none" />
           <div className="mt-2 inline-block px-4 py-1 bg-primary-container/10 border border-primary-container/20 rounded-sm">
             <p className="font-label text-xs tracking-[0.2em] uppercase font-bold text-primary">Level up your real life</p>
           </div>
         </div>
 
-        <div className="w-full max-w-md bg-surface-container-highest/80 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/30 mt-8 mb-8">
-          <form className="flex flex-col gap-4" onSubmit={handleAuth}>
-            {error && <div className="text-error text-xs bg-error-container p-2 rounded">{error}</div>}
+        <div className="w-full max-w-md mt-8 mb-8 z-10 block">
+          <SpotlightCard className="bg-surface-container-highest/80 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/30 w-full overflow-hidden">
+            <div className="flex justify-center w-full mb-6 relative z-10">
+              <h2 className="text-xl font-headline font-black tracking-widest text-on-surface uppercase text-shadow-sm">
+                <AnimatedText text={isRegister ? "Register Hero" : "Initialize Session"} />
+              </h2>
+            </div>
             
-            {isRegister && (
+            <form className="flex flex-col gap-4 relative z-10" onSubmit={handleAuth}>
+              {error && (
+                <div className="text-secondary text-xs uppercase tracking-widest font-bold bg-secondary/10 border border-secondary/30 p-3 rounded text-center animate-pulse shadow-[0_0_15px_rgba(255,180,171,0.2)]">
+                  {error}
+                </div>
+              )}
+              
+              {isRegister && (
+                <input
+                  className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
+                  type="text"
+                  placeholder="Hero Alias"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              )}
+              
               <input
                 className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-                type="text"
-                placeholder="Agent Alias"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                type="email"
+                placeholder="Email Interface"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
-            )}
-            
-            <input
-              className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-              type="email"
-              placeholder="Email Interface"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            
-            <input
-              className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-              type="password"
-              placeholder="Authorization Code"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+              
+              <input
+                className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-            <button 
-              type="submit"
-              disabled={loading}
-              className="group relative w-full bg-primary-container py-4 mt-2 rounded-lg py-5 overflow-hidden shadow-[0_10px_30px_rgba(209,54,57,0.3)] disabled:opacity-50 active:scale-95 transition-all duration-200"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="relative font-headline font-black text-lg uppercase tracking-widest text-on-primary-container flex items-center justify-center gap-2">
-                {loading ? <span className="material-symbols-outlined animate-spin">refresh</span> : (isRegister ? "Start Game" : "Initialize")}
-              </span>
-            </button>
-          </form>
+              <button 
+                type="submit"
+                disabled={loading}
+                className="group relative w-full bg-primary-container py-4 mt-2 rounded-lg py-5 overflow-hidden shadow-[0_10px_30px_rgba(209,54,57,0.3)] disabled:opacity-50 active:scale-95 transition-all duration-200"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative font-headline font-black text-lg uppercase tracking-widest text-on-primary-container flex items-center justify-center gap-2">
+                  {loading ? <span className="material-symbols-outlined animate-spin">refresh</span> : (isRegister ? "Start Game" : "Initialize")}
+                </span>
+              </button>
+            </form>
 
           <button 
             type="button"
@@ -175,6 +190,7 @@ export const Login: React.FC = () => {
               Sign In With Google
             </span>
           </button>
+          </SpotlightCard>
         </div>
 
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 hidden md:grid opacity-50">
