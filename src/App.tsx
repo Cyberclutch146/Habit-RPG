@@ -10,6 +10,7 @@ import { JuiceOverlay } from './components/JuiceOverlay';
 import { useAuthStore } from './store/useAuthStore';
 import { useUserStore } from './store/useUserStore';
 import { useHabitStore } from './store/useHabitStore';
+import { LoadingScreen } from './components/LoadingScreen';
 
 // Global Error Boundary to catch Firebase async crashes and React errors
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
@@ -93,10 +94,7 @@ function App() {
   }, [initUserListener, initDataSync, fbUser]);
 
   if (!initialized) {
-    return <div className="h-screen w-full bg-background flex flex-col items-center justify-center text-primary-container">
-      <span className="material-symbols-outlined animate-spin text-4xl">refresh</span>
-      <p className="font-mono text-xs uppercase tracking-widest mt-4">Initializing Security Protocol...</p>
-    </div>;
+    return <LoadingScreen />;
   }
 
   return (

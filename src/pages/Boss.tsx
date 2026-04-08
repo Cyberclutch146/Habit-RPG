@@ -2,6 +2,7 @@ import React from 'react';
 import { TopBar } from '../components/layout/TopBar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { useHabitStore } from '../store/useHabitStore';
+import { GlitchText } from '../components/animations/GlitchText';
 
 export const Boss: React.FC = () => {
   const getWeeklyProgress = useHabitStore(state => state.getWeeklyProgress);
@@ -27,7 +28,9 @@ export const Boss: React.FC = () => {
           {/* Boss Identity Header */}
           <div className="text-center space-y-2">
             <span className="font-label text-sm tracking-[0.2em] text-primary font-bold uppercase">Legendary Encounter</span>
-            <h2 className="text-5xl md:text-7xl font-headline font-black tracking-tighter uppercase text-on-surface">The Sloth Demon</h2>
+            <div className="flex justify-center w-full">
+              <GlitchText text="The Sloth Demon" className="text-5xl md:text-7xl font-headline font-black tracking-tighter uppercase text-on-surface" />
+            </div>
             <div className="flex items-center justify-center gap-2 text-neutral-500 font-label text-xs uppercase tracking-widest">
               <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>skull</span>
               WEEKLY BOSS

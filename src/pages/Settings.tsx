@@ -6,6 +6,7 @@ import { useUserStore } from '../store/useUserStore';
 import { UsersDB } from '../lib/db';
 import { m, AnimatePresence } from 'framer-motion';
 import { gameEngine } from '../lib/gameEngine';
+import { AnimatedText } from '../components/animations/AnimatedText';
 
 export const Settings: React.FC = () => {
   const logout = useAuthStore(state => state.logout);
@@ -65,7 +66,9 @@ export const Settings: React.FC = () => {
       
       <main className="pt-[100px] pb-32 px-6 w-full flex-1 overflow-y-auto space-y-6 custom-scrollbar">
         <div className="mb-8">
-          <m.h1 layoutId="page-title" className="text-3xl font-black tracking-tighter uppercase text-on-surface">Settings</m.h1>
+          <m.h1 layoutId="page-title" className="text-3xl font-black tracking-tighter uppercase text-on-surface">
+            <AnimatedText text="Settings" />
+          </m.h1>
           <p className="text-on-surface-variant font-body text-sm mt-1">Configure your HUD.</p>
         </div>
 

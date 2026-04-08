@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Habit } from '../../lib/db';
 import { useHabitStore } from '../../store/useHabitStore';
 import { m } from 'framer-motion';
+import { SpotlightCard } from '../animations/SpotlightCard';
 
 interface Props {
   habit: Habit;
@@ -29,16 +30,17 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   };
 
   return (
-    <m.div 
-      onClick={handleComplete}
-      layout
-      whileTap={!completed ? { scale: 0.96, rotate: -1 } : {}}
-      className={`group relative overflow-hidden rounded-2xl p-5 mb-4 border transition-colors duration-500 ${
-        completed 
-          ? "bg-surface-container border-outline/10 opacity-60 cursor-default" 
-          : "bg-surface-container-high border-outline-variant/30 hover:border-primary/50 cursor-pointer shadow-lg shadow-surface-dim/20"
-      }`}
-    >
+    <SpotlightCard className="mb-4 rounded-2xl">
+      <m.div 
+        onClick={handleComplete}
+        layout
+        whileTap={!completed ? { scale: 0.96, rotate: -1 } : {}}
+        className={`group relative overflow-hidden rounded-2xl p-5 transition-colors duration-500 border ${
+          completed 
+            ? "bg-surface-container border-outline/10 opacity-60 cursor-default" 
+            : "bg-surface-container-high border-outline-variant/30 hover:border-primary/50 cursor-pointer shadow-lg shadow-surface-dim/20"
+        }`}
+      >
       {/* Premium Spotlight / Glow internal effect */}
       {!completed && (
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[40px] group-hover:bg-primary/30 transition-all duration-700 pointer-events-none" />
@@ -76,5 +78,6 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
         </div>
       </div>
     </m.div>
+    </SpotlightCard>
   );
 };

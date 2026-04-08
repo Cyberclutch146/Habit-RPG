@@ -8,6 +8,7 @@ import { useUserStore } from '../store/useUserStore';
 import { FAB } from '../components/dashboard/FAB';
 import { AddHabitModal } from '../components/dashboard/AddHabitModal';
 import { gameEngine } from '../lib/gameEngine';
+import { AnimatedText } from '../components/animations/AnimatedText';
 
 export const Dashboard: React.FC = () => {
   const habits = useHabitStore(state => state.habits);
@@ -27,7 +28,9 @@ export const Dashboard: React.FC = () => {
 
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-black font-label tracking-[0.2em] text-primary uppercase drop-shadow-sm">Daily Quests</h2>
+            <h2 className="text-sm font-black font-label tracking-[0.2em] text-primary uppercase drop-shadow-sm">
+              <AnimatedText text="Daily Quests" />
+            </h2>
             <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Resets at midnight</span>
           </div>
           

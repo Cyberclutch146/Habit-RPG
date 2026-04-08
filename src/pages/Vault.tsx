@@ -2,6 +2,8 @@ import React from 'react';
 import { TopBar } from '../components/layout/TopBar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { useUserStore } from '../store/useUserStore';
+import { AnimatedText } from '../components/animations/AnimatedText';
+import { SpotlightCard } from '../components/animations/SpotlightCard';
 
 export const Vault: React.FC = () => {
   const user = useUserStore(state => state.user);
@@ -12,7 +14,9 @@ export const Vault: React.FC = () => {
       
       <main className="pt-20 pb-32 px-6 w-full flex-1 overflow-y-auto space-y-6 custom-scrollbar">
         <div className="mb-8">
-          <h1 className="text-3xl font-black tracking-tighter uppercase text-on-surface">The Vault</h1>
+          <h1 className="text-3xl font-black tracking-tighter uppercase text-on-surface">
+             <AnimatedText text="The Vault" />
+          </h1>
           <p className="text-on-surface-variant font-body text-sm mt-1">Your hard-earned relics and active multipliers.</p>
         </div>
 
@@ -52,14 +56,16 @@ export const Vault: React.FC = () => {
             {[1, 2].map(slot => {
               const isActive = (user?.streakShields || 0) >= slot;
               return (
-                <div key={slot} className={`aspect-square rounded-xl border-2 flex flex-col items-center justify-center gap-2 transition-all ${isActive ? 'bg-secondary/10 border-secondary/50 shadow-[0_0_15px_rgba(214,116,255,0.2)]' : 'bg-surface-container-lowest border-outline-variant/20 opacity-50'}`}>
-                  <span className={`material-symbols-outlined text-3xl ${isActive ? 'text-secondary' : 'text-outline-variant'}`} style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
-                    shield
-                  </span>
-                  <span className="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">
-                    {isActive ? "Ready" : "Empty"}
-                  </span>
-                </div>
+                <SpotlightCard key={slot} className="w-full h-full rounded-xl">
+                  <div className={`w-full h-full aspect-square rounded-xl border-2 flex flex-col items-center justify-center gap-2 transition-all ${isActive ? 'bg-secondary/10 border-secondary/50 shadow-[0_0_15px_rgba(214,116,255,0.2)]' : 'bg-surface-container-lowest border-outline-variant/20 opacity-50'}`}>
+                    <span className={`material-symbols-outlined text-3xl ${isActive ? 'text-secondary' : 'text-outline-variant'}`} style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+                      shield
+                    </span>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">
+                      {isActive ? "Ready" : "Empty"}
+                    </span>
+                  </div>
+                </SpotlightCard>
               )
             })}
           </div>
