@@ -26,10 +26,10 @@ export const StarBorder: React.FC<StarBorderProps> = ({
         }} 
       />
       {/* Inner Mask (to hide the center and only show the border) */}
-      <div className="absolute inset-[1px] rounded-2xl bg-surface-container-highest z-0" />
+      <div className="absolute inset-[1px] rounded-[inherit] bg-surface-container-highest z-0" />
       
       {/* Content wrapper */}
-      <div className="relative z-10 w-full h-full">
+      <div className="relative z-10 w-full h-full flex items-center justify-center flex-col">
         {children}
       </div>
     </Component>

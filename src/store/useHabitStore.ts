@@ -128,13 +128,21 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
 
     activeRequests.add(logId);
 
-    // -- 1. Optimistic UI Update --
+    // -- 1. Optimistic UI Update & Game Engine Math --
+    // Extract new combat math
+    const comboMult = gameEngine.calculateCombatMultiplier(user.streak, user.class || "none", habit.type);
+    const goldDrop = gameEngine.calculateGoldDrop(habit.xpReward, comboMult);
+    const { damage, isCritical } = gameEngine.calculateDamage(habit.xpReward, comboMult, user.equippedWeapon || null);
+
     const newLog: HabitLog = {
       id: logId,
       habitId,
       timestamp: new Date(), 
       completed: true,
       xpAwarded: habit.xpReward,
+      goldAwarded: goldDrop,
+      damageDealt: damage,
+      isCritical: isCritical,
       idempotencyKey: logId,
       source: "HABIT"
     };
@@ -145,18 +153,21 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
       Date.now(),
       user.streakShields || 0
     );
-    const leveledResult = gameEngine.evaluateLevelUp(user.level, user.xp, habit.xpReward);
+    // XP also multiplied by combo class
+    const finalXpGain = Math.floor(habit.xpReward * comboMult);
+    const leveledResult = gameEngine.evaluateLevelUp(user.level, user.xp, finalXpGain);
 
-    useUserStore.setState({
-      user: {
-        ...user,
-        xp: leveledResult.xp,
-        level: leveledResult.level,
-        streak: streakResult.streak,
-        streakShields: streakResult.shields,
-        lastCheckInDate: new Date() as any
-      }
-    });
+    const updatedUser = {
+      ...user,
+      xp: leveledResult.xp,
+      level: leveledResult.level,
+      streak: streakResult.streak,
+      streakShields: streakResult.shields,
+      gold: (user.gold || 0) + goldDrop,
+      lastCheckInDate: new Date() as any
+    };
+
+    useUserStore.setState({ user: updatedUser });
 
     set((state) => ({
       logs: [...state.logs.filter(l => l.id !== logId), newLog], // Merge filter to prevent duplicates
@@ -166,7 +177,13 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     // -- 2. Server Sync (Non-blocking) --
     Promise.all([
       habitsService.createLog(user.id, newLog),
-      usersService.updateUserStats(user.id, leveledResult.xp, leveledResult.level, streakResult.streak, streakResult.shields)
+      usersService.updateUserStats(user.id, {
+        xp: leveledResult.xp,
+        level: leveledResult.level,
+        streak: streakResult.streak,
+        streakShields: streakResult.shields,
+        gold: updatedUser.gold
+      })
     ]).then(() => {
       set(state => {
         const nextStatus = { ...state.syncStatus };
@@ -174,9 +191,9 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
         return { syncStatus: nextStatus };
       });
 
-      trackEvent("habit_completed", { habitId, xpReward: habit.xpReward });
+      trackEvent("habit_completed", { habitId, xpReward: finalXpGain, damage, isCritical });
       if (clickEvent) {
-         useJuiceStore.getState().spawnFloatingXP(habit.xpReward, clickEvent.clientX, clickEvent.clientY);
+         useJuiceStore.getState().spawnFloatingXP(finalXpGain, clickEvent.clientX, clickEvent.clientY);
       }
       
       if (leveledResult.didLevelUp) {

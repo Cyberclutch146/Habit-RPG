@@ -5,16 +5,11 @@ export const usersService = {
   /**
    * Batch updates user level progression and streak stats.
    */
-  updateUserStats: async (userId: string, xp: number, level: number, streak: number, streakShields?: number): Promise<void> => {
+  updateUserStats: async (userId: string, updates: Partial<any>): Promise<void> => {
     const payload: any = {
-      xp,
-      level,
-      streak,
-      lastCheckInDate: serverTimestamp()
+      ...updates,
+      lastCheckInDate: serverTimestamp() // Always ping standard checkin date
     };
-    if (streakShields !== undefined) {
-       payload.streakShields = streakShields;
-    }
     
     await UsersDB.update(userId, payload);
   }

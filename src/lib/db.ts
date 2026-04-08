@@ -20,6 +20,11 @@ export const userSchema = z.object({
   email: z.string().email(),
   level: z.number().min(1),
   xp: z.number().min(0),
+  hp: z.number().min(0).max(100).optional().default(100),
+  maxHp: z.number().min(100).optional().default(100),
+  gold: z.number().min(0).optional().default(0),
+  class: z.enum(["none", "warrior", "mage", "rogue"]).optional().default("none"),
+  equippedWeapon: z.string().nullable().optional(),
   streak: z.number().min(0),
   lastCheckInDate: z.any().nullable(), // ServerTimestamp or null
   hardMode: z.boolean().optional(),
@@ -45,6 +50,9 @@ export const logSchema = z.object({
   timestamp: z.any(), // ServerTimestamp
   completed: z.boolean(),
   xpAwarded: z.number().optional(),
+  goldAwarded: z.number().optional(),
+  damageDealt: z.number().optional(),
+  isCritical: z.boolean().optional(),
   idempotencyKey: z.string().optional(),
   source: z.enum(["HABIT", "BOSS", "BONUS"]).optional(),
 });
