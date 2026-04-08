@@ -33,6 +33,10 @@ export const Login: React.FC = () => {
           email: result.user.email || '',
           level: 1,
           xp: 0,
+          hp: 100,
+          maxHp: 100,
+          gold: 0,
+          class: 'none',
           streak: 0,
           lastCheckInDate: null
         });
@@ -56,13 +60,17 @@ export const Login: React.FC = () => {
     try {
       if (isRegister) {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        // Initialize user doc
+        // Initialize user doc with RPG defaults
         await UsersDB.create(cred.user.uid, {
           id: cred.user.uid,
           name: name || 'Commander',
           email,
           level: 1,
           xp: 0,
+          hp: 100,
+          maxHp: 100,
+          gold: 0,
+          class: 'none',
           streak: 0,
           lastCheckInDate: null
         });

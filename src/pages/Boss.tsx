@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TopBar } from '../components/layout/TopBar';
 import { BottomNav } from '../components/layout/BottomNav';
 import { useHabitStore } from '../store/useHabitStore';
+import { useUserStore } from '../store/useUserStore';
 import { GlitchText } from '../components/animations/GlitchText';
 import { AuroraBackground } from '../components/animations/AuroraBackground';
 import { StarBorder } from '../components/animations/StarBorder';
@@ -10,19 +11,26 @@ import { BOSS_ROSTER } from '../lib/gameEngine';
 
 export const Boss: React.FC = () => {
   const logs = useHabitStore(state => state.logs);
+  const user = useUserStore(state => state.user);
+  const [showRoster, setShowRoster] = useState(false);
   
-  // Calculate active boss based on total damage across all habits completed
-  const { currentBoss, bossDamagePercent, activeHp, totalDamage } = useMemo(() => {
+  // Calculate active boss and full progression
+  const { currentBoss, currentBossIndex, bossDamagePercent, activeHp, totalDamage, defeatedCount } = useMemo(() => {
     const totalDmg = logs.reduce((sum, log) => sum + (log.damageDealt || 10), 0);
     
     let cumulativeHp = 0;
-    let activeBoss = BOSS_ROSTER[BOSS_ROSTER.length - 1]; // Default to last
+    let activeBoss = BOSS_ROSTER[BOSS_ROSTER.length - 1];
     let currentBossStartHp = 0;
+    let bossIndex = BOSS_ROSTER.length - 1;
+    let deflated = 0;
 
-    for (const boss of BOSS_ROSTER) {
+    for (let i = 0; i < BOSS_ROSTER.length; i++) {
+      const boss = BOSS_ROSTER[i];
       if (totalDmg < cumulativeHp + boss.maxHp) {
         activeBoss = boss;
         currentBossStartHp = cumulativeHp;
+        bossIndex = i;
+        deflated = i;
         break;
       }
       cumulativeHp += boss.maxHp;
@@ -33,10 +41,16 @@ export const Boss: React.FC = () => {
     
     return {
       currentBoss: activeBoss,
+      currentBossIndex: bossIndex,
       bossDamagePercent: progressPercent,
       activeHp: damageOnCurrentBoss,
-      totalDamage: totalDmg
+      totalDamage: totalDmg,
+      defeatedCount: deflated
     };
+  }, [logs]);
+
+  const recentCrits = useMemo(() => {
+    return logs.filter(l => l.isCritical).slice(-3);
   }, [logs]);
 
   return (
@@ -52,14 +66,24 @@ export const Boss: React.FC = () => {
           
           {/* Boss Identity Header */}
           <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <span className="bg-primary-container/20 text-primary text-[9px] border border-primary/20 px-3 py-1 rounded-full font-black uppercase tracking-widest">
+                Boss {currentBossIndex + 1} of {BOSS_ROSTER.length}
+              </span>
+              {defeatedCount > 0 && (
+                <span className="bg-amber-500/10 text-amber-500 text-[9px] border border-amber-500/30 px-3 py-1 rounded-full font-black uppercase tracking-widest">
+                  {defeatedCount} Vanquished
+                </span>
+              )}
+            </div>
             <span className="font-label text-sm tracking-[0.2em] text-primary font-bold uppercase">Epic Encounter</span>
             <div className="flex justify-center w-full">
-              <GlitchText text={currentBoss.name} className="text-4xl md:text-6xl font-headline font-black tracking-tighter uppercase text-on-surface" />
+              <GlitchText text={currentBoss.name} className="text-3xl md:text-5xl font-headline font-black tracking-tighter uppercase text-on-surface" />
             </div>
             <div className="flex items-center justify-center gap-2 text-neutral-500 font-label text-xs uppercase tracking-widest">
-              <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>swords</span>
+              <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
               VULNERABILITY: {currentBoss.weakness.toUpperCase()} (+50% DMG)
-              <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>swords</span>
+              <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
             </div>
           </div>
 
@@ -75,13 +99,26 @@ export const Boss: React.FC = () => {
                     src={currentBoss.imagePath}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container-high via-transparent to-transparent"></div>
-                  <div className="absolute inset-0 border-[4px] border-primary/20 opacity-40 mix-blend-overlay"></div>
+                  
+                  {/* HP badge */}
+                  <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm border border-red-500/50 px-3 py-1.5 rounded-lg">
+                    <p className="text-red-400 text-[10px] font-black uppercase tracking-widest">Boss HP</p>
+                    <p className="text-white font-black text-sm">{Math.max(0, currentBoss.maxHp - activeHp).toLocaleString()} / {currentBoss.maxHp.toLocaleString()}</p>
+                  </div>
+
+                  {/* Crit badge */}
+                  {recentCrits.length > 0 && (
+                    <div className="absolute top-4 right-4 bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/50 px-3 py-1.5 rounded-lg">
+                      <p className="text-yellow-400 text-[9px] font-black uppercase tracking-widest">💥 Crit Hits</p>
+                      <p className="text-white font-black text-sm">{recentCrits.length}</p>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="p-6 md:p-8 space-y-6">
                   <div className="space-y-3">
                     <div className="flex justify-between items-end">
-                      <div className="font-label text-xs tracking-widest text-secondary uppercase">HP DELETED: {activeHp}/{currentBoss.maxHp}</div>
+                      <div className="font-label text-xs tracking-widest text-secondary uppercase">HP DELETED: {activeHp.toLocaleString()}/{currentBoss.maxHp.toLocaleString()}</div>
                       <div className="text-2xl font-black italic text-primary-container font-headline">
                         <DecryptedText text={`${bossDamagePercent}%`} speed={80} />
                       </div>
@@ -97,23 +134,104 @@ export const Boss: React.FC = () => {
             </StarBorder>
           </div>
 
-          {/* Rewards Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-2 hover:bg-surface-container-high transition-colors shadow-lg">
-              <span className="material-symbols-outlined text-primary text-4xl animate-bounce" style={{ fontVariationSettings: "'FILL' 1" }}>swords</span>
+          {/* Combat Stats Grid */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-1 hover:bg-surface-container-high transition-colors shadow-lg">
+              <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>swords</span>
+              <div className="text-xl font-black text-on-surface">{totalDamage.toLocaleString()}</div>
+              <div className="font-label text-[9px] tracking-widest text-neutral-500 uppercase">Lifetime DMG</div>
+            </div>
+            <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-1 hover:bg-surface-container-high transition-colors shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-12 h-12 bg-amber-500/10 rounded-full blur-xl animate-pulse"></div>
+              <span className="material-symbols-outlined text-amber-500 text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+              <div className="text-sm font-black text-on-surface uppercase tracking-tight">{currentBoss.title}</div>
+              <div className="font-label text-[9px] tracking-widest text-neutral-500 uppercase">On Defeat</div>
+            </div>
+            <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-1 hover:bg-surface-container-high transition-colors shadow-lg">
+              <span className="material-symbols-outlined text-secondary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              <div className="text-xl font-black text-on-surface">{logs.filter(l => l.isCritical).length}</div>
+              <div className="font-label text-[9px] tracking-widest text-neutral-500 uppercase">Total Crits</div>
+            </div>
+          </div>
+
+          {/* Class Bonus Banner */}
+          {user?.class && user.class !== 'none' && (
+            <div className={`p-4 rounded-xl border flex items-center gap-4 ${
+              (user.class === 'warrior' && currentBoss.weakness === 'Workout') ||
+              (user.class === 'mage' && currentBoss.weakness === 'Custom') ||
+              (user.class === 'rogue' && currentBoss.weakness === 'Steps')
+                ? 'bg-green-900/30 border-green-500/40 shadow-[0_0_20px_rgba(34,197,94,0.15)]'
+                : 'bg-surface-container-low border-outline-variant/10'
+            }`}>
+              <span className="material-symbols-outlined text-2xl text-green-400">military_tech</span>
               <div>
-                <div className="text-2xl font-black text-on-surface">{totalDamage}</div>
-                <div className="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Lifetime Damage</div>
+                <p className="font-black text-on-surface uppercase text-xs tracking-widest">
+                  {user.class.toUpperCase()} Class Active
+                </p>
+                <p className="text-[10px] text-secondary mt-0.5">
+                  {(user.class === 'warrior' && currentBoss.weakness === 'Workout') ||
+                   (user.class === 'mage' && currentBoss.weakness === 'Custom') ||
+                   (user.class === 'rogue' && currentBoss.weakness === 'Steps')
+                    ? '⚡ CLASS BONUS APPLIES — You deal +50% damage to this boss!'
+                    : 'Class bonus does not apply to this boss\'s weakness.'}
+                </p>
               </div>
             </div>
-            <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex flex-col items-center justify-center text-center space-y-2 hover:bg-surface-container-high transition-colors shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rounded-full blur-xl animate-pulse"></div>
-              <span className="material-symbols-outlined text-amber-500 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-              <div>
-                <div className="text-sm font-black text-on-surface uppercase tracking-tight">{currentBoss.title}</div>
-                <div className="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Defeat To Unlock</div>
+          )}
+
+          {/* Boss Roster Preview */}
+          <div className="bg-surface-container rounded-xl overflow-hidden border border-outline-variant/10 shadow-xl">
+            <button
+              onClick={() => setShowRoster(!showRoster)}
+              className="w-full flex items-center justify-between p-5 text-left hover:bg-surface-container-high transition-colors"
+            >
+              <h2 className="text-sm font-black text-on-surface uppercase tracking-widest flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-sm">format_list_bulleted</span>
+                Boss Gauntlet — {BOSS_ROSTER.length} Enemies
+              </h2>
+              <span className="material-symbols-outlined text-secondary transition-transform" style={{ transform: showRoster ? 'rotate(180deg)' : 'none' }}>
+                expand_more
+              </span>
+            </button>
+
+            {showRoster && (
+              <div className="px-5 pb-5 space-y-2">
+                {BOSS_ROSTER.map((boss, idx) => {
+                  const isDefeated = idx < currentBossIndex;
+                  const isActive = idx === currentBossIndex;
+                  return (
+                    <div
+                      key={boss.id}
+                      className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+                        isActive
+                          ? 'bg-primary/10 border-primary/30 shadow-[0_0_10px_rgba(209,54,57,0.15)]'
+                          : isDefeated
+                          ? 'bg-surface-container-lowest border-outline-variant/5 opacity-60'
+                          : 'bg-surface-container-low border-outline-variant/10'
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${
+                        isDefeated ? 'bg-green-900/40 text-green-400' : isActive ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container text-secondary'
+                      }`}>
+                        {isDefeated ? '✓' : idx + 1}
+                      </div>
+                      <div className="flex-1">
+                        <p className={`font-black text-xs uppercase tracking-tight ${isActive ? 'text-on-surface' : 'text-secondary'}`}>{boss.name}</p>
+                        <p className="text-[9px] text-outline font-mono uppercase tracking-widest">
+                          {boss.maxHp.toLocaleString()} HP · Weak to {boss.weakness}
+                        </p>
+                      </div>
+                      {isActive && (
+                        <span className="text-[9px] font-black text-primary uppercase tracking-widest animate-pulse">FIGHTING</span>
+                      )}
+                      {isDefeated && (
+                        <span className="text-[9px] font-black text-green-400 uppercase tracking-widest">SLAIN</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
           </div>
 
         </div>

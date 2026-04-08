@@ -162,7 +162,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_1",
     name: "The Sloth Demon",
     title: "SLOTH SLAYER",
-    imagePath: "/boss.png", // Using the existing image
+    imagePath: "/boss.png",
     maxHp: 2000,
     weakness: "Workout",
     themeColor: "rgba(255,100,100,0.8)"
@@ -171,7 +171,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_2",
     name: "The Procrastination Dragon",
     title: "DRAGON BANE",
-    imagePath: "/boss.png", // Fallback to existing until assets provided
+    imagePath: "/boss.png",
     maxHp: 5000,
     weakness: "Custom",
     themeColor: "rgba(100,200,255,0.8)"
@@ -193,5 +193,33 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     maxHp: 4000,
     weakness: "Steps",
     themeColor: "rgba(100,255,100,0.8)"
+  },
+  {
+    id: "boss_5",
+    name: "The Void Titan",
+    title: "VOID BREAKER",
+    imagePath: "/boss.png",
+    maxHp: 7500,
+    weakness: "Workout",
+    themeColor: "rgba(180,100,255,0.8)"
+  },
+  {
+    id: "boss_6",
+    name: "Chronophage — Devourer of Time",
+    title: "TIME LORD",
+    imagePath: "/boss.png",
+    maxHp: 10000,
+    weakness: "Custom",
+    themeColor: "rgba(255,215,0,0.8)"
+  },
+  {
+    id: "boss_7",
+    name: "The Eternal Spectral King",
+    title: "APEX LEGEND",
+    imagePath: "/boss.png",
+    maxHp: 20000,
+    weakness: "Steps",
+    themeColor: "rgba(255,80,80,0.8)"
   }
 ];
+
