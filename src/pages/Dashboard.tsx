@@ -16,6 +16,7 @@ export const Dashboard: React.FC = () => {
   const getTodayCompletedHabits = useHabitStore(state => state.getTodayCompletedHabits);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useUserStore(state => state.user);
+  const logs = useHabitStore(state => state.logs); // Subscribe to re-render
   
   const completedIds = getTodayCompletedHabits();
 
@@ -45,13 +46,35 @@ export const Dashboard: React.FC = () => {
                   No quests active. Tap + to begin your journey.
                 </div>
               ) : (
-                habits.map(habit => (
-                  <QuestCard 
-                    key={habit.id} 
-                    habit={habit} 
-                    completed={completedIds.includes(habit.id)} 
-                  />
-                ))
+                <>
+                  <div className="space-y-4">
+                    {habits.filter(h => !completedIds.includes(h.id)).map(habit => (
+                      <QuestCard 
+                        key={habit.id} 
+                        habit={habit} 
+                        completed={false} 
+                      />
+                    ))}
+                    {habits.filter(h => !completedIds.includes(h.id)).length === 0 && (
+                      <div className="text-center p-6 bg-surface-container border border-outline-variant/20 rounded-2xl text-on-surface-variant font-medium text-xs uppercase tracking-widest">
+                        All Quests Completed!
+                      </div>
+                    )}
+                  </div>
+
+                  {habits.filter(h => completedIds.includes(h.id)).length > 0 && (
+                    <div className="mt-8 space-y-4">
+                      <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-2">Completed Quests</h3>
+                      {habits.filter(h => completedIds.includes(h.id)).map(habit => (
+                        <QuestCard 
+                          key={habit.id} 
+                          habit={habit} 
+                          completed={true} 
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
               )
             )}
           </div>

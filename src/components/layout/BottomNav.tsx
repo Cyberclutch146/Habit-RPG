@@ -23,17 +23,22 @@ export const BottomNav: React.FC = () => {
       
       <NavLink 
         to="/boss"
-        className="flex flex-col items-center justify-center outline-none -translate-y-4"
+        className="flex flex-col items-center justify-center outline-none"
       >
         {({ isActive }) => (
-          <Magnet strength={30}>
-            <m.div whileTap={{ scale: 0.9 }} className={`flex flex-col items-center justify-center rounded-2xl w-14 h-14 border transition-all duration-300 ${isActive ? "bg-primary text-on-primary border-primary shadow-[0_8px_20px_rgba(var(--color-primary),0.4)]" : "bg-surface-container-highest text-on-surface-variant border-transparent shadow-md"}`}>
+          <Magnet strength={20}>
+            <m.div whileTap={{ scale: 0.9 }} className={`flex flex-col items-center transition-colors duration-300 ${isActive ? "text-primary" : "text-on-surface-variant hover:text-primary/80"}`}>
               {isActive ? (
-                <StarBorder speed="2s" color="rgba(255,255,255,0.8)" className="w-full h-full flex items-center justify-center bg-primary">
-                  <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>castle</span>
-                </StarBorder>
+                <div className="flex flex-col items-center relative">
+                  <span className="absolute inset-0 bg-primary/20 blur-md rounded-full"></span>
+                  <span className="material-symbols-outlined text-[24px] drop-shadow-[0_0_8px_rgba(var(--color-primary),0.5)]" style={{ fontVariationSettings: "'FILL' 1" }}>castle</span>
+                  <span className="font-label text-[10px] font-bold uppercase tracking-widest mt-1">Boss</span>
+                </div>
               ) : (
-                <span className="material-symbols-outlined text-[28px]">castle</span>
+                <>
+                  <span className="material-symbols-outlined text-[24px]">castle</span>
+                  <span className="font-label text-[10px] font-bold uppercase tracking-widest mt-1">Boss</span>
+                </>
               )}
             </m.div>
           </Magnet>

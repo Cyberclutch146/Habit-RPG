@@ -32,13 +32,11 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   return (
     <SpotlightCard className="mb-4 rounded-2xl">
       <m.div 
-        onClick={handleComplete}
         layout
-        whileTap={!completed ? { scale: 0.96, rotate: -1 } : {}}
         className={`group relative overflow-hidden rounded-2xl p-5 transition-colors duration-500 border ${
           completed 
-            ? "bg-surface-container border-outline/10 opacity-60 cursor-default" 
-            : "bg-surface-container-high border-outline-variant/30 hover:border-primary/50 cursor-pointer shadow-lg shadow-surface-dim/20"
+            ? "bg-surface-container border-outline/10 opacity-60" 
+            : "bg-surface-container-high border-outline-variant/30 hover:border-primary/50 shadow-lg shadow-surface-dim/20"
         }`}
       >
       {/* Premium Spotlight / Glow internal effect */}
@@ -58,23 +56,25 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
       </div>
       
       <div className="relative z-10">
-        <m.h3 layout="position" className={`font-bold text-lg mb-1 leading-tight tracking-tight transition-colors duration-500 ${completed ? "text-on-surface-variant line-through decoration-outline/50" : "text-on-surface group-hover:text-primary"}`}>
+        <m.h3 layout="position" className={`font-bold text-lg mb-1 leading-tight tracking-tight mt-2 transition-colors duration-500 ${completed ? "text-on-surface-variant line-through decoration-outline/50" : "text-on-surface group-hover:text-primary"}`}>
           {habit.title}
         </m.h3>
-        <p className="text-[10px] text-on-surface-variant mb-5 font-bold tracking-widest uppercase">{habit.difficulty}</p>
+        <p className="text-[10px] text-on-surface-variant mb-4 font-bold tracking-widest uppercase">{habit.difficulty}</p>
         
-        <div className="flex items-center gap-3 bg-surface-container-lowest p-1.5 rounded-full border border-outline-variant/10">
-          <div className="flex-grow h-[4px] bg-surface-container-highest rounded-full overflow-hidden ml-1 relative">
-            <m.div 
-              initial={false}
-              animate={{ width: completed ? "100%" : "0%" }}
-              transition={{ duration: 0.6, ease: "circOut" }}
-              className="absolute top-0 left-0 bottom-0 bg-primary shadow-[0_0_12px_rgba(var(--color-primary),0.8)]" 
-            />
+        <div className="flex items-center justify-between gap-3 bg-surface-container-lowest p-1.5 rounded-full border border-outline-variant/10">
+          <div className="flex items-center w-full px-2">
+			      <span className={`text-[10px] font-bold uppercase tracking-widest transition-colors duration-500 ${completed ? "text-primary" : "text-on-surface-variant"}`}>
+              {completed ? "Done" : "Todo"}
+            </span>
           </div>
-          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 transition-colors duration-500 ${completed ? "text-primary" : "text-on-surface-variant"}`}>
-            {completed ? "Done" : "Todo"}
-          </span>
+          <button
+            onClick={handleComplete}
+            disabled={completed || isClicking}
+            className={`flex items-center shrink-0 gap-1 px-4 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest transition-colors active:scale-95 duration-150 ${completed ? "bg-primary/20 text-primary cursor-auto" : "bg-primary text-on-primary hover:bg-primary-container shadow-[0_4px_12px_rgba(var(--color-primary),0.3)]"}`}
+          >
+            {completed ? "Completed" : "Complete Quest"}
+            <span className="material-symbols-outlined text-[14px]">done</span>
+          </button>
         </div>
       </div>
     </m.div>

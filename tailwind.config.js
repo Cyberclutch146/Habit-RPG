@@ -57,9 +57,9 @@ export default {
         "surface-variant": "var(--color-surface-variant)"
       },
       fontFamily: {
-        headline: ["Inter", "sans-serif"],
-        body: ["Inter", "sans-serif"],
-        label: ["Inter", "sans-serif"]
+        headline: ["Space Grotesk", "sans-serif"],
+        body: ["Outfit", "sans-serif"],
+        label: ["Space Grotesk", "sans-serif"]
       }
     },
   },

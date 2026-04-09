@@ -147,7 +147,10 @@ export const Vault: React.FC = () => {
             <h1 className="text-3xl font-black tracking-tighter uppercase text-on-surface">
                <AnimatedText text="The Vault" />
             </h1>
-            <p className="text-on-surface-variant font-body text-sm mt-1">Spend your hard-earned gold wisely.</p>
+            <p className="text-on-surface-variant font-body text-sm mt-2">
+              <strong className="text-amber-500">Gold Coins</strong> are earned by completing daily quests and boss challenges. 
+              Spend them in the <strong className="text-primary">Black Market</strong> below to buy health potions, shields, and powerful upgrades!
+            </p>
           </div>
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-2 bg-surface-container-high py-2 px-4 rounded-xl shadow-lg border border-amber-500/30">

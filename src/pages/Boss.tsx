@@ -13,6 +13,7 @@ export const Boss: React.FC = () => {
   const logs = useHabitStore(state => state.logs);
   const user = useUserStore(state => state.user);
   const [showRoster, setShowRoster] = useState(false);
+  const [previewBossId, setPreviewBossId] = useState<string | null>(null);
   
   // Calculate active boss and full progression
   const { currentBoss, currentBossIndex, bossDamagePercent, activeHp, totalDamage, defeatedCount } = useMemo(() => {
@@ -185,7 +186,7 @@ export const Boss: React.FC = () => {
               onClick={() => setShowRoster(!showRoster)}
               className="w-full flex items-center justify-between p-5 text-left hover:bg-surface-container-high transition-colors"
             >
-              <h2 className="text-sm font-black text-on-surface uppercase tracking-widest flex items-center gap-2">
+              <h2 className="text-sm font-black text-on-surface uppercase tracking-widest flex items-center gap-2 font-headline">
                 <span className="material-symbols-outlined text-primary text-sm">format_list_bulleted</span>
                 Boss Gauntlet — {BOSS_ROSTER.length} Enemies
               </h2>
@@ -199,33 +200,68 @@ export const Boss: React.FC = () => {
                 {BOSS_ROSTER.map((boss, idx) => {
                   const isDefeated = idx < currentBossIndex;
                   const isActive = idx === currentBossIndex;
+                  const isUpcoming = idx > currentBossIndex;
+                  const isPreviewing = previewBossId === boss.id;
+
                   return (
-                    <div
-                      key={boss.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                        isActive
-                          ? 'bg-primary/10 border-primary/30 shadow-[0_0_10px_rgba(209,54,57,0.15)]'
-                          : isDefeated
-                          ? 'bg-surface-container-lowest border-outline-variant/5 opacity-60'
-                          : 'bg-surface-container-low border-outline-variant/10'
-                      }`}
-                    >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${
-                        isDefeated ? 'bg-green-900/40 text-green-400' : isActive ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container text-secondary'
-                      }`}>
-                        {isDefeated ? '✓' : idx + 1}
-                      </div>
-                      <div className="flex-1">
-                        <p className={`font-black text-xs uppercase tracking-tight ${isActive ? 'text-on-surface' : 'text-secondary'}`}>{boss.name}</p>
-                        <p className="text-[9px] text-outline font-mono uppercase tracking-widest">
-                          {boss.maxHp.toLocaleString()} HP · Weak to {boss.weakness}
-                        </p>
-                      </div>
-                      {isActive && (
-                        <span className="text-[9px] font-black text-primary uppercase tracking-widest animate-pulse">FIGHTING</span>
-                      )}
-                      {isDefeated && (
-                        <span className="text-[9px] font-black text-green-400 uppercase tracking-widest">SLAIN</span>
+                    <div key={boss.id} className="flex flex-col gap-1">
+                      <button
+                        onClick={() => {
+                          if (!isActive) {
+                            setPreviewBossId(isPreviewing ? null : boss.id);
+                          }
+                        }}
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
+                          isActive
+                            ? 'bg-primary/10 border-primary/30 shadow-[0_0_10px_rgba(209,54,57,0.15)] cursor-default'
+                            : isDefeated
+                            ? 'bg-surface-container-lowest border-outline-variant/5 opacity-60 hover:opacity-100 hover:bg-surface-container-low cursor-pointer'
+                            : 'bg-surface-container-low border-outline-variant/10 hover:border-outline-variant/30 cursor-pointer'
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-full flex shrink-0 items-center justify-center text-xs font-black ${
+                          isDefeated ? 'bg-green-900/40 text-green-400' : isActive ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container text-secondary'
+                        }`}>
+                          {isDefeated ? '✓' : idx + 1}
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                          <p className={`font-black text-xs uppercase tracking-tight truncate font-headline ${isActive ? 'text-on-surface' : 'text-secondary'}`}>{boss.name}</p>
+                          <p className="text-[9px] text-outline font-mono uppercase tracking-widest truncate">
+                            {boss.maxHp.toLocaleString()} HP · Weak to {boss.weakness}
+                          </p>
+                        </div>
+                        {isActive && (
+                          <span className="text-[9px] font-black text-primary uppercase tracking-widest animate-pulse shrink-0">FIGHTING</span>
+                        )}
+                        {isDefeated && !isPreviewing && (
+                          <span className="text-[9px] font-black text-green-400 uppercase tracking-widest shrink-0">SLAIN</span>
+                        )}
+                        {!isActive && !isDefeated && !isPreviewing && (
+                          <span className="material-symbols-outlined text-secondary text-sm shrink-0">visibility</span>
+                        )}
+                        {isPreviewing && (
+                          <span className="material-symbols-outlined text-primary text-sm shrink-0">visibility_off</span>
+                        )}
+                      </button>
+                      
+                      {/* Preview Panel */}
+                      {isPreviewing && (
+                        <div className="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-lg p-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                           <div className="aspect-[21/9] relative rounded-md overflow-hidden bg-black flex items-center justify-center group/preview">
+                             <img 
+                               src={boss.imagePath} 
+                               alt={boss.name}
+                               className={`w-full h-full object-cover transition-all duration-1000 ${isUpcoming ? "grayscale opacity-30 group-hover/preview:opacity-60 blur-sm group-hover/preview:blur-0" : "opacity-80"}`}
+                             />
+                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                               <p className="text-white font-headline text-lg uppercase font-black tracking-tight">{boss.name}</p>
+                               <span className="text-[10px] text-primary uppercase font-bold tracking-widest bg-primary/20 self-start px-2 py-0.5 rounded border border-primary/30 mt-1">
+                                 {boss.title}
+                               </span>
+                             </div>
+                             {isUpcoming && <div className="absolute inset-0 flex items-center justify-center font-headline text-white/40 tracking-[0.3em] font-black uppercase text-xl rotate-[-5deg] mix-blend-overlay">UNDISCOVERED</div>}
+                           </div>
+                        </div>
                       )}
                     </div>
                   );
