@@ -132,9 +132,6 @@ export const gameEngine = {
     return { damage, isCritical };
   },
 
-  /**
-   * Computes HP penalty if a Daily Habit is missed.
-   */
   evaluateMissedHabitHpPenalty: (difficulty: "Easy" | "Medium" | "Hard"): number => {
     switch(difficulty) {
       case "Easy": return 5;
@@ -142,6 +139,66 @@ export const gameEngine = {
       case "Hard": return 30;
       default: return 10;
     }
+  },
+
+  /**
+   * Checks if a boss was defeated during this attack
+   */
+  checkBossDefeats: (previousTotalDmg: number, newTotalDmg: number): RPG_Boss[] => {
+    let cumulativeHp = 0;
+    const defeated: RPG_Boss[] = [];
+    
+    for (let i = 0; i < BOSS_ROSTER.length; i++) {
+        const boss = BOSS_ROSTER[i];
+        cumulativeHp += boss.maxHp;
+        
+        // If the old damage was below the threshold, but new damage is above or equal, we just defeated it!
+        if (previousTotalDmg < cumulativeHp && newTotalDmg >= cumulativeHp) {
+            defeated.push(boss);
+        }
+    }
+    return defeated;
+  },
+
+  /**
+   * Generates a random piece of loot
+   */
+  generateLoot: (bossLevel: number) => {
+    const types = ["weapon", "armor", "artifact"] as const;
+    const type = types[Math.floor(Math.random() * types.length)];
+    
+    const rarities = ["common", "rare", "epic", "legendary"] as const;
+    const randomF = Math.random();
+    let rarity: "common" | "rare" | "epic" | "legendary" = "common";
+    if (randomF > 0.95) rarity = "legendary";
+    else if (randomF > 0.8) rarity = "epic";
+    else if (randomF > 0.5) rarity = "rare";
+
+    const baseNames = {
+        weapon: ["Sword", "Dagger", "Staff", "Bow", "Axe", "Scythe"],
+        armor: ["Chestplate", "Robes", "Leather Vest", "Cloak", "Tunic"],
+        artifact: ["Ring", "Amulet", "Crown", "Lantern", "Gem"]
+    };
+
+    const prefixes = ["Flaming", "Abyssal", "Radiant", "Cursed", "Ethereal", "Hollow", "Celestial", "Corrupted"];
+    
+    const name = `${prefixes[Math.floor(Math.random() * prefixes.length)]} ${
+        baseNames[type][Math.floor(Math.random() * baseNames[type].length)]
+    }`;
+
+    // Generate stat bonus (just flavour string for now)
+    const multiplier = rarity === "legendary" ? 4 : rarity === "epic" ? 3 : rarity === "rare" ? 2 : 1;
+    const buffs = ["crit", "hp", "xp", "gold"];
+    const buff = buffs[Math.floor(Math.random() * buffs.length)];
+    const val = Math.floor(Math.random() * 5 * multiplier) + 1;
+
+    return {
+        id: `loot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        type,
+        name,
+        rarity,
+        statBonus: `${buff}+${val}%`
+    };
   }
 };
 

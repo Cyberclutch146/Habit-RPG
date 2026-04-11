@@ -112,6 +112,48 @@
     --color-secondary-fixed-dim: #c7c6c6;
     --color-surface-variant: #353534;
   }
+
+  .crimson {
+    --color-on-background: #ffe5e5;
+    --color-background: #0f0000;
+    --color-surface-container: #1b0000;
+    --color-surface-container-high: #2d0000;
+    --color-surface-container-highest: #420000;
+    --color-primary: #ff3333;
+    --color-primary-container: #4c0000;
+    --color-on-primary-container: #ff9999;
+    --color-secondary: #ff8080;
+    --color-error: #ff1a1a;
+    --color-outline-variant: #660000;
+  }
+
+  .abyssal {
+    --color-on-background: #e0f2fe;
+    --color-background: #000913;
+    --color-surface-container: #001224;
+    --color-surface-container-high: #001f3f;
+    --color-surface-container-highest: #002d5c;
+    --color-primary: #38bdf8;
+    --color-primary-container: #0c4a6e;
+    --color-on-primary-container: #bae6fd;
+    --color-secondary: #7dd3fc;
+    --color-error: #ef4444;
+    --color-outline-variant: #003a7a;
+  }
+
+  .cyberpunk {
+    --color-on-background: #fdf5ff;
+    --color-background: #080014;
+    --color-surface-container: #12002b;
+    --color-surface-container-high: #1e0047;
+    --color-surface-container-highest: #2b0066;
+    --color-primary: #ec4899;
+    --color-primary-container: #831843;
+    --color-on-primary-container: #fbcfe8;
+    --color-secondary: #eab308;
+    --color-error: #ef4444;
+    --color-outline-variant: #4c1d95;
+  }
 }
 
 @layer utilities {

@@ -3,12 +3,16 @@ import { NavLink } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Magnet } from '../animations/Magnet';
 import { StarBorder } from '../animations/StarBorder';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 export const BottomNav: React.FC = () => {
+  const { playClick } = useSoundEffects();
+
   return (
     <nav className="sticky bottom-0 w-full z-50 mt-auto flex justify-around items-center px-4 pt-3 pb-8 bg-surface-container-high/90 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-10px_40px_rgba(0,0,0,0.2)] rounded-t-3xl">
       <NavLink 
         to="/dashboard"
+        onClick={() => playClick()}
         className="flex flex-col items-center justify-center outline-none"
       >
         {({ isActive }) => (
@@ -23,6 +27,7 @@ export const BottomNav: React.FC = () => {
       
       <NavLink 
         to="/boss"
+        onClick={() => playClick()}
         className="flex flex-col items-center justify-center outline-none"
       >
         {({ isActive }) => (
@@ -47,6 +52,7 @@ export const BottomNav: React.FC = () => {
 
       <NavLink 
         to="/stats"
+        onClick={() => playClick()}
         className="flex flex-col items-center justify-center outline-none"
       >
         {({ isActive }) => (
@@ -61,6 +67,7 @@ export const BottomNav: React.FC = () => {
 
       <NavLink 
         to="/vault"
+        onClick={() => playClick()}
         className="flex flex-col items-center justify-center outline-none"
       >
          {({ isActive }) => (

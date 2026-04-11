@@ -12,5 +12,12 @@ export const usersService = {
     };
     
     await UsersDB.update(userId, payload);
+  },
+  
+  /**
+   * Update general profile fields (inventory, equipped, etc.)
+   */
+  updateProfile: async (userId: string, updates: Partial<any>): Promise<void> => {
+    await UsersDB.update(userId, updates);
   }
 };

@@ -7,6 +7,7 @@ import { AnimatedText } from '../components/animations/AnimatedText';
 import { SpotlightCard } from '../components/animations/SpotlightCard';
 import { trackEvent } from '../lib/analytics';
 import { useHabitStore } from '../store/useHabitStore';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 interface ShopItem {
   id: string;
@@ -25,6 +26,7 @@ export const Vault: React.FC = () => {
   const user = useUserStore(state => state.user);
   const logs = useHabitStore(state => state.logs);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const { playLootDrop, playError } = useSoundEffects();
 
   const flash = (msg: string) => {
     setFeedback(msg);
@@ -32,57 +34,89 @@ export const Vault: React.FC = () => {
   };
 
   const handleBuyPotion = async () => {
-    if (!user || (user.gold || 0) < 50) return;
-    if ((user.hp || 100) >= (user.maxHp || 100)) { flash('Already at full HP!'); return; }
+    if (!user || (user.gold || 0) < 50) { playError(); return; }
+    if ((user.hp || 100) >= (user.maxHp || 100)) { playError(); flash('Already at full HP!'); return; }
     const newGold = (user.gold || 0) - 50;
     const newHp = Math.min((user.hp || 100) + 20, (user.maxHp || 100));
     useUserStore.setState({ user: { ...user, gold: newGold, hp: newHp } });
     await usersService.updateUserStats(user.id, { gold: newGold, hp: newHp });
     trackEvent("shop_purchase", { item: "health_potion", cost: 50 });
+    playLootDrop();
     flash('+20 HP restored!');
   };
 
   const handleBuyShield = async () => {
-    if (!user || (user.gold || 0) < 150) return;
-    if ((user.streakShields || 0) >= 2) { flash('Max shields equipped!'); return; }
+    if (!user || (user.gold || 0) < 150) { playError(); return; }
+    if ((user.streakShields || 0) >= 2) { playError(); flash('Max shields equipped!'); return; }
     const newGold = (user.gold || 0) - 150;
     const newShields = (user.streakShields || 0) + 1;
     useUserStore.setState({ user: { ...user, gold: newGold, streakShields: newShields } });
     await usersService.updateUserStats(user.id, { gold: newGold, streakShields: newShields });
     trackEvent("shop_purchase", { item: "streak_shield", cost: 150 });
+    playLootDrop();
     flash('Shield activated!');
   };
 
   const handleBuyWeapon = async () => {
-    if (!user || (user.gold || 0) < 300) return;
-    if (user.equippedWeapon) { flash('Weapon already equipped!'); return; }
+    if (!user || (user.gold || 0) < 300) { playError(); return; }
+    if (user.equippedWeapon) { playError(); flash('Weapon already equipped!'); return; }
     const newGold = (user.gold || 0) - 300;
     useUserStore.setState({ user: { ...user, gold: newGold, equippedWeapon: 'Iron Sword' } });
     await usersService.updateUserStats(user.id, { gold: newGold, equippedWeapon: 'Iron Sword' });
     trackEvent("shop_purchase", { item: "iron_sword", cost: 300 });
+    playLootDrop();
     flash('Iron Sword equipped! 15% crit chance unlocked.');
   };
 
   const handleBuyMaxHp = async () => {
-    if (!user || (user.gold || 0) < 200) return;
-    if ((user.maxHp || 100) >= 200) { flash('Max HP already upgraded!'); return; }
+    if (!user || (user.gold || 0) < 200) { playError(); return; }
+    if ((user.maxHp || 100) >= 200) { playError(); flash('Max HP already upgraded!'); return; }
     const newGold = (user.gold || 0) - 200;
     const newMaxHp = (user.maxHp || 100) + 25;
     useUserStore.setState({ user: { ...user, gold: newGold, maxHp: newMaxHp } });
     await usersService.updateUserStats(user.id, { gold: newGold, maxHp: newMaxHp });
     trackEvent("shop_purchase", { item: "hp_upgrade", cost: 200 });
+    playLootDrop();
     flash('+25 Max HP unlocked!');
   };
 
   const handleBuyXpBoost = async () => {
-    if (!user || (user.gold || 0) < 100) return;
+    if (!user || (user.gold || 0) < 100) { playError(); return; }
     // XP Boost: Immediately grant bonus XP
     const newGold = (user.gold || 0) - 100;
     const bonusXp = (user.xp || 0) + 50;
     useUserStore.setState({ user: { ...user, gold: newGold, xp: bonusXp } });
     await usersService.updateUserStats(user.id, { gold: newGold, xp: bonusXp });
     trackEvent("shop_purchase", { item: "xp_boost", cost: 100 });
+    playLootDrop();
     flash('+50 XP injected!');
+  };
+
+  const handleBuyTheme = async (themeName: string, cost: number) => {
+    if (!user) return;
+    const unlocked = user.unlockedThemes || ["dark"];
+    if (unlocked.includes(themeName)) {
+        // Theme is already unlocked, just equip it!
+        useUserStore.setState({ user: { ...user, theme: themeName }});
+        await usersService.updateProfile(user.id, { theme: themeName });
+        playLootDrop();
+        flash(`Equipped ${themeName} theme!`);
+        return;
+    }
+
+    if ((user.gold || 0) < cost) {
+        playError();
+        flash("Not enough gold!");
+        return;
+    }
+
+    const newGold = (user.gold || 0) - cost;
+    const newUnlocked = [...unlocked, themeName];
+    useUserStore.setState({ user: { ...user, gold: newGold, theme: themeName, unlockedThemes: newUnlocked } });
+    await usersService.updateProfile(user.id, { gold: newGold, theme: themeName, unlockedThemes: newUnlocked });
+    trackEvent("shop_purchase", { item: `theme_${themeName}`, cost });
+    playLootDrop();
+    flash(`Unlocked ${themeName} theme!`);
   };
 
   const gold = user?.gold || 0;
@@ -126,6 +160,27 @@ export const Vault: React.FC = () => {
       disabled: !user || gold < 100,
       tag: 'BOOST'
     },
+    {
+        id: 'theme_crimson', name: 'Crimson Theme', description: 'Unlock the blood-red cosmetic theme.',
+        cost: 500, icon: 'format_paint', iconColor: 'text-red-600', borderColor: 'border-red-600/30',
+        action: () => handleBuyTheme('crimson', 500),
+        disabled: !user || (gold < 500 && !(user.unlockedThemes || []).includes('crimson')),
+        tag: (user.unlockedThemes || []).includes('crimson') ? (user.theme === 'crimson' ? 'ACTIVE' : 'EQUIP') : '500g'
+    },
+    {
+        id: 'theme_abyssal', name: 'Abyssal Theme', description: 'Unlock the deep sea cyan cosmetic theme.',
+        cost: 500, icon: 'format_paint', iconColor: 'text-cyan-400', borderColor: 'border-cyan-400/30',
+        action: () => handleBuyTheme('abyssal', 500),
+        disabled: !user || (gold < 500 && !(user.unlockedThemes || []).includes('abyssal')),
+        tag: (user.unlockedThemes || []).includes('abyssal') ? (user.theme === 'abyssal' ? 'ACTIVE' : 'EQUIP') : '500g'
+    },
+    {
+        id: 'theme_cyberpunk', name: 'Cyberpunk Theme', description: 'Unlock the neon synthwave cosmetic theme.',
+        cost: 500, icon: 'format_paint', iconColor: 'text-pink-500', borderColor: 'border-pink-500/30',
+        action: () => handleBuyTheme('cyberpunk', 500),
+        disabled: !user || (gold < 500 && !(user.unlockedThemes || []).includes('cyberpunk')),
+        tag: (user.unlockedThemes || []).includes('cyberpunk') ? (user.theme === 'cyberpunk' ? 'ACTIVE' : 'EQUIP') : '500g'
+    }
   ];
 
   return (

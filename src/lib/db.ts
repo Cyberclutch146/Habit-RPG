@@ -29,8 +29,21 @@ export const userSchema = z.object({
   lastCheckInDate: z.any().nullable(), // ServerTimestamp or null
   hardMode: z.boolean().optional(),
   streakShields: z.number().min(0).max(2).optional(),
-  theme: z.enum(["dark", "light"]).optional(),
+  theme: z.string().optional().default("dark"),
+  unlockedThemes: z.array(z.string()).optional().default(["dark"]),
   reducedMotion: z.boolean().optional(),
+  // -- New RPG Mechanics --
+  inventory: z.array(z.object({
+    id: z.string(),
+    type: z.enum(["weapon", "armor", "pet", "artifact"]),
+    name: z.string(),
+    rarity: z.enum(["common", "rare", "epic", "legendary"]),
+    statBonus: z.string().optional(), // 'crit+5', 'hp+20'
+  })).optional().default([]),
+  equippedArmor: z.string().nullable().optional(),
+  equippedPet: z.string().nullable().optional(),
+  skillPoints: z.number().min(0).optional().default(0),
+  unlockedSkills: z.array(z.string()).optional().default([]),
 });
 export type User = z.infer<typeof userSchema>;
 

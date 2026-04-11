@@ -3,6 +3,7 @@ import { Habit } from '../../lib/db';
 import { useHabitStore } from '../../store/useHabitStore';
 import { m } from 'framer-motion';
 import { SpotlightCard } from '../animations/SpotlightCard';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 interface Props {
   habit: Habit;
@@ -12,6 +13,7 @@ interface Props {
 export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   const completeHabit = useHabitStore(state => state.completeHabit);
   const [isClicking, setIsClicking] = useState(false);
+  const { playSuccess, playLevelUp, playLootDrop } = useSoundEffects();
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -25,7 +27,12 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
   const handleComplete = async (e: React.MouseEvent) => {
     if (completed || isClicking) return;
     setIsClicking(true);
-    await completeHabit(habit.id, { clientX: e.clientX, clientY: e.clientY });
+    const result = await completeHabit(habit.id, { clientX: e.clientX, clientY: e.clientY });
+    if (result) {
+        if (result.didLevelUp) playLevelUp();
+        else if (result.droppedLoot) playLootDrop();
+        else playSuccess();
+    }
     setIsClicking(false);
   };
 

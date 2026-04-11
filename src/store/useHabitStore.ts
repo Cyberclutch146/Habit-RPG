@@ -20,7 +20,7 @@ interface HabitStore {
   initDataSync: (userId: string) => () => void;
   
   // Actions with Debounce/Optimistic UI
-  completeHabit: (habitId: string, clickEvent?: { clientX: number, clientY: number }) => Promise<void>;
+  completeHabit: (habitId: string, clickEvent?: { clientX: number, clientY: number }) => Promise<{ didLevelUp: boolean, droppedLoot: boolean } | void>;
   addHabit: (data: Omit<Habit, 'id' | 'createdAt'>) => Promise<void>;
   
   // Derived state helpers
@@ -147,6 +147,11 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
       source: "HABIT"
     };
 
+    const prevTotalDamage = logs.reduce((sum, l) => sum + (l.damageDealt || 0), 0);
+    const newTotalDamage = prevTotalDamage + damage;
+    const defeatedBosses = gameEngine.checkBossDefeats(prevTotalDamage, newTotalDamage);
+    const droppedLoot = defeatedBosses.map((b, i) => gameEngine.generateLoot(user.level));
+
     const streakResult = gameEngine.calculateNewStreak(
       user.streak, 
       user.lastCheckInDate?.toMillis ? user.lastCheckInDate.toMillis() : Date.now(),
@@ -156,6 +161,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     // XP also multiplied by combo class
     const finalXpGain = Math.floor(habit.xpReward * comboMult);
     const leveledResult = gameEngine.evaluateLevelUp(user.level, user.xp, finalXpGain);
+    const addedSkillPoints = leveledResult.didLevelUp ? 1 : 0;
 
     const updatedUser = {
       ...user,
@@ -164,7 +170,9 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
       streak: streakResult.streak,
       streakShields: streakResult.shields,
       gold: (user.gold || 0) + goldDrop,
-      lastCheckInDate: new Date() as any
+      lastCheckInDate: new Date() as any,
+      inventory: [...(user.inventory || []), ...droppedLoot],
+      skillPoints: (user.skillPoints || 0) + addedSkillPoints
     };
 
     useUserStore.setState({ user: updatedUser });
@@ -182,7 +190,9 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
         level: leveledResult.level,
         streak: streakResult.streak,
         streakShields: streakResult.shields,
-        gold: updatedUser.gold
+        gold: updatedUser.gold,
+        inventory: updatedUser.inventory,
+        skillPoints: updatedUser.skillPoints
       })
     ]).then(() => {
       set(state => {
@@ -210,5 +220,10 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     }).finally(() => {
       activeRequests.delete(logId);
     });
+
+    return { 
+        didLevelUp: leveledResult.didLevelUp, 
+        droppedLoot: droppedLoot.length > 0 
+    };
   }
 }));

@@ -75,10 +75,12 @@ function App() {
   }, [initAuthListener]);
 
   useEffect(() => {
-    if (user?.theme === 'light') {
-      document.documentElement.classList.remove('dark');
+    const html = document.documentElement;
+    html.classList.remove('dark', 'light', 'crimson', 'abyssal', 'cyberpunk');
+    if (user?.theme) {
+      html.classList.add(user.theme);
     } else {
-      document.documentElement.classList.add('dark');
+      html.classList.add('dark');
     }
   }, [user?.theme]);
 
