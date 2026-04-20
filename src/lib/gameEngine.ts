@@ -163,11 +163,10 @@ export const gameEngine = {
   /**
    * Generates a random piece of loot
    */
-  generateLoot: (bossLevel: number) => {
+  generateLoot: (_bossLevel?: number) => {
     const types = ["weapon", "armor", "artifact"] as const;
     const type = types[Math.floor(Math.random() * types.length)];
     
-    const rarities = ["common", "rare", "epic", "legendary"] as const;
     const randomF = Math.random();
     let rarity: "common" | "rare" | "epic" | "legendary" = "common";
     if (randomF > 0.95) rarity = "legendary";

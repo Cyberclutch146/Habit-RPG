@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Magnet } from '../animations/Magnet';
-import { StarBorder } from '../animations/StarBorder';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 export const BottomNav: React.FC = () => {

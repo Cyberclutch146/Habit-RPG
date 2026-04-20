@@ -16,7 +16,7 @@ export const Dashboard: React.FC = () => {
   const getTodayCompletedHabits = useHabitStore(state => state.getTodayCompletedHabits);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useUserStore(state => state.user);
-  const logs = useHabitStore(state => state.logs); // Subscribe to re-render
+  useHabitStore(state => state.logs); // Subscribe to re-render
   
   const completedIds = getTodayCompletedHabits();
 

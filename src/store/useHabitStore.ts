@@ -150,7 +150,7 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
     const prevTotalDamage = logs.reduce((sum, l) => sum + (l.damageDealt || 0), 0);
     const newTotalDamage = prevTotalDamage + damage;
     const defeatedBosses = gameEngine.checkBossDefeats(prevTotalDamage, newTotalDamage);
-    const droppedLoot = defeatedBosses.map((b, i) => gameEngine.generateLoot(user.level));
+    const droppedLoot = defeatedBosses.map(() => gameEngine.generateLoot(user.level));
 
     const streakResult = gameEngine.calculateNewStreak(
       user.streak, 

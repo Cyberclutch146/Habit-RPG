@@ -38,7 +38,12 @@ export const Login: React.FC = () => {
           gold: 0,
           class: 'none',
           streak: 0,
-          lastCheckInDate: null
+          lastCheckInDate: null,
+          theme: 'dark',
+          unlockedThemes: ['dark'],
+          inventory: [],
+          skillPoints: 0,
+          unlockedSkills: []
         });
       }
       navigate('/dashboard');
@@ -72,7 +77,12 @@ export const Login: React.FC = () => {
           gold: 0,
           class: 'none',
           streak: 0,
-          lastCheckInDate: null
+          lastCheckInDate: null,
+          theme: 'dark',
+          unlockedThemes: ['dark'],
+          inventory: [],
+          skillPoints: 0,
+          unlockedSkills: []
         });
       } else {
         await signInWithEmailAndPassword(auth, email, password);

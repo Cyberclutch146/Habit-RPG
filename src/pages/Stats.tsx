@@ -216,15 +216,15 @@ export const Stats: React.FC = () => {
                         Your Inventory
                     </h2>
                     
-                    {!(user?.inventory?.length > 0) ? (
+                    {!user?.inventory || user.inventory.length === 0 ? (
                         <div className="text-center py-8">
                             <span className="material-symbols-outlined text-4xl text-secondary/30 block mb-2">sentiment_dissatisfied</span>
                             <p className="text-xs text-secondary font-bold uppercase tracking-widest">No loot found.<br/>Defeat Bosses to earn gear!</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 gap-3">
-                            {user.inventory.map((item) => {
-                                const isEquipped = user.equippedWeapon === item.id || user.equippedArmor === item.id || user.equippedPet === item.id;
+                            {(user?.inventory || []).map((item) => {
+                                const isEquipped = user?.equippedWeapon === item.id || user?.equippedArmor === item.id || user?.equippedPet === item.id;
                                 const rarityConfig = {
                                     common: { border: "border-gray-500", text: "text-gray-500", bg: "bg-gray-500/10" },
                                     rare: { border: "border-blue-500", text: "text-blue-500", bg: "bg-blue-500/10" },

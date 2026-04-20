@@ -165,21 +165,21 @@ export const Vault: React.FC = () => {
         cost: 500, icon: 'format_paint', iconColor: 'text-red-600', borderColor: 'border-red-600/30',
         action: () => handleBuyTheme('crimson', 500),
         disabled: !user || (gold < 500 && !(user?.unlockedThemes || []).includes('crimson')),
-        tag: (user?.unlockedThemes || []).includes('crimson') ? (user.theme === 'crimson' ? 'ACTIVE' : 'EQUIP') : '500g'
+        tag: (user?.unlockedThemes || []).includes('crimson') ? (user?.theme === 'crimson' ? 'ACTIVE' : 'EQUIP') : '500g'
     },
     {
         id: 'theme_abyssal', name: 'Abyssal Theme', description: 'Unlock the deep sea cyan cosmetic theme.',
         cost: 500, icon: 'format_paint', iconColor: 'text-cyan-400', borderColor: 'border-cyan-400/30',
         action: () => handleBuyTheme('abyssal', 500),
         disabled: !user || (gold < 500 && !(user?.unlockedThemes || []).includes('abyssal')),
-        tag: (user?.unlockedThemes || []).includes('abyssal') ? (user.theme === 'abyssal' ? 'ACTIVE' : 'EQUIP') : '500g'
+        tag: (user?.unlockedThemes || []).includes('abyssal') ? (user?.theme === 'abyssal' ? 'ACTIVE' : 'EQUIP') : '500g'
     },
     {
         id: 'theme_cyberpunk', name: 'Cyberpunk Theme', description: 'Unlock the neon synthwave cosmetic theme.',
         cost: 500, icon: 'format_paint', iconColor: 'text-pink-500', borderColor: 'border-pink-500/30',
         action: () => handleBuyTheme('cyberpunk', 500),
         disabled: !user || (gold < 500 && !(user?.unlockedThemes || []).includes('cyberpunk')),
-        tag: (user?.unlockedThemes || []).includes('cyberpunk') ? (user.theme === 'cyberpunk' ? 'ACTIVE' : 'EQUIP') : '500g'
+        tag: (user?.unlockedThemes || []).includes('cyberpunk') ? (user?.theme === 'cyberpunk' ? 'ACTIVE' : 'EQUIP') : '500g'
     }
   ];
 
