@@ -15,16 +15,16 @@
 
   :root {
     --color-on-secondary-fixed: #1b1c1c;
-    --color-on-surface-variant: #524443;
-    --color-outline: #857371;
+    --color-on-surface-variant: #403e3d;
+    --color-outline: #756f6e;
     --color-on-tertiary-fixed: #1b1c1c;
     --color-on-error-container: #410002;
     --color-on-error: #ffffff;
     --color-on-secondary-container: #1d192b;
     --color-on-tertiary-fixed-variant: #474746;
-    --color-on-background: #201a1a;
-    --color-background: #fffbff;
-    --color-outline-variant: #d7c1c0;
+    --color-on-background: #171616;
+    --color-background: #faf8f7;
+    --color-outline-variant: #cec5c4;
     --color-on-tertiary-container: #111010;
     --color-error: #ba1a1a;
     --color-on-primary: #ffffff;
@@ -32,8 +32,8 @@
     --color-on-tertiary: #ffffff;
     --color-error-container: #ffdad6;
     --color-secondary-fixed: #e3e2e2;
-    --color-surface-container-highest: #e5e2e1;
-    --color-surface-container: #f1efee;
+    --color-surface-container-highest: #eae7e6;
+    --color-surface-container: #ffffff;
     --color-on-primary-fixed: #410004;
     --color-surface-tint: #b62129;
     --color-primary: #b62129;
@@ -43,16 +43,16 @@
     --color-inverse-primary: #ffb3ae;
     --color-tertiary-fixed: #e4e2e1;
     --color-inverse-on-surface: #f4f0ef;
-    --color-surface-container-low: #f7f5f4;
+    --color-surface-container-low: #f5f2f1;
     --color-tertiary: #5d5e5e;
     --color-secondary-container: #e8def8;
-    --color-surface-container-high: #ebe9e8;
+    --color-surface-container-high: #f7f4f2;
     --color-secondary: #625b71;
-    --color-surface: #fffbff;
-    --color-on-surface: #201a1a;
-    --color-surface-dim: #ded8d7;
+    --color-surface: #faf8f7;
+    --color-on-surface: #171616;
+    --color-surface-dim: #e0dada;
     --color-surface-container-lowest: #ffffff;
-    --color-surface-bright: #fffbff;
+    --color-surface-bright: #faf8f7;
     --color-on-secondary: #ffffff;
     --color-inverse-surface: #313030;
     --color-tertiary-container: #f9f7f6;
@@ -60,7 +60,7 @@
     --color-on-secondary-fixed-variant: #464747;
     --color-primary-fixed-dim: #ffb3ae;
     --color-secondary-fixed-dim: #c7c6c6;
-    --color-surface-variant: #f4dddb;
+    --color-surface-variant: #f2ebea;
   }
 
   .dark {

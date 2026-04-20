@@ -180,11 +180,40 @@ export const Settings: React.FC = () => {
             >
               <h2 className="text-2xl font-black mb-4 uppercase tracking-tight text-primary">System Manual</h2>
               
-              <div className="space-y-4 text-sm text-on-surface-variant font-body mb-6">
-                <p><strong className="text-on-surface">Ranks:</strong> Progress from UNRANKED to GOD by completing habits and gaining XP. Ranks have 3 subdivisions (III, II, I).</p>
-                <p><strong className="text-on-surface">Streaks:</strong> Keep checking in daily to multiply XP gains.</p>
-                <p><strong className="text-on-surface">Shields:</strong> Reaching 7 and 30 day streaks grants a shield that protects you from losing your streak if you miss precisely one day.</p>
-                <p><strong className="text-on-surface">Hard Mode:</strong> Miss a habit and physically lose XP values. Are you ready?</p>
+              <div className="space-y-6 text-sm text-on-surface-variant font-body mb-6 w-full pr-2 pb-4">
+                <section>
+                  <h3 className="font-bold text-primary uppercase tracking-widest text-xs mb-2 border-b border-outline-variant/20 pb-1">Core Progression</h3>
+                  <div className="space-y-3">
+                    <p><strong className="text-on-surface">XP & Levels:</strong> By completing daily recurring habits, you gain XP. You level up when you surpass the required XP threshold. XP scaling is quadratic, requiring more effort as you grow.</p>
+                    <p><strong className="text-on-surface">Ranks:</strong> Your level directly determines your Rank (e.g. Bronze III, Apex I, or GOD tier). Ranking up unlocks new visual prestige.</p>
+                    <p><strong className="text-on-surface">Streaks:</strong> Consistently executing habits builds your combo. Combo directly multiplies the XP and gold value you receive.</p>
+                  </div>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-amber-500 uppercase tracking-widest text-xs mb-2 border-b border-outline-variant/20 pb-1">The Vault & Loot</h3>
+                  <div className="space-y-3">
+                    <p><strong className="text-on-surface">Gold:</strong> Defeating bosses and achieving high streaks drops Gold coins. Gold can be spent in the <strong className="text-amber-500">Vault</strong>.</p>
+                    <p><strong className="text-on-surface">Weapons:</strong> Purchasing a Sword in the Vault grants a permanent +15% chance to score a Critical Hit on any habit completion (x2 Damage!).</p>
+                    <p><strong className="text-on-surface">Cosmetics:</strong> Buy Themes (Crimson, Abyssal, Cyberpunk) in the Vault to customize your HUD.</p>
+                  </div>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-blue-500 uppercase tracking-widest text-xs mb-2 border-b border-outline-variant/20 pb-1">Combat & Survival</h3>
+                  <div className="space-y-3">
+                    <p><strong className="text-on-surface">Boss Battles:</strong> Your habit completion deals damage to Bosses. Bosses are weak to specific habit categories (e.g., Workout, Steps), dealing 150% damage.</p>
+                    <p><strong className="text-on-surface">HP & Hard Mode:</strong> If Hard Mode is enabled, failing to complete a daily habit will cause you to take damage based on the habit difficulty. If your HP reaches 0, you lose your streak and suffer an XP penalty!</p>
+                    <p><strong className="text-on-surface">Shields:</strong> Buy Streak Shields in the Vault. They passively consume themselves to protect your streak and HP if you miss a single day.</p>
+                  </div>
+                </section>
+                
+                <section>
+                  <h3 className="font-bold text-green-500 uppercase tracking-widest text-xs mb-2 border-b border-outline-variant/20 pb-1">Classes</h3>
+                  <div className="space-y-3">
+                    <p><strong className="text-on-surface">Class Bonus:</strong> At character creation, you picked a class (Warrior, Mage, Rogue). Your class gives you a +50% passive damage bonus to specific categories. E.g. Warriors deal massive damage when completing Workout habits.</p>
+                  </div>
+                </section>
               </div>
 
               <button 

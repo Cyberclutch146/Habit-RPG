@@ -219,7 +219,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_1",
     name: "The Sloth Demon",
     title: "SLOTH SLAYER",
-    imagePath: "/boss.png",
+    imagePath: "/boss_1.png",
     maxHp: 2000,
     weakness: "Workout",
     themeColor: "rgba(255,100,100,0.8)"
@@ -228,7 +228,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_2",
     name: "The Procrastination Dragon",
     title: "DRAGON BANE",
-    imagePath: "/boss.png",
+    imagePath: "/boss_2.png",
     maxHp: 5000,
     weakness: "Custom",
     themeColor: "rgba(100,200,255,0.8)"
@@ -237,7 +237,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_3",
     name: "The Sugar Golem",
     title: "SUGAR SMASHER",
-    imagePath: "/boss.png",
+    imagePath: "/boss_3.png",
     maxHp: 3500,
     weakness: "Diet",
     themeColor: "rgba(255,100,255,0.8)"
@@ -246,7 +246,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_4",
     name: "The Scroll-Wraith of Doomsurfing",
     title: "WRAITH WALKER",
-    imagePath: "/boss.png",
+    imagePath: "/boss_4.png",
     maxHp: 4000,
     weakness: "Steps",
     themeColor: "rgba(100,255,100,0.8)"
@@ -255,7 +255,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_5",
     name: "The Void Titan",
     title: "VOID BREAKER",
-    imagePath: "/boss.png",
+    imagePath: "/boss_5.png",
     maxHp: 7500,
     weakness: "Workout",
     themeColor: "rgba(180,100,255,0.8)"
@@ -264,7 +264,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_6",
     name: "Chronophage — Devourer of Time",
     title: "TIME LORD",
-    imagePath: "/boss.png",
+    imagePath: "/boss_6.png",
     maxHp: 10000,
     weakness: "Custom",
     themeColor: "rgba(255,215,0,0.8)"
@@ -273,7 +273,7 @@ export const BOSS_ROSTER: RPG_Boss[] = [
     id: "boss_7",
     name: "The Eternal Spectral King",
     title: "APEX LEGEND",
-    imagePath: "/boss.png",
+    imagePath: "/boss_7.png",
     maxHp: 20000,
     weakness: "Steps",
     themeColor: "rgba(255,80,80,0.8)"
