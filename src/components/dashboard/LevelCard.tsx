@@ -8,9 +8,11 @@ export const LevelCard: React.FC = () => {
   
   if (!user) return <div className="h-40 bg-surface-container-low rounded-2xl animate-pulse m-6" />; // Skeleton
 
-  const nextXp = gameEngine.getXPForNextLevel(user.level);
-  const progressPercent = Math.min(100, Math.floor((user.xp / nextXp) * 100));
-  const currentRank = gameEngine.getUserRank(user.level);
+  const safeLevel = user.level || 1;
+  const safeXp = user.xp || 0;
+  const nextXp = gameEngine.getXPForNextLevel(safeLevel);
+  const progressPercent = Math.min(100, Math.floor((safeXp / nextXp) * 100));
+  const currentRank = gameEngine.getUserRank(safeLevel);
 
   return (
     <m.section 
@@ -38,7 +40,7 @@ export const LevelCard: React.FC = () => {
             />
           </m.div>
           <div className="absolute -bottom-3 -right-2 bg-primary text-on-primary font-black text-xs px-2.5 py-1 rounded-lg border-2 border-surface-container-high shadow-md">
-            LVL {user.level}
+            LVL {safeLevel}
           </div>
         </div>
         
@@ -51,7 +53,7 @@ export const LevelCard: React.FC = () => {
           <div className="space-y-1.5 pt-1">
              <div className="flex justify-between items-baseline">
                 <span className="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Experience</span>
-                <span className="text-[10px] font-bold font-mono text-on-surface-variant">{user.xp.toLocaleString()} / {nextXp.toLocaleString()}</span>
+                <span className="text-[10px] font-bold font-mono text-on-surface-variant">{safeXp.toLocaleString()} / {nextXp.toLocaleString()}</span>
              </div>
             <div className="h-3 bg-surface-container-highest rounded-full overflow-hidden p-0.5 relative">
               <m.div 
