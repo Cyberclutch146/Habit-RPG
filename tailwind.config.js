@@ -56,6 +56,12 @@ export default {
         "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
         "surface-variant": "var(--color-surface-variant)"
       },
+      borderRadius: {
+        "DEFAULT": "0px",
+        "lg": "0px",
+        "xl": "0px",
+        "full": "9999px"
+      },
       fontFamily: {
         headline: ["Space Grotesk", "sans-serif"],
         body: ["Outfit", "sans-serif"],

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0e0e0e;
+            color: #e2e2e2;
+            margin: 0;
+            padding: 0;
+        }
+        /* Custom scrollbar for stealth look */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0e0e0e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#b9c7e0",
+                      "inverse-on-surface": "#303030",
+                      "surface-container": "#1f1f1f",
+                      "surface-tint": "#ffb4ab",
+                      "on-primary-container": "#fff6f5",
+                      "surface-container-high": "#2a2a2a",
+                      "primary": "#ffb4ab",
+                      "secondary-container": "#3c4a5e",
+                      "primary-fixed-dim": "#ffb4ab",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#cbe6ff",
+                      "surface-container-lowest": "#0e0e0e",
+                      "outline-variant": "#5c403c",
+                      "background": "#131313",
+                      "tertiary-fixed-dim": "#90cdff",
+                      "on-tertiary-container": "#f3f8ff",
+                      "tertiary": "#90cdff",
+                      "on-primary": "#690005",
+                      "surface": "#131313",
+                      "error-container": "#93000a",
+                      "surface-dim": "#131313",
+                      "secondary-fixed": "#d5e3fd",
+                      "on-tertiary-fixed": "#001e30",
+                      "on-tertiary": "#003450",
+                      "inverse-primary": "#bf0715",
+                      "error": "#ffb4ab",
+                      "on-surface-variant": "#e6bdb8",
+                      "on-background": "#e2e2e2",
+                      "secondary": "#b9c7e0",
+                      "primary-fixed": "#ffdad6",
+                      "surface-container-highest": "#353535",
+                      "on-secondary-fixed": "#0d1c2f",
+                      "on-secondary-container": "#abb9d2",
+                      "on-primary-fixed": "#410002",
+                      "surface-variant": "#353535",
+                      "surface-bright": "#393939",
+                      "primary-container": "#dc2626",
+                      "on-secondary-fixed-variant": "#3a485c",
+                      "tertiary-container": "#0078b2",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-low": "#1b1b1b",
+                      "on-primary-fixed-variant": "#93000b",
+                      "inverse-surface": "#e2e2e2",
+                      "outline": "#ac8884",
+                      "on-secondary": "#233144",
+                      "on-tertiary-fixed-variant": "#004b71",
+                      "on-surface": "#e2e2e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0px",
+                      "lg": "0px",
+                      "xl": "0px",
+                      "full": "9999px"
+              }
+            },
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-background selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="bg-[#131313] dark:bg-black fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center h-16">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#dc2626]" data-icon="terminal">terminal</span>
+<h1 class="font-['Space_Grotesk'] font-medium tracking-[0.05em] text-[#dc2626] text-xl">PROTOCOL_RPG</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-medium tracking-widest text-secondary opacity-60 uppercase">Credit_Balance</span>
+<span class="text-primary font-bold tracking-tight">12,450.00 GC</span>
+</div>
+<div class="w-8 h-8 bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="user_class_avatar" class="w-full h-full object-cover" data-alt="minimalist silhouette of a tactical operator avatar with red accents on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwm9D4R6St3E_NPZwJJ8zd-KDGCsdeGQk4bHCx_TXHFM_hOcuEsd2NvfvalzYzOk4gE3PmhC30pXU---xWeY2cJdtLOZ3ZySjz2QgDrzCJWK7Ev2cE1_TAwzaygDAV9VbXQnL91J74ExzY7KCKD8M8zsMUH5QlABhWxFg1j3TjnOvikL2fAolIOuOSH_X7LSbC7QD8tj31yks6zx8YpUPszUOPcM1t6frI04TzpHvtSHQc_VygPHBau5P37HjDhEomd8OhvQ7XDP4"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+<!-- Hero Section: The Vault Branding -->
+<section class="mb-16">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+<div>
+<span class="text-primary text-[10px] font-medium tracking-[0.2em] uppercase block mb-4">Secure_Channel_Active</span>
+<h2 class="text-6xl font-light tracking-[-0.03em] mb-6 leading-none uppercase">The Vault</h2>
+<p class="text-secondary-fixed-dim font-light max-w-md leading-relaxed">Accessing encrypted black market listings. Acquire advanced protocols and experimental augmentations to survive the next cycle.</p>
+</div>
+<div class="flex justify-end hidden md:flex">
+<div class="w-full max-w-sm h-1 bg-surface-container-high relative overflow-hidden">
+<div class="absolute left-0 top-0 h-full w-2/3 bg-primary-container"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Consumables Section -->
+<section class="mb-20">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-sm font-medium tracking-[0.1em] uppercase border-l-2 border-primary-container pl-4">Consumables</h3>
+<span class="text-[10px] text-on-surface-variant font-light">STOCK_REFRESH: 04:12:09</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+<!-- Item: Streak Shield -->
+<div class="bg-surface group hover:bg-surface-container-high transition-colors p-8 flex flex-col justify-between aspect-square border border-surface-container-high/10">
+<div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-6 block" data-icon="shield">shield</span>
+<h4 class="text-xl font-light mb-2 uppercase">Streak Shield</h4>
+<p class="text-sm text-secondary-fixed-dim font-light leading-snug">Prevents habit regression for 24 hours. Single-use encryption.</p>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-primary font-bold">450 GC</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 text-[10px] font-medium tracking-widest uppercase active:scale-95 transition-transform">Acquire</button>
+</div>
+</div>
+<!-- Item: Health Potion -->
+<div class="bg-surface group hover:bg-surface-container-high transition-colors p-8 flex flex-col justify-between aspect-square border border-surface-container-high/10">
+<div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-6 block" data-icon="medication">medication</span>
+<h4 class="text-xl font-light mb-2 uppercase">Neural Stim</h4>
+<p class="text-sm text-secondary-fixed-dim font-light leading-snug">Instant restoration of 50 HP. Bypasses metabolic limiters.</p>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-primary font-bold">200 GC</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 text-[10px] font-medium tracking-widest uppercase active:scale-95 transition-transform">Acquire</button>
+</div>
+</div>
+<!-- Item: Exp Booster -->
+<div class="bg-surface group hover:bg-surface-container-high transition-colors p-8 flex flex-col justify-between aspect-square border border-surface-container-high/10">
+<div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-6 block" data-icon="bolt">bolt</span>
+<h4 class="text-xl font-light mb-2 uppercase">Data Uplink</h4>
+<p class="text-sm text-secondary-fixed-dim font-light leading-snug">2x EXP multiplier for the next 3 tasks. High bandwidth sync.</p>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-primary font-bold">850 GC</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 text-[10px] font-medium tracking-widest uppercase active:scale-95 transition-transform">Acquire</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Cosmetics/Classes Section (Asymmetric Grid) -->
+<section class="mb-20">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-sm font-medium tracking-[0.1em] uppercase border-l-2 border-primary-container pl-4">Class_Modifications</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-1">
+<!-- Class: Pyromancer Unlock -->
+<div class="md:col-span-2 row-span-2 bg-surface-container-lowest relative overflow-hidden group">
+<div class="absolute inset-0 z-0">
+<img alt="Pyromancer" class="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Abstract cinematic visual of digital flames and embers flickering against a pitch black background with technical HUD overlays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw8IRqh_HMoQ2UqoCHnOJ6cuFhfN7dTwgIoIhwajHa9QS1vt5ykMSb-eBWx0wsWhBgCq87I5IEvMBozQLlCp272Rq3WMeq1zWK7Ab31QbOJbryPRmy_GPyhXjWVJgrrevLNtQK83cHDREkr0imKFiIU56GB1Rsn1kRY3U3Qde_UL-ciM8KJFbmdKKXFamGip-M1x9YVJuZx5e2IyWVeF1TL4_nBK9NZuDwImOItwImDDg6woPuSs-E_kwOxQYIsKu5cxJKia-YHRE"/>
+</div>
+<div class="relative z-10 p-10 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 to-transparent">
+<div>
+<span class="text-[10px] font-medium text-primary tracking-[0.3em] uppercase block mb-4">Elite_Protocol</span>
+<h4 class="text-4xl font-light mb-4 uppercase">Pyromancer</h4>
+<p class="text-secondary-fixed-dim font-light max-w-xs leading-relaxed">Convert bad habits into fuel. High-risk, high-reward offensive specialization for veteran operators.</p>
+</div>
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold text-primary">5,000 GC</span>
+<button class="bg-primary-container text-on-primary-container px-8 py-3 text-xs font-bold tracking-[0.2em] uppercase hover:bg-red-700 transition-colors">Initialize_Unlock</button>
+</div>
+</div>
+</div>
+<!-- Cosmetic: Neon Visor -->
+<div class="md:col-span-2 bg-surface-container-low p-8 flex gap-8 items-center border border-white/5">
+<div class="w-32 h-32 bg-surface-container-highest flex-shrink-0 relative">
+<img alt="Neon_Visor" class="w-full h-full object-cover" data-alt="close up of a high tech visor with glowing red fiber optic lines on a matte black textured surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzkjEqVKAoH2nYk9-FWe3DYc3PUb_BrfAkidjAuSYEPGhHq1pzb9tZAYGY6Z08uGZj9SHH1PtxPVUOgX2N9y1uLAfW9FHenapliperYAh9sQ1WDWHqsoBSCly0PNLf_Ezbbb9rFK-D6sYI2vYSSRGVQ6JPnVoeMEtR8sNM6rn31lXsdjbSUhy5A85MXloRRCyNgVcEz8UFufag5przx3jKtydNJFyVTHWJeSro7PP6j5ExUCIFFonYMB0rkMczrGIGCT6bvD9_TFc"/>
+</div>
+<div class="flex-grow">
+<h5 class="text-lg font-light uppercase mb-1">Spectral Visor</h5>
+<p class="text-xs text-secondary-fixed-dim font-light mb-4 uppercase tracking-tighter">Limited_Edition_Visual_Aug</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-bold">1,200 GC</span>
+<button class="text-on-surface hover:text-primary transition-colors text-[10px] font-bold tracking-widest uppercase">Purchase</button>
+</div>
+</div>
+</div>
+<!-- Cosmetic: Shadow Cloak -->
+<div class="md:col-span-2 bg-surface-container-low p-8 flex gap-8 items-center border border-white/5">
+<div class="w-32 h-32 bg-surface-container-highest flex-shrink-0 relative">
+<img alt="Shadow_Cloak" class="w-full h-full object-cover opacity-60" data-alt="macro texture of carbon fiber weave reflecting deep crimson light in the shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5oyt0aTpnP6TaLDBYQm93jBmtB_hjh13oIggzSSd6HIpZTO_P5uXfY5T0soDgIVkpC_15Ccb8fn1euooEr_GoOCPBgJD7K7sl2IvKIuLbYjlgT3TgkCk4Ukv3Sj7FQ_-FXN0gIq-N_runc_dJb83FPzVc9io21sBBJ4BopB-LU2ynS-h-SQ8tkvukL-1blCcbMI1pOohppNimO3xTBsXTMA8UbSrg8WNGLtzOEoLZUV8Xisdex_X8PE0W3oMkSwkR_kBZ9RNNdis"/>
+</div>
+<div class="flex-grow">
+<h5 class="text-lg font-light uppercase mb-1">Void Shroud</h5>
+<p class="text-xs text-secondary-fixed-dim font-light mb-4 uppercase tracking-tighter">Stealth_Aesthetic_Overlay</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-bold">2,400 GC</span>
+<button class="text-on-surface hover:text-primary transition-colors text-[10px] font-bold tracking-widest uppercase">Purchase</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Wealth Indicator Footer (Floating Intel) -->
+<section class="max-w-2xl mx-auto bg-surface-container-high/40 backdrop-blur-xl p-8 flex justify-around items-center border border-primary-container/20">
+<div class="text-center">
+<span class="text-[9px] uppercase tracking-widest text-secondary block mb-1">Reputation</span>
+<span class="text-xl font-light text-on-surface uppercase">Honored</span>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="text-center">
+<span class="text-[9px] uppercase tracking-widest text-secondary block mb-1">Total_Spent</span>
+<span class="text-xl font-light text-on-surface">45.2K GC</span>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="text-center">
+<span class="text-[9px] uppercase tracking-widest text-secondary block mb-1">Vault_Access</span>
+<span class="text-xl font-light text-primary uppercase tracking-tighter">Level_04</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#131313] dark:bg-black font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="assignment">assignment</span>
+<span>QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#dc2626] text-white p-2 rounded-none scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="shopping_cart">shopping_cart</span>
+<span>VAULT</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="swords">swords</span>
+<span>BATTLE</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span>INTEL</span>
+</a>
+</nav>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 w-1/3 h-screen bg-gradient-to-l from-primary-container/5 to-transparent pointer-events-none -z-10"></div>
+<div class="fixed bottom-0 left-0 w-1/4 h-1/2 bg-gradient-to-tr from-[#dc2626]/5 to-transparent pointer-events-none -z-10"></div>
+</body></html>

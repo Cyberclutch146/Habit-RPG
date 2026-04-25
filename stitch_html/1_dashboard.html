@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f3f8ff",
+                    "on-primary": "#690005",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#cbe6ff",
+                    "secondary-fixed-dim": "#b9c7e0",
+                    "surface-container-lowest": "#0e0e0e",
+                    "inverse-primary": "#bf0715",
+                    "on-tertiary-fixed-variant": "#004b71",
+                    "surface-container": "#1f1f1f",
+                    "on-surface-variant": "#e6bdb8",
+                    "inverse-on-surface": "#303030",
+                    "tertiary": "#90cdff",
+                    "background": "#131313",
+                    "tertiary-fixed-dim": "#90cdff",
+                    "primary-container": "#dc2626",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#131313",
+                    "on-primary-fixed-variant": "#93000b",
+                    "primary-fixed": "#ffdad6",
+                    "on-secondary": "#233144",
+                    "on-tertiary": "#003450",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#ffb4ab",
+                    "surface-variant": "#353535",
+                    "on-tertiary-fixed": "#001e30",
+                    "surface-container-low": "#1b1b1b",
+                    "on-primary-container": "#fff6f5",
+                    "on-surface": "#e2e2e2",
+                    "inverse-surface": "#e2e2e2",
+                    "primary-fixed-dim": "#ffb4ab",
+                    "secondary": "#b9c7e0",
+                    "error-container": "#93000a",
+                    "tertiary-container": "#0078b2",
+                    "surface-tint": "#ffb4ab",
+                    "on-secondary-fixed-variant": "#3a485c",
+                    "surface-bright": "#393939",
+                    "surface-container-highest": "#353535",
+                    "outline-variant": "#5c403c",
+                    "surface": "#131313",
+                    "outline": "#ac8884",
+                    "on-primary-fixed": "#410002",
+                    "secondary-fixed": "#d5e3fd",
+                    "on-secondary-container": "#abb9d2",
+                    "on-secondary-fixed": "#0d1c2f",
+                    "secondary-container": "#3c4a5e",
+                    "on-background": "#e2e2e2",
+                    "error": "#ffb4ab"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Space Grotesk"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#000000] selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full rounded-none bg-[#000000] border-b border-white/5 flex justify-between items-center px-6 h-16 w-full z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#dc2626]" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="text-lg font-medium tracking-[0.05em] text-[#dc2626] font-['Space_Grotesk'] uppercase">SHADOW_OPERATIVE</span>
+</div>
+<nav class="hidden md:flex gap-8">
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase text-[#dc2626] cursor-pointer hover:text-[#ffb4ab] transition-colors duration-300">INTEL</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase text-[#b9c7e0] cursor-pointer hover:text-[#ffb4ab] transition-colors duration-300">TARGETS</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase text-[#b9c7e0] cursor-pointer hover:text-[#ffb4ab] transition-colors duration-300">ARSENAL</span>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-medium uppercase tracking-widest text-secondary opacity-50">S_ID</span>
+<span class="text-xs font-bold tracking-tighter text-on-surface">VOX_7712</span>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen pt-16 pb-20 md:pb-0">
+<!-- NavigationDrawer (Sidebar) -->
+<aside class="hidden md:flex flex-col py-12 px-6 gap-8 h-full w-80 rounded-none bg-[#131313] sticky top-16">
+<div class="mb-4">
+<span class="text-[#dc2626] font-bold tracking-tighter text-2xl uppercase">S_V_O_I_D</span>
+<div class="h-[1px] w-12 bg-primary-container mt-2"></div>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4 py-2 px-4 text-[#dc2626] font-medium bg-[#0e0e0e] transition-all duration-300">
+<span class="material-symbols-outlined">visibility</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase">INTEL</span>
+</div>
+<div class="flex items-center gap-4 py-2 px-4 text-[#b9c7e0] opacity-60 hover:pl-4 transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined">gps_fixed</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase">TARGETS</span>
+</div>
+<div class="flex items-center gap-4 py-2 px-4 text-[#b9c7e0] opacity-60 hover:pl-4 transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase">ARSENAL</span>
+</div>
+<div class="flex items-center gap-4 py-2 px-4 text-[#b9c7e0] opacity-60 hover:pl-4 transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase">COMM_LINK</span>
+</div>
+<div class="flex items-center gap-4 py-2 px-4 text-[#b9c7e0] opacity-60 hover:pl-4 transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined">settings_input_component</span>
+<span class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase">SYSTEM_LOG</span>
+</div>
+</div>
+<div class="mt-auto p-6 bg-[#0e0e0e]">
+<div class="flex justify-between items-end mb-2">
+<span class="text-[10px] uppercase tracking-widest text-secondary">Integrity</span>
+<span class="text-xs font-bold text-primary">98.2%</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest">
+<div class="h-1 w-[98.2%] bg-primary-container"></div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 bg-[#000000] p-6 md:p-12 overflow-y-auto">
+<!-- Hero Section / Identity -->
+<section class="mb-24 flex flex-col md:flex-row justify-between items-end gap-12">
+<div class="max-w-2xl">
+<h1 class="text-6xl md:text-8xl font-light tracking-[-0.04em] leading-none mb-6">LEVEL <span class="text-[#dc2626]">42</span></h1>
+<p class="text-on-surface-variant font-light text-lg max-w-md leading-relaxed">
+                        Operating in the absolute silence of the subterranean sectors. 
+                        Zero detection recorded over 1,440 hours of field deployment.
+                    </p>
+</div>
+<div class="grid grid-cols-2 gap-12 w-full md:w-auto">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-medium uppercase tracking-widest text-secondary">Experience_XP</span>
+<span class="text-3xl font-light">1,240,000</span>
+<div class="w-full h-[1px] bg-secondary/10 mt-2">
+<div class="h-[2px] w-[65%] bg-primary translate-y-[-0.5px]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-medium uppercase tracking-widest text-secondary">Currency_GOLD</span>
+<span class="text-3xl font-light text-[#dc2626]">88,420</span>
+<div class="w-full h-[1px] bg-secondary/10 mt-2">
+<div class="h-[2px] w-[40%] bg-primary translate-y-[-0.5px]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Intel -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Active Mission -->
+<div class="md:col-span-2 bg-[#0e0e0e] p-8 flex flex-col justify-between group cursor-crosshair">
+<div class="flex justify-between items-start mb-12">
+<div>
+<span class="text-[10px] font-medium uppercase tracking-widest text-[#dc2626]">Active_Protocol</span>
+<h2 class="text-3xl font-light mt-2 uppercase tracking-tight">Operation: Midnight Bloom</h2>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-30 group-hover:text-primary transition-colors">radar</span>
+</div>
+<div class="aspect-video w-full bg-surface-container relative overflow-hidden mb-8">
+<img alt="Mission landscape" class="w-full h-full object-cover opacity-40 grayscale hover:grayscale-0 transition-all duration-700" data-alt="Cinematic wide shot of a futuristic dark urban skyline at night with neon red accents and heavy fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwk7vT_RJibTzae_GPo2WbTw9Ct31evoLRHS67HCdCqhfsm3MzlysmFdvVd8VmMc6sZtDQ74Dwni2xDl5iuVavtQsCg0ag2086Jh77ePOZ2_zDbE9srak5oQACWLq0iTCz2L9efpnzuyzpTzW9Ngx_98TsVvny3U9eBvQWXPUEiG0-XQy3A4BiPr3hChhTBmTrXpqGzhyDG5OPedurcn9KyilVCgVg2lEv4c59vovuJSsr1qGH2YVTq0cSvnSxvw8yMpJw-kUBNkw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] to-transparent"></div>
+<div class="absolute top-4 right-4 flex gap-2">
+<span class="px-2 py-1 bg-primary-container text-[8px] font-bold uppercase tracking-widest">Priority_Alpha</span>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-center justify-between">
+<div class="flex gap-12">
+<div>
+<span class="block text-[8px] uppercase tracking-widest text-secondary mb-1">Target_Distance</span>
+<span class="text-lg font-light">400m</span>
+</div>
+<div>
+<span class="block text-[8px] uppercase tracking-widest text-secondary mb-1">Estimated_Time</span>
+<span class="text-lg font-light">04:12</span>
+</div>
+</div>
+<button class="bg-primary-container text-on-primary-container px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-red-700 transition-colors">
+                            INITIATE_BREACH
+                        </button>
+</div>
+</div>
+<!-- Vertical Data Strip -->
+<div class="flex flex-col gap-12">
+<div class="bg-[#0e0e0e] p-8 flex flex-col flex-1">
+<span class="text-[10px] font-medium uppercase tracking-widest text-secondary mb-8">System_Threats</span>
+<div class="space-y-6">
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<span class="text-sm font-light">Scythe_7.exe</span>
+<span class="text-[10px] text-primary">REDACTED</span>
+</div>
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<span class="text-sm font-light">Ghost_Node</span>
+<span class="text-[10px] text-secondary opacity-50">OFFLINE</span>
+</div>
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<span class="text-sm font-light">Vector_Prime</span>
+<span class="text-[10px] text-primary">WATCHING</span>
+</div>
+</div>
+<div class="mt-auto pt-8">
+<div class="h-32 w-full bg-[#131313] flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-[#dc2626] opacity-20">fingerprint</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Weaponry / Arsenal Horizontal Scroll -->
+<section class="mt-24">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-[10px] font-medium uppercase tracking-widest text-secondary">Arsenal_Manifest</span>
+<h3 class="text-4xl font-light tracking-tighter mt-2">EQUIPPED_GEAR</h3>
+</div>
+<span class="text-xs font-bold text-primary underline cursor-pointer tracking-widest">VIEW_ALL</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-low p-6 group cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-[8px] uppercase tracking-widest text-primary mb-4 block">Primary</span>
+<h4 class="text-lg font-light mb-8">Obsidian Edge</h4>
+<div class="h-[1px] w-full bg-white/5 group-hover:bg-primary transition-colors"></div>
+<div class="mt-4 flex justify-between">
+<span class="text-[10px] text-secondary">DMG_99</span>
+<span class="text-[10px] text-secondary">SPD_MAX</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 group cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-[8px] uppercase tracking-widest text-secondary mb-4 block">Secondary</span>
+<h4 class="text-lg font-light mb-8">Silent Needle</h4>
+<div class="h-[1px] w-full bg-white/5 group-hover:bg-primary transition-colors"></div>
+<div class="mt-4 flex justify-between">
+<span class="text-[10px] text-secondary">DMG_12</span>
+<span class="text-[10px] text-secondary">CRIT_75%</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 group cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-[8px] uppercase tracking-widest text-secondary mb-4 block">Utility</span>
+<h4 class="text-lg font-light mb-8">Smoke Veil</h4>
+<div class="h-[1px] w-full bg-white/5 group-hover:bg-primary transition-colors"></div>
+<div class="mt-4 flex justify-between">
+<span class="text-[10px] text-secondary">DUR_8s</span>
+<span class="text-[10px] text-secondary">RAD_5m</span>
+</div>
+</div>
+<div class="bg-[#0e0e0e] flex items-center justify-center border border-dashed border-white/10 group cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all">add</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-8 pb-4 bg-[#0e0e0e] border-t border-white/5">
+<div class="flex items-center justify-center text-[#dc2626] border-t-2 border-[#dc2626] pt-1 h-full w-full">
+<span class="material-symbols-outlined">radar</span>
+</div>
+<div class="flex items-center justify-center text-[#334155] h-full w-full hover:bg-[#131313] hover:text-[#ffb4ab] transition-colors">
+<span class="material-symbols-outlined">target</span>
+</div>
+<div class="flex items-center justify-center text-[#334155] h-full w-full hover:bg-[#131313] hover:text-[#ffb4ab] transition-colors">
+<span class="material-symbols-outlined">layers</span>
+</div>
+<div class="flex items-center justify-center text-[#334155] h-full w-full hover:bg-[#131313] hover:text-[#ffb4ab] transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+</nav>
+</body></html>

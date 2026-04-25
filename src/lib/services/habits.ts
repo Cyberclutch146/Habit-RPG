@@ -17,6 +17,20 @@ export const habitsService = {
   },
 
   /**
+   * Updates an existing Habit
+   */
+  updateHabit: async (userId: string, habitId: string, updates: Partial<Habit>): Promise<void> => {
+    await HabitsDB.update(habitId, updates, userId);
+  },
+
+  /**
+   * Deletes a Habit
+   */
+  deleteHabit: async (userId: string, habitId: string): Promise<void> => {
+    await HabitsDB.delete(habitId, userId);
+  },
+
+  /**
    * Logs a completion record for a specific habit
    */
   createLog: async (userId: string, log: HabitLog): Promise<HabitLog> => {

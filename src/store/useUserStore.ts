@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { User } from '../lib/db';
+import { User, userSchema } from '../lib/db';
 import { useAuthStore } from './useAuthStore';
 import { db } from '../lib/firebase';
 
@@ -27,7 +27,16 @@ export const useUserStore = create<UserStore>((set) => ({
     const unsubscribe = import('firebase/firestore').then(({ onSnapshot, doc }) => {
       return onSnapshot(doc(db, 'users', fbUser.uid), (docSnap) => {
         if (docSnap.exists()) {
-          set({ user: docSnap.data() as User, loading: false });
+          try {
+            const parsedUser = userSchema.parse({ id: docSnap.id, ...docSnap.data() });
+            // TODO: Remove this override — infinite gold for testing
+            parsedUser.gold = 999999;
+            set({ user: parsedUser, loading: false });
+          } catch (e) {
+            console.error("Zod Validation Failed on User fetch:", e);
+            // Even if poorly formed, we don't crash unconditionally, but maybe pass default user
+            set({ user: { ...docSnap.data(), id: docSnap.id } as User, loading: false });
+          }
         } else {
           set({ user: null, loading: false });
         }

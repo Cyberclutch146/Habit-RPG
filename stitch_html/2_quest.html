@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PROTOCOL_RPG // QUEST_BOARD</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#b9c7e0",
+                    "inverse-on-surface": "#303030",
+                    "surface-container": "#1f1f1f",
+                    "surface-tint": "#ffb4ab",
+                    "on-primary-container": "#fff6f5",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#ffb4ab",
+                    "secondary-container": "#3c4a5e",
+                    "primary-fixed-dim": "#ffb4ab",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#cbe6ff",
+                    "surface-container-lowest": "#0e0e0e",
+                    "outline-variant": "#5c403c",
+                    "background": "#131313",
+                    "tertiary-fixed-dim": "#90cdff",
+                    "on-tertiary-container": "#f3f8ff",
+                    "tertiary": "#90cdff",
+                    "on-primary": "#690005",
+                    "surface": "#131313",
+                    "error-container": "#93000a",
+                    "surface-dim": "#131313",
+                    "secondary-fixed": "#d5e3fd",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-tertiary": "#003450",
+                    "inverse-primary": "#bf0715",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#e6bdb8",
+                    "on-background": "#e2e2e2",
+                    "secondary": "#b9c7e0",
+                    "primary-fixed": "#ffdad6",
+                    "surface-container-highest": "#353535",
+                    "on-secondary-fixed": "#0d1c2f",
+                    "on-secondary-container": "#abb9d2",
+                    "on-primary-fixed": "#410002",
+                    "surface-variant": "#353535",
+                    "surface-bright": "#393939",
+                    "primary-container": "#dc2626",
+                    "on-secondary-fixed-variant": "#3a485c",
+                    "tertiary-container": "#0078b2",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#1b1b1b",
+                    "on-primary-fixed-variant": "#93000b",
+                    "inverse-surface": "#e2e2e2",
+                    "outline": "#ac8884",
+                    "on-secondary": "#233144",
+                    "on-tertiary-fixed-variant": "#004b71",
+                    "on-surface": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "0px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Space Grotesk"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Hide scrollbars for a cleaner look */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar Component -->
+<header class="bg-[#131313] dark:bg-black text-[#dc2626] font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase docked full-width top-0 rounded-none flex justify-between items-center w-full px-6 py-4 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#dc2626]">terminal</span>
+<h1 class="text-xl font-medium tracking-[0.05em] text-[#dc2626]">PROTOCOL_RPG</h1>
+</div>
+<div class="h-8 w-8 bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="user_class_avatar" class="w-full h-full object-cover" data-alt="close up profile of a futuristic cybernetic operator wearing a visor in dark lighting with red accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz_DoZ7m-jAxK-qMnsDY6Id5_7ctQdWzqwNsxTcR5fkog3Zz89eFY9JN9GhObtir-BIiFxA8CX_cc3_euhs2bPN1h2VHvhnsA5Whgpx2t65zfaRkA0_qiT3ttLQczUONBFy7q53HlrZOe-bNSjUIA6SwTZ2JrXoXHbBuiWchmBeHgm7GV6KlVGSWNb4QxVRlVUdteSrFsdeqgGYlvzVtOgEuBIGa0VJ9E5jUwATMISAFfb0xRhJ5vUvkG_rYCFinnniftXqLQ5JYY"/>
+</div>
+</header>
+<main class="flex-grow pt-4 pb-24 px-6 max-w-4xl mx-auto w-full">
+<!-- Dashboard Statistics (Asymmetric Bento Grid) -->
+<section class="grid grid-cols-12 gap-4 mb-12">
+<div class="col-span-12 md:col-span-7 bg-surface-container p-6 flex flex-col justify-between h-48 relative overflow-hidden">
+<div class="z-10">
+<p class="text-[10px] font-medium tracking-[0.05em] uppercase text-secondary mb-1">OPERATOR_STATUS</p>
+<h2 class="text-3xl font-light tracking-[-0.02em]">LVL_42_RECON</h2>
+</div>
+<div class="z-10">
+<div class="flex justify-between items-end mb-2">
+<span class="text-[10px] font-medium tracking-[0.05em] uppercase">XP_PROGRESSION</span>
+<span class="text-xs font-light text-primary">84%</span>
+</div>
+<div class="h-[2px] w-full bg-secondary-container">
+<div class="h-full bg-primary-container w-[84%]"></div>
+</div>
+</div>
+<!-- Subtle background visual -->
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+</div>
+<div class="col-span-6 md:col-span-5 bg-surface-container-high p-6 flex flex-col gap-2">
+<p class="text-[10px] font-medium tracking-[0.05em] uppercase text-secondary">ACTIVE_QUESTS</p>
+<p class="text-4xl font-light text-primary">12</p>
+<div class="mt-auto flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span class="text-[10px] font-medium tracking-[0.05em] uppercase">streak: 07_days</span>
+</div>
+</div>
+<div class="col-span-6 md:hidden bg-[#dc2626] p-6 text-white flex flex-col justify-center items-center">
+<p class="text-[10px] font-medium tracking-[0.05em] uppercase opacity-80">DAILY_SYNC</p>
+<span class="material-symbols-outlined text-2xl mt-2">sync</span>
+</div>
+</section>
+<!-- Quest Filter / Header -->
+<div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
+<div>
+<h3 class="text-[10px] font-medium tracking-[0.05em] uppercase text-secondary">MISSION_LOG</h3>
+<p class="text-2xl font-light uppercase tracking-tight">Active_Quests</p>
+</div>
+<div class="flex gap-4">
+<button class="text-[10px] font-medium tracking-[0.05em] uppercase text-primary border-b border-primary pb-1">ALL</button>
+<button class="text-[10px] font-medium tracking-[0.05em] uppercase text-on-surface-variant hover:text-white transition-colors pb-1">HABITS</button>
+<button class="text-[10px] font-medium tracking-[0.05em] uppercase text-on-surface-variant hover:text-white transition-colors pb-1">DAILIES</button>
+</div>
+</div>
+<!-- Quest List -->
+<div class="space-y-4">
+<!-- Quest Item 1: High Difficulty -->
+<div class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-5 flex items-center gap-6">
+<button class="w-8 h-8 flex items-center justify-center border-2 border-primary-container bg-surface-container-lowest group-active:scale-95 transition-transform text-transparent hover:text-primary-container">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-1">
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase px-1.5 py-0.5 bg-primary-container text-white">HARD</span>
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase text-on-surface-variant">+500 XP</span>
+</div>
+<p class="text-lg font-light tracking-wide uppercase">Core_System_Refactoring</p>
+</div>
+<div class="flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</div>
+</div>
+<!-- Quest Item 2: Medium Difficulty -->
+<div class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-5 flex items-center gap-6">
+<button class="w-8 h-8 flex items-center justify-center border-2 border-secondary-container bg-surface-container-lowest group-active:scale-95 transition-transform text-transparent hover:text-secondary-container">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-1">
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase px-1.5 py-0.5 bg-secondary-container text-on-secondary-container">MEDIUM</span>
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase text-on-surface-variant">+250 XP</span>
+</div>
+<p class="text-lg font-light tracking-wide uppercase">Neural_Network_Training</p>
+</div>
+<div class="flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</div>
+</div>
+<!-- Quest Item 3: Easy Difficulty -->
+<div class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-5 flex items-center gap-6">
+<button class="w-8 h-8 flex items-center justify-center border-2 border-tertiary-container bg-surface-container-lowest group-active:scale-95 transition-transform text-transparent hover:text-tertiary-container">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-1">
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase px-1.5 py-0.5 bg-tertiary-container text-on-tertiary-container">EASY</span>
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase text-on-surface-variant">+100 XP</span>
+</div>
+<p class="text-lg font-light tracking-wide uppercase">Data_Node_Purge</p>
+</div>
+<div class="flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</div>
+</div>
+<!-- Quest Item 4: Completed State -->
+<div class="group bg-surface-container-lowest border border-white/5 p-5 flex items-center gap-6 opacity-40">
+<div class="w-8 h-8 flex items-center justify-center bg-primary-container text-white">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-1">
+<span class="text-[9px] font-medium tracking-[0.1em] uppercase px-1.5 py-0.5 bg-surface-container-highest text-on-surface-variant">COMPLETED</span>
+</div>
+<p class="text-lg font-light tracking-wide uppercase line-through">System_Log_Cleanup</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-sm">history</span>
+</div>
+</div>
+<!-- Add Quest Action Placeholder -->
+<div class="h-32 border-2 border-dashed border-white/5 flex items-center justify-center">
+<p class="text-[10px] font-medium tracking-[0.1em] uppercase text-on-surface-variant">end_of_mission_log</p>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-16 h-16 bg-[#dc2626] text-white flex items-center justify-center z-50 shadow-[0_0_30px_rgba(220,38,38,0.3)] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar Component -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#131313] dark:bg-black font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase border-none">
+<a class="flex flex-col items-center justify-center bg-[#dc2626] text-white p-2 rounded-none w-1/4 h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span>QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] w-1/4 h-full" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>VAULT</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] w-1/4 h-full" href="#">
+<span class="material-symbols-outlined">swords</span>
+<span>BATTLE</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] w-1/4 h-full" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>INTEL</span>
+</a>
+</nav>
+<!-- Background Decoration -->
+<div class="fixed inset-0 pointer-events-none -z-10 opacity-20">
+<div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_20%,_#dc2626_0%,_transparent_25%)] opacity-10"></div>
+<div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[radial-gradient(circle_at_10%_80%,_#334155_0%,_transparent_30%)] opacity-5"></div>
+</div>
+</body></html>

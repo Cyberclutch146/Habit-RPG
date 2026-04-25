@@ -109,22 +109,26 @@ export const gameEngine = {
 
   /**
    * Computes Gold drops. Drops scale with habit difficulty (baseXp) and combo.
+   * Optional petGoldBonus is a decimal (e.g. 0.05 for +5%).
    */
-  calculateGoldDrop: (baseXp: number, multiplier: number): number => {
-    const baseGold = Math.floor(baseXp * 0.2); // e.g. 50 XP -> 10 Gold
-    return Math.floor(baseGold * multiplier);
+  calculateGoldDrop: (baseXp: number, multiplier: number, petGoldBonus: number = 0): number => {
+    const baseGold = Math.floor(baseXp * 0.2);
+    return Math.floor(baseGold * multiplier * (1 + petGoldBonus));
   },
 
   /**
    * Computes Damage against the boss. Checks for critical hits if a weapon is equipped.
+   * Optional petCritBonus is a decimal added to crit chance (e.g. 0.10 for +10%).
    */
-  calculateDamage: (baseXp: number, multiplier: number, equippedWeapon: string | null): { damage: number, isCritical: boolean } => {
+  calculateDamage: (baseXp: number, multiplier: number, equippedWeapon: string | null, petCritBonus: number = 0): { damage: number, isCritical: boolean } => {
     let isCritical = false;
     let critMultiplier = 1.0;
 
-    if (equippedWeapon) {
-      // 15% chance to crit if any weapon is equipped
-      isCritical = Math.random() < 0.15;
+    const baseCrit = equippedWeapon ? 0.15 : 0;
+    const totalCritChance = baseCrit + petCritBonus;
+    
+    if (totalCritChance > 0) {
+      isCritical = Math.random() < totalCritChance;
       if (isCritical) critMultiplier = 2.0;
     }
 
@@ -132,13 +136,14 @@ export const gameEngine = {
     return { damage, isCritical };
   },
 
-  evaluateMissedHabitHpPenalty: (difficulty: "Easy" | "Medium" | "Hard"): number => {
+  evaluateMissedHabitHpPenalty: (difficulty: "Easy" | "Medium" | "Hard", petHpReduction: number = 0): number => {
+    let base = 10;
     switch(difficulty) {
-      case "Easy": return 5;
-      case "Medium": return 15;
-      case "Hard": return 30;
-      default: return 10;
+      case "Easy": base = 5; break;
+      case "Medium": base = 15; break;
+      case "Hard": base = 30; break;
     }
+    return Math.max(1, Math.floor(base * (1 - petHpReduction)));
   },
 
   /**
@@ -152,7 +157,6 @@ export const gameEngine = {
         const boss = BOSS_ROSTER[i];
         cumulativeHp += boss.maxHp;
         
-        // If the old damage was below the threshold, but new damage is above or equal, we just defeated it!
         if (previousTotalDmg < cumulativeHp && newTotalDmg >= cumulativeHp) {
             defeated.push(boss);
         }
@@ -185,7 +189,6 @@ export const gameEngine = {
         baseNames[type][Math.floor(Math.random() * baseNames[type].length)]
     }`;
 
-    // Generate stat bonus (just flavour string for now)
     const multiplier = rarity === "legendary" ? 4 : rarity === "epic" ? 3 : rarity === "rare" ? 2 : 1;
     const buffs = ["crit", "hp", "xp", "gold"];
     const buff = buffs[Math.floor(Math.random() * buffs.length)];
@@ -198,8 +201,108 @@ export const gameEngine = {
         rarity,
         statBonus: `${buff}+${val}%`
     };
+  },
+
+  /**
+   * Checks if any new pets should be unlocked based on the user's current streak.
+   */
+  checkPetUnlocks: (currentStreak: number, ownedPetIds: string[]): RPG_Pet[] => {
+    return PET_ROSTER.filter(pet => 
+      currentStreak >= pet.requiredStreak && !ownedPetIds.includes(pet.id)
+    );
+  },
+
+  /**
+   * Gets the active pet's bonuses for combat calculations.
+   */
+  getPetBonuses: (equippedPetId: string | null): { goldBonus: number, xpBonus: number, critBonus: number, hpReduction: number } => {
+    const defaults = { goldBonus: 0, xpBonus: 0, critBonus: 0, hpReduction: 0 };
+    if (!equippedPetId) return defaults;
+    const pet = PET_ROSTER.find(p => p.id === equippedPetId);
+    if (!pet) return defaults;
+
+    switch (pet.bonusType) {
+      case "gold": return { ...defaults, goldBonus: pet.bonusValue };
+      case "xp": return { ...defaults, xpBonus: pet.bonusValue };
+      case "crit": return { ...defaults, critBonus: pet.bonusValue };
+      case "hp_reduction": return { ...defaults, hpReduction: pet.bonusValue };
+      case "all": return { goldBonus: pet.bonusValue, xpBonus: pet.bonusValue, critBonus: pet.bonusValue, hpReduction: pet.bonusValue };
+      default: return defaults;
+    }
   }
 };
+
+// -- Pet Roster --
+
+export interface RPG_Pet {
+  id: string;
+  name: string;
+  icon: string;
+  requiredStreak: number;
+  bonusType: "gold" | "xp" | "crit" | "hp_reduction" | "all";
+  bonusValue: number;
+  description: string;
+  rarity: "common" | "rare" | "epic" | "legendary";
+  lore: string;
+}
+
+export const PET_ROSTER: RPG_Pet[] = [
+  {
+    id: "pet_shadow_cat",
+    name: "Shadow Cat",
+    icon: "pets",
+    requiredStreak: 3,
+    bonusType: "gold",
+    bonusValue: 0.05,
+    description: "+5% Gold drops",
+    rarity: "common",
+    lore: "A stealthy feline that sniffs out hidden treasure."
+  },
+  {
+    id: "pet_flame_sprite",
+    name: "Flame Sprite",
+    icon: "local_fire_department",
+    requiredStreak: 7,
+    bonusType: "xp",
+    bonusValue: 0.05,
+    description: "+5% XP gains",
+    rarity: "rare",
+    lore: "A restless elemental fueled by your burning discipline."
+  },
+  {
+    id: "pet_iron_golem",
+    name: "Iron Golem",
+    icon: "smart_toy",
+    requiredStreak: 14,
+    bonusType: "hp_reduction",
+    bonusValue: 0.10,
+    description: "-10% HP penalties",
+    rarity: "rare",
+    lore: "An ancient construct that absorbs damage meant for its master."
+  },
+  {
+    id: "pet_storm_falcon",
+    name: "Storm Falcon",
+    icon: "flutter",
+    requiredStreak: 21,
+    bonusType: "crit",
+    bonusValue: 0.10,
+    description: "+10% Crit chance",
+    rarity: "epic",
+    lore: "Strikes like lightning. Your enemies never see it coming."
+  },
+  {
+    id: "pet_celestial_dragon",
+    name: "Celestial Dragon",
+    icon: "trophy",
+    requiredStreak: 30,
+    bonusType: "all",
+    bonusValue: 0.10,
+    description: "+10% all stats",
+    rarity: "legendary",
+    lore: "The ultimate companion. Only the most disciplined warriors earn its trust."
+  }
+];
 
 // -- Multi-Boss Roster --
 

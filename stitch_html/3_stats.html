@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PROTOCOL_RPG // OPERATOR_STATS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;family=Outfit:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "inverse-on-surface": "#303030",
+                        "surface-container": "#1f1f1f",
+                        "surface-tint": "#ffb4ab",
+                        "on-primary-container": "#fff6f5",
+                        "surface-container-high": "#2a2a2a",
+                        "primary": "#ffb4ab",
+                        "secondary-container": "#3c4a5e",
+                        "primary-fixed-dim": "#ffb4ab",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#cbe6ff",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline-variant": "#5c403c",
+                        "background": "#131313",
+                        "tertiary-fixed-dim": "#90cdff",
+                        "on-tertiary-container": "#f3f8ff",
+                        "tertiary": "#90cdff",
+                        "on-primary": "#690005",
+                        "surface": "#131313",
+                        "error-container": "#93000a",
+                        "surface-dim": "#131313",
+                        "secondary-fixed": "#d5e3fd",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-tertiary": "#003450",
+                        "inverse-primary": "#bf0715",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#e6bdb8",
+                        "on-background": "#e2e2e2",
+                        "secondary": "#b9c7e0",
+                        "primary-fixed": "#ffdad6",
+                        "surface-container-highest": "#353535",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "on-secondary-container": "#abb9d2",
+                        "on-primary-fixed": "#410002",
+                        "surface-variant": "#353535",
+                        "surface-bright": "#393939",
+                        "primary-container": "#dc2626",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "tertiary-container": "#0078b2",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b1b",
+                        "on-primary-fixed-variant": "#93000b",
+                        "inverse-surface": "#e2e2e2",
+                        "outline": "#ac8884",
+                        "on-secondary": "#233144",
+                        "on-tertiary-fixed-variant": "#004b71",
+                        "on-surface": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Outfit"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #e2e2e2;
+            font-family: 'Outfit', sans-serif;
+        }
+        .space-grotesk {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-[#131313] dark:bg-black flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#dc2626]" style="font-variation-settings: 'FILL' 0;">terminal</span>
+<h1 class="font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase text-xl font-medium tracking-[0.05em] text-[#dc2626]">PROTOCOL_RPG</h1>
+</div>
+<div class="w-10 h-10 bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="abstract cyberpunk profile avatar with glitch effects and neon red accents on black background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPXUXFt64rLoEsdj80wRZokTZC1LnP93s93r6_invu4qNx9cm1h_Jfu-stt4eaxoSh-l0rAAsaQMKBTLY3fyyeD5wzMOa5rUJEoY38-7n8_W5_c2KoyZLcqtB0k743wiocXHdCmzUUDoC_5jzAFlDMKfCJQeuLXkC5ePyuNtsXH6po2pSICp_BAngK02hx6DeFuyhq3IZQ37hzy7hb61LgcsfutLPphRXVuLeIXFwrr9oRJnSjkMT9ZaR26rrmsv7MlrQmzo0fmfA"/>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-7xl mx-auto">
+<!-- Profile Header Section -->
+<section class="mb-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+<div class="md:col-span-8">
+<p class="font-['Space_Grotesk'] text-xs font-medium tracking-[0.15em] text-secondary-fixed-dim uppercase mb-2">OPERATOR_PROFILE</p>
+<h2 class="font-['Space_Grotesk'] text-5xl md:text-7xl font-light tracking-tighter text-on-surface">OPERATOR_01</h2>
+<div class="flex items-center gap-6 mt-4">
+<div class="flex flex-col">
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] text-[#dc2626] uppercase">CLASS</span>
+<span class="font-light text-on-surface">LVL_42_RECON</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant opacity-30"></div>
+<div class="flex flex-col">
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] text-[#dc2626] uppercase">SECTOR</span>
+<span class="font-light text-on-surface">ACTIVE_SECTOR_07</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col gap-2">
+<div class="flex justify-between items-end mb-1">
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase text-secondary">EXP_PROGRESS</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-medium text-on-surface">84%</span>
+</div>
+<div class="h-1 bg-surface-container-highest w-full relative">
+<div class="absolute top-0 left-0 h-full bg-[#dc2626]" style="width: 84%;"></div>
+</div>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-16 bg-outline-variant bg-opacity-10">
+<!-- Lifetime Damage -->
+<div class="bg-surface-container p-8 flex flex-col justify-between aspect-square md:aspect-auto md:h-64">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-3xl">query_stats</span>
+<div>
+<h3 class="font-['Space_Grotesk'] text-xs font-medium tracking-[0.1em] text-secondary-fixed-dim uppercase mb-1">LIFETIME DAMAGE</h3>
+<p class="font-['Space_Grotesk'] text-5xl font-light text-on-surface tracking-tighter">1.24M</p>
+<div class="mt-4 flex items-center gap-2">
+<span class="w-2 h-2 bg-[#dc2626]"></span>
+<span class="font-['Space_Grotesk'] text-[10px] text-secondary uppercase tracking-widest">RANK_S_TIER</span>
+</div>
+</div>
+</div>
+<!-- Quests Completed -->
+<div class="bg-surface-container-low p-8 flex flex-col justify-between aspect-square md:aspect-auto md:h-64">
+<span class="material-symbols-outlined text-[#dc2626] text-3xl" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+<div>
+<h3 class="font-['Space_Grotesk'] text-xs font-medium tracking-[0.1em] text-secondary-fixed-dim uppercase mb-1">TOTAL QUESTS</h3>
+<p class="font-['Space_Grotesk'] text-5xl font-light text-on-surface tracking-tighter">742</p>
+<div class="mt-4">
+<div class="h-[2px] bg-secondary-container w-full">
+<div class="h-[2px] bg-[#dc2626] w-3/4"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Login Streak -->
+<div class="bg-surface-container p-8 flex flex-col justify-between aspect-square md:aspect-auto md:h-64 border-l-0 md:border-l border-outline-variant border-opacity-10">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-3xl">bolt</span>
+<div>
+<h3 class="font-['Space_Grotesk'] text-xs font-medium tracking-[0.1em] text-secondary-fixed-dim uppercase mb-1">CURRENT STREAK</h3>
+<p class="font-['Space_Grotesk'] text-5xl font-light text-on-surface tracking-tighter">18_DAYS</p>
+<div class="mt-4 flex items-center gap-1">
+<span class="text-[10px] text-primary uppercase font-medium">RECOVERY_AVAILABLE</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Inventory Grid -->
+<section class="mb-24">
+<div class="flex justify-between items-end mb-8">
+<h3 class="font-['Space_Grotesk'] text-2xl font-light tracking-tight text-on-surface uppercase">EQUIPMENT_VAULT</h3>
+<div class="flex gap-4">
+<button class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.1em] text-[#dc2626] uppercase border-b border-[#dc2626] pb-1">ALL_ITEMS</button>
+<button class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.1em] text-secondary uppercase hover:text-on-surface transition-colors pb-1">SORT_RARITY</button>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-outline-variant bg-opacity-20 border border-outline-variant border-opacity-20">
+<!-- Legendary Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#fbbf24]"></div>
+<span class="material-symbols-outlined text-[#fbbf24] text-4xl mb-4 group-hover:scale-110 transition-transform">swords</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">VOID_REAPER</span>
+<span class="text-[9px] text-secondary mt-1">LVL_99</span>
+</div>
+<!-- Epic Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#a855f7]"></div>
+<span class="material-symbols-outlined text-[#a855f7] text-4xl mb-4">shield</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">NULL_AEGIS</span>
+<span class="text-[9px] text-secondary mt-1">LVL_85</span>
+</div>
+<!-- Rare Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#3b82f6]"></div>
+<span class="material-symbols-outlined text-[#3b82f6] text-4xl mb-4">visibility</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">GHOST_OPTIC</span>
+<span class="text-[9px] text-secondary mt-1">LVL_42</span>
+</div>
+<!-- Common Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#64748b]"></div>
+<span class="material-symbols-outlined text-[#64748b] text-4xl mb-4">architecture</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">BASIC_BLADE</span>
+<span class="text-[9px] text-secondary mt-1">LVL_05</span>
+</div>
+<!-- Epic Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#a855f7]"></div>
+<span class="material-symbols-outlined text-[#a855f7] text-4xl mb-4">memory</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">SYNAPSE_LINK</span>
+<span class="text-[9px] text-secondary mt-1">LVL_72</span>
+</div>
+<!-- Rare Item -->
+<div class="aspect-square bg-surface-container p-4 flex flex-col items-center justify-center group hover:bg-surface-container-high transition-colors cursor-pointer relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-[#3b82f6]"></div>
+<span class="material-symbols-outlined text-[#3b82f6] text-4xl mb-4">battery_charging_full</span>
+<span class="font-['Space_Grotesk'] text-[10px] text-center text-on-surface uppercase leading-tight font-medium">ION_CORE</span>
+<span class="text-[9px] text-secondary mt-1">LVL_38</span>
+</div>
+<!-- Empty Slot -->
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-surface-variant text-2xl">add</span>
+</div>
+<!-- Repeat Empty Slots -->
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center"></div>
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center"></div>
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center"></div>
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center"></div>
+<div class="aspect-square bg-surface-container-lowest border border-dashed border-outline-variant border-opacity-30 p-4 flex flex-col items-center justify-center"></div>
+</div>
+</section>
+<!-- System Logs Muted Footer -->
+<section class="mb-12 border-l border-[#dc2626] pl-6 py-4">
+<h4 class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.2em] text-[#dc2626] uppercase mb-4">SYSTEM_LOGS_STREAM</h4>
+<div class="space-y-2 opacity-60">
+<p class="font-['Space_Grotesk'] text-[11px] font-light"><span class="text-secondary">[04:12:00]</span> :: OPERATOR_LOGGED_IN :: SECTOR_07</p>
+<p class="font-['Space_Grotesk'] text-[11px] font-light"><span class="text-secondary">[02:30:15]</span> :: QUEST_COMPLETE :: "MORNING_ROUTINE" :: +50 EXP</p>
+<p class="font-['Space_Grotesk'] text-[11px] font-light"><span class="text-secondary">[00:45:22]</span> :: ITEM_ACQUIRED :: VOID_REAPER_FRAGMENT</p>
+</div>
+</section>
+</main>
+<!-- NavigationDrawer (Mobile/Desktop Semantic Anchor) -->
+<nav class="hidden fixed left-0 top-0 h-full w-20 md:flex flex-col items-center py-8 gap-8 bg-[#0e0e0e] border-r border-outline-variant border-opacity-10 z-[60]">
+<span class="material-symbols-outlined text-[#dc2626] mb-8">category</span>
+<div class="flex flex-col gap-6">
+<button class="w-10 h-10 flex items-center justify-center text-[#b9c7e0] hover:text-white transition-colors">
+<span class="material-symbols-outlined">assignment</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-[#b9c7e0] hover:text-white transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-[#dc2626] border-l-2 border-[#dc2626]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-[#b9c7e0] hover:text-white transition-colors">
+<span class="material-symbols-outlined">database</span>
+</button>
+</div>
+<button class="mt-auto w-10 h-10 flex items-center justify-center text-[#b9c7e0] hover:text-error transition-colors">
+<span class="material-symbols-outlined">power_settings_new</span>
+</button>
+</nav>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#131313] dark:bg-black">
+<div class="flex flex-col items-center justify-center text-[#334155] p-2">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">QUESTS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#334155] p-2">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">VAULT</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#334155] p-2">
+<span class="material-symbols-outlined">swords</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">BATTLE</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#dc2626] text-white p-2 rounded-none min-w-[80px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">INTEL</span>
+</div>
+</nav>
+</body></html>

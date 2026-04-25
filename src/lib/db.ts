@@ -17,7 +17,7 @@ import { db } from "./firebase";
 export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string().email(),
+  email: z.string().email().or(z.literal('')),
   level: z.number().min(1),
   xp: z.number().min(0),
   hp: z.number().min(0).max(100).optional().default(100),
@@ -42,6 +42,7 @@ export const userSchema = z.object({
   })).optional().default([]),
   equippedArmor: z.string().nullable().optional(),
   equippedPet: z.string().nullable().optional(),
+  pets: z.array(z.string()).optional().default([]),
   skillPoints: z.number().min(0).optional().default(0),
   unlockedSkills: z.array(z.string()).optional().default([]),
 });
@@ -87,7 +88,7 @@ export class FirestoreCollection<T extends z.ZodTypeAny> {
     return doc(db, this.pathGenerator(...args), docId);
   }
 
-  async create(docId: string, data: z.infer<T>, ...args: string[]): Promise<void> {
+  async create(docId: string, data: z.input<T>, ...args: string[]): Promise<void> {
     const parsed = this.schema.parse(data);
     await setDoc(this.getDocRef(docId, ...args), parsed);
   }

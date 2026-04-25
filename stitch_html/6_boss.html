@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PROTOCOL_RPG // EPIC_ENCOUNTER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;family=Outfit:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "inverse-on-surface": "#303030",
+                        "surface-container": "#1f1f1f",
+                        "surface-tint": "#ffb4ab",
+                        "on-primary-container": "#fff6f5",
+                        "surface-container-high": "#2a2a2a",
+                        "primary": "#ffb4ab",
+                        "secondary-container": "#3c4a5e",
+                        "primary-fixed-dim": "#ffb4ab",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#cbe6ff",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline-variant": "#5c403c",
+                        "background": "#131313",
+                        "tertiary-fixed-dim": "#90cdff",
+                        "on-tertiary-container": "#f3f8ff",
+                        "tertiary": "#90cdff",
+                        "on-primary": "#690005",
+                        "surface": "#131313",
+                        "error-container": "#93000a",
+                        "surface-dim": "#131313",
+                        "secondary-fixed": "#d5e3fd",
+                        "on-tertiary-fixed": "#001e30",
+                        "on-tertiary": "#003450",
+                        "inverse-primary": "#bf0715",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#e6bdb8",
+                        "on-background": "#e2e2e2",
+                        "secondary": "#b9c7e0",
+                        "primary-fixed": "#ffdad6",
+                        "surface-container-highest": "#353535",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "on-secondary-container": "#abb9d2",
+                        "on-primary-fixed": "#410002",
+                        "surface-variant": "#353535",
+                        "surface-bright": "#393939",
+                        "primary-container": "#dc2626",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "tertiary-container": "#0078b2",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1b1b1b",
+                        "on-primary-fixed-variant": "#93000b",
+                        "inverse-surface": "#e2e2e2",
+                        "outline": "#ac8884",
+                        "on-secondary": "#233144",
+                        "on-tertiary-fixed-variant": "#004b71",
+                        "on-surface": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk", "sans-serif"],
+                        "body": ["Outfit", "sans-serif"],
+                        "label": ["Space Grotesk", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glitch-border {
+            position: relative;
+            border: 1px solid #dc2626;
+        }
+        .glitch-border::before, .glitch-border::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #dc2626;
+        }
+        .glitch-border::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .glitch-border::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+        
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(220, 38, 38, 0.05) 50%, rgba(0,0,0,0) 100%);
+            position: absolute;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black text-on-background font-body min-h-screen flex flex-col selection:bg-primary-container selection:text-white overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#131313] dark:bg-black text-[#dc2626] font-['Space_Grotesk'] font-light tracking-[-0.02em] uppercase fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl">terminal</span>
+<h1 class="text-xl font-medium tracking-[0.05em] text-[#dc2626]">PROTOCOL_RPG</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden md:block">
+<p class="text-[10px] font-medium tracking-widest text-secondary opacity-60">ENCOUNTER_ACTIVE</p>
+<p class="text-xs font-bold">SYSTEM_BREACH_V3</p>
+</div>
+<div class="w-10 h-10 bg-surface-container-highest border border-outline-variant flex items-center justify-center">
+<img alt="User" class="w-full h-full object-cover" data-alt="high-contrast pixel art style avatar of a futuristic cybernetic operator with glowing red visor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfyxrnvzmHqmQXy8DXjMVYZxALY5ZExFPJ8PFaydRRbnXvrqzaeG2JQgEVCNHz0-SGNErekC-ExwCZWDAlYZX3UaKRUFoH4tQlOqGkgJ_tH7o1fQeRr75YwBaU5V39XPwaKUWXJWhERXZlWPIaukvMyLafhYlkt2K-bLywqPtg9EjOnsziym2QoZWBlY6ObL1wgLrym3sRBSEaleJ9hctL2KtHHflEsoNRf2Ja4Eag5OJvZyCN4-rhxjZT1NCw0KBl7nl7KSNbgBs"/>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 px-6 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Hero Section: Boss Portrait -->
+<section class="md:col-span-8 flex flex-col gap-8">
+<div class="relative group">
+<!-- Glitchy Frame -->
+<div class="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-primary-container"></div>
+<div class="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-primary-container"></div>
+<div class="bg-surface-container-lowest border border-white/5 aspect-video md:aspect-[21/9] relative overflow-hidden group">
+<img alt="Boss" class="w-full h-full object-cover grayscale brightness-50 contrast-125 hover:scale-105 transition-transform duration-700" data-alt="monstrous digital glitch entity with multiple glowing red eyes and distorted wireframe limbs emerging from black void" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDftT-CL5LQFWmtdSaWpbD_TCukOz-jy9fw5l2YIBrwHBeU_GjWV-ocIGtwH89g5ZGuYksO1aAd_tuw_6XGOKLNEmhmlIpLhjm35Guxe9iUpFsFaL3JYfb1_JlhwDvJtwaX6UaXa-vu8PUqU1DRp3UYHP636sAxIrjctEcymUOFykN0acxaMDOvi9ZlaVW4I07XfQPKgzmbPRiWkTpEVH4OPv8o1QBaXsfTG97dc5_R8FP2nUubWJWNLoPQW6HFaQlLBrnG8B9HcAY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+<div class="scanline"></div>
+<!-- Tactical Overlay -->
+<div class="absolute top-6 left-6 flex flex-col gap-1">
+<span class="bg-primary-container text-white px-2 py-0.5 text-[10px] font-bold tracking-tighter uppercase">Subject: ARCH_NULL_EX</span>
+<span class="text-white/40 text-[9px] font-mono">THREAT_LEVEL: OMEGA</span>
+</div>
+<div class="absolute bottom-6 right-6 text-right">
+<div class="text-[4rem] md:text-[6rem] font-headline font-light leading-none tracking-tighter text-white/10 uppercase select-none">
+                            VOID_WALKER
+                        </div>
+</div>
+</div>
+</div>
+<!-- Massive HP Bar -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="font-label text-[10px] tracking-[0.2em] text-secondary">LIFETIME_DAMAGE_INDEX</span>
+<h2 class="font-headline text-4xl font-light text-primary-container leading-none">842,901 / 1,500,000</h2>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] tracking-[0.2em] text-secondary">CRITICAL_THRESHOLD</span>
+<p class="font-headline text-xl text-on-surface">56.1%</p>
+</div>
+</div>
+<!-- Micro-Gauge HP Bar -->
+<div class="h-8 w-full bg-surface-container-lowest border border-white/5 flex p-1">
+<div class="h-full bg-primary-container w-[56%]" style="box-shadow: 0 0 20px rgba(220, 38, 38, 0.4)"></div>
+<div class="h-full w-[2%] bg-white animate-pulse"></div>
+<div class="h-full flex-grow bg-surface-container-high opacity-20"></div>
+</div>
+<div class="grid grid-cols-4 gap-4 mt-2">
+<div class="border-l border-primary-container pl-3 py-1">
+<p class="text-[9px] font-label text-secondary uppercase">Stamina</p>
+<p class="text-lg font-headline">LOW</p>
+</div>
+<div class="border-l border-white/10 pl-3 py-1 opacity-50">
+<p class="text-[9px] font-label text-secondary uppercase">Armor</p>
+<p class="text-lg font-headline">92%</p>
+</div>
+<div class="border-l border-white/10 pl-3 py-1 opacity-50">
+<p class="text-[9px] font-label text-secondary uppercase">Evasion</p>
+<p class="text-lg font-headline">14%</p>
+</div>
+<div class="border-l border-primary-container pl-3 py-1 bg-primary-container/10">
+<p class="text-[9px] font-label text-white uppercase">Combo</p>
+<p class="text-lg font-headline text-white">x14</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Intel & Controls -->
+<aside class="md:col-span-4 flex flex-col gap-8">
+<div class="bg-surface-container-lowest p-6 border border-white/5 flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<h3 class="font-label text-xs tracking-widest text-primary-container">INTEL_REPORT</h3>
+<span class="material-symbols-outlined text-secondary opacity-50 text-sm">info</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="group cursor-help">
+<p class="text-[10px] text-secondary font-label mb-1">STRENGTHS</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high px-3 py-1 text-[11px] font-medium border border-white/5">VOID_DASH</span>
+<span class="bg-surface-container-high px-3 py-1 text-[11px] font-medium border border-white/5">CORRUPTION</span>
+</div>
+</div>
+<div class="group cursor-help">
+<p class="text-[10px] text-secondary font-label mb-1">WEAKNESSES</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary-container/20 text-primary px-3 py-1 text-[11px] font-medium border border-primary-container/50">DATA_PURGE</span>
+<span class="bg-primary-container/20 text-primary px-3 py-1 text-[11px] font-medium border border-primary-container/50">LIGHT_FLARE</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex flex-col gap-2">
+<button class="w-full bg-primary-container hover:bg-[#b91c1c] text-white py-4 font-label text-sm tracking-[0.2em] transition-all active:scale-[0.98]">
+                        INITIATE_STRIKE
+                    </button>
+<button class="w-full border border-white/10 hover:bg-white/5 text-on-surface py-4 font-label text-sm tracking-[0.2em] transition-all">
+                        USE_SKILL_ARRAY
+                    </button>
+</div>
+</div>
+<!-- Boss Gauntlet Accordion -->
+<div class="flex flex-col gap-2">
+<h3 class="font-label text-[10px] tracking-[0.2em] text-secondary px-2">BOSS_GAUNTLET_SEQ</h3>
+<div class="flex flex-col border border-white/5 bg-surface-container-lowest">
+<!-- Defeated Boss -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#10b981] text-sm">check_circle</span>
+<span class="text-xs font-label tracking-wider text-secondary">01. SLIME_OVERLORD</span>
+</div>
+<span class="text-[9px] font-mono text-[#10b981] uppercase">DEFEATED</span>
+</div>
+<!-- Defeated Boss -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#10b981] text-sm">check_circle</span>
+<span class="text-xs font-label tracking-wider text-secondary">02. IRON_SENTINEL</span>
+</div>
+<span class="text-[9px] font-mono text-[#10b981] uppercase">DEFEATED</span>
+</div>
+<!-- Current Boss -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 bg-primary-container/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container text-sm animate-pulse">target</span>
+<span class="text-xs font-label tracking-wider text-on-surface">03. VOID_WALKER</span>
+</div>
+<span class="text-[9px] font-mono text-primary-container uppercase">ACTIVE</span>
+</div>
+<!-- Locked Bosses -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">lock</span>
+<span class="text-xs font-label tracking-wider text-secondary">04. ???_ENTITY</span>
+</div>
+<span class="text-[9px] font-mono text-secondary uppercase">LOCKED</span>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-white/5 opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">lock</span>
+<span class="text-xs font-label tracking-wider text-secondary">05. ???_ENTITY</span>
+</div>
+<span class="text-[9px] font-mono text-secondary uppercase">LOCKED</span>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-white/5 opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">lock</span>
+<span class="text-xs font-label tracking-wider text-secondary">06. ???_ENTITY</span>
+</div>
+<span class="text-[9px] font-mono text-secondary uppercase">LOCKED</span>
+</div>
+<div class="flex items-center justify-between p-4 opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-sm">lock</span>
+<span class="text-xs font-label tracking-wider text-secondary">07. FINAL_PROTOCOL</span>
+</div>
+<span class="text-[9px] font-mono text-secondary uppercase">LOCKED</span>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- NavigationDrawer Logic (Simplified for layout) -->
+<nav class="hidden lg:flex fixed left-0 top-0 h-full w-16 flex-col items-center py-24 bg-[#0e0e0e] border-r border-white/5 z-40 gap-8">
+<button class="material-symbols-outlined text-secondary hover:text-primary-container transition-colors">category</button>
+<button class="material-symbols-outlined text-secondary hover:text-primary-container transition-colors">database</button>
+<div class="mt-auto">
+<button class="material-symbols-outlined text-primary-container/40 hover:text-primary-container transition-colors">power_settings_new</button>
+</div>
+</nav>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#131313] dark:bg-black font-['Space_Grotesk'] text-[10px] font-medium tracking-[0.05em] uppercase">
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] transition-all" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span>QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] transition-all" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>VAULT</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#dc2626] text-white p-2 rounded-none scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swords</span>
+<span>BATTLE</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#334155] p-2 hover:bg-[#1a1a1a] transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>INTEL</span>
+</a>
+</nav>
+</body></html>

@@ -8,10 +8,12 @@ import { useSoundEffects } from '../../hooks/useSoundEffects';
 interface Props {
   habit: Habit;
   completed: boolean;
+  onEdit?: () => void;
 }
 
-export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
+export const QuestCard: React.FC<Props> = ({ habit, completed, onEdit }) => {
   const completeHabit = useHabitStore(state => state.completeHabit);
+  const deleteHabit = useHabitStore(state => state.deleteHabit);
   const [isClicking, setIsClicking] = useState(false);
   const { playSuccess, playLevelUp, playLootDrop } = useSoundEffects();
 
@@ -36,6 +38,12 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
     setIsClicking(false);
   };
 
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to abandon this quest?")) {
+      await deleteHabit(habit.id);
+    }
+  };
+
   return (
     <SpotlightCard className="mb-4 rounded-2xl">
       <m.div 
@@ -57,9 +65,23 @@ export const QuestCard: React.FC<Props> = ({ habit, completed }) => {
             {getIcon(habit.type)}
           </span>
         </div>
-        <span className={`text-[10px] uppercase tracking-wider font-black px-2 py-1 rounded border transition-colors duration-500 ${completed ? "bg-surface-container-highest text-on-surface-variant border-outline-variant/20" : "bg-inverse-surface text-inverse-on-surface shadow-sm border-outline-variant/20"}`}>
-          +{habit.xpReward} XP
-        </span>
+        <div className="flex items-center gap-2">
+          {!completed && (
+            <div className="flex bg-surface-container opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded overflow-hidden shadow-sm border border-outline-variant/20">
+              {onEdit && (
+                <button onClick={onEdit} className="p-1 hover:bg-primary/20 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[14px]">edit</span>
+                </button>
+              )}
+              <button onClick={handleDelete} className="p-1 hover:bg-rose-500/20 text-on-surface-variant hover:text-rose-500 transition-colors flex items-center justify-center">
+                <span className="material-symbols-outlined text-[14px]">delete</span>
+              </button>
+            </div>
+          )}
+          <span className={`text-[10px] uppercase tracking-wider font-black px-2 py-1 rounded border transition-colors duration-500 ${completed ? "bg-surface-container-highest text-on-surface-variant border-outline-variant/20" : "bg-inverse-surface text-inverse-on-surface shadow-sm border-outline-variant/20"}`}>
+            +{habit.xpReward} XP
+          </span>
+        </div>
       </div>
       
       <div className="relative z-10">

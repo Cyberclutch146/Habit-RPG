@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PROTOCOL_RPG // INITIALIZATION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#b9c7e0",
+                    "inverse-on-surface": "#303030",
+                    "surface-container": "#1f1f1f",
+                    "surface-tint": "#ffb4ab",
+                    "on-primary-container": "#fff6f5",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#ffb4ab",
+                    "secondary-container": "#3c4a5e",
+                    "primary-fixed-dim": "#ffb4ab",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#cbe6ff",
+                    "surface-container-lowest": "#0e0e0e",
+                    "outline-variant": "#5c403c",
+                    "background": "#131313",
+                    "tertiary-fixed-dim": "#90cdff",
+                    "on-tertiary-container": "#f3f8ff",
+                    "tertiary": "#90cdff",
+                    "on-primary": "#690005",
+                    "surface": "#131313",
+                    "error-container": "#93000a",
+                    "surface-dim": "#131313",
+                    "secondary-fixed": "#d5e3fd",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-tertiary": "#003450",
+                    "inverse-primary": "#bf0715",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#e6bdb8",
+                    "on-background": "#e2e2e2",
+                    "secondary": "#b9c7e0",
+                    "primary-fixed": "#ffdad6",
+                    "surface-container-highest": "#353535",
+                    "on-secondary-fixed": "#0d1c2f",
+                    "on-secondary-container": "#abb9d2",
+                    "on-primary-fixed": "#410002",
+                    "surface-variant": "#353535",
+                    "surface-bright": "#393939",
+                    "primary-container": "#dc2626",
+                    "on-secondary-fixed-variant": "#3a485c",
+                    "tertiary-container": "#0078b2",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#1b1b1b",
+                    "on-primary-fixed-variant": "#93000b",
+                    "inverse-surface": "#e2e2e2",
+                    "outline": "#ac8884",
+                    "on-secondary": "#233144",
+                    "on-tertiary-fixed-variant": "#004b71",
+                    "on-surface": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Space Grotesk"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e2e2e2;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(220, 38, 38, 0.1);
+            position: absolute;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(42, 42, 42, 0.4);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest min-h-screen selection:bg-primary-container selection:text-white">
+<!-- TopAppBar Anchor (JSON Ref: TopAppBar) -->
+<header class="bg-[#131313] dark:bg-black flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#dc2626]" data-icon="terminal">terminal</span>
+<h1 class="text-xl font-medium tracking-[0.05em] text-[#dc2626] font-['Space_Grotesk'] uppercase">PROTOCOL_RPG</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6">
+<span class="text-[10px] font-medium tracking-[0.05em] uppercase text-[#dc2626]">SYSTEM_STATUS: ACTIVE</span>
+<span class="text-[10px] font-medium tracking-[0.05em] uppercase text-[#b9c7e0]">ENCRYPTION: AES-256</span>
+</div>
+<div class="w-8 h-8 bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" data-icon="user_class_avatar">account_circle</span>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Hero Branding & Terminal Data -->
+<section class="lg:col-span-5 flex flex-col justify-center gap-8">
+<div class="space-y-4">
+<p class="text-primary tracking-[0.2em] font-medium text-xs uppercase">Initial Boot Sequence</p>
+<h2 class="text-5xl md:text-7xl font-light tracking-[-0.03em] leading-tight text-on-background">
+                    DEFINE YOUR <span class="text-primary-container">OPERATOR</span>
+</h2>
+<p class="text-secondary font-light text-lg max-w-md leading-relaxed">
+                    Connect your neural interface to the habit-tracking matrix. Establish identity and select your operational specialty.
+                </p>
+</div>
+<div class="bg-surface-container-lowest p-6 border-l-2 border-primary-container space-y-4">
+<div class="flex justify-between text-[10px] text-on-surface-variant font-medium tracking-widest uppercase">
+<span>Active_Node</span>
+<span class="text-primary">SECTOR_07</span>
+</div>
+<div class="space-y-2 font-mono text-xs text-secondary-fixed-dim opacity-60">
+<p>&gt; initializing_kernel... [OK]</p>
+<p>&gt; loading_class_database... [OK]</p>
+<p>&gt; waiting_for_user_credentials...</p>
+</div>
+</div>
+</section>
+<!-- Interactive Interface -->
+<section class="lg:col-span-7 space-y-12">
+<!-- Auth Form -->
+<div class="bg-surface-container p-8 space-y-8">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-primary-container"></div>
+<h3 class="label-md font-medium tracking-widest uppercase text-on-surface">IDENTITY_VERIFICATION</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-[10px] font-medium tracking-widest uppercase text-secondary">EMAIL_ADDRESS</label>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-0 text-on-surface p-4 placeholder:text-surface-container-highest transition-all focus:bg-surface-container-high" placeholder="OPERATOR@NULL.NET" type="email"/>
+<div class="h-[1px] w-full bg-surface-container-highest"></div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-medium tracking-widest uppercase text-secondary">ACCESS_KEY</label>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-0 text-on-surface p-4 placeholder:text-surface-container-highest transition-all focus:bg-surface-container-high" placeholder="********" type="password"/>
+<div class="h-[1px] w-full bg-surface-container-highest"></div>
+</div>
+</div>
+</div>
+<!-- Class Selection: Bento Grid Style -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-primary-container"></div>
+<h3 class="label-md font-medium tracking-widest uppercase text-on-surface">CLASS_SELECTION</h3>
+</div>
+<span class="text-[10px] text-secondary-fixed-dim uppercase tracking-tighter">Required_Field</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Warrior Class -->
+<button class="group relative flex flex-col bg-surface-container-low hover:bg-surface-container-high transition-all text-left p-0 overflow-hidden ring-1 ring-inset ring-transparent hover:ring-primary-container">
+<div class="h-32 w-full overflow-hidden bg-surface-container-highest relative">
+<img alt="cybernetic heavy armor" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="high-contrast close up of futuristic black matte plate armor with red glowing light filaments in a dark hangar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZsJZKfB4sPYo8VMS-U2LZd4igr18Kg8tfDvBRa2U1D7ouJwyRCz2n20xWKC0dsncN2EAo6uDY_jvY3Sl3R8qA6as9EA127ZebT0TmdiJ8HDF0_LyEsJqrWG_3q3KhLi32oV0vI6evVNX2YXvFLedst6aEomlXhsB3w5MSdhJrwDrJh9q8NsE5ILFsBJ0Q3lchG4mrbjVnnQaWvhpOeI5V5xgC6KIKGs3FdwHbSwerztiCkNgflZG1BookUt2pMHfIuf5h46GpMqE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex justify-between items-center">
+<h4 class="text-xl font-medium tracking-tight text-on-background">WARRIOR</h4>
+<span class="material-symbols-outlined text-primary-container" data-icon="shield">shield</span>
+</div>
+<p class="text-xs text-secondary leading-relaxed">Focuses on Strength and Consistency. +20% EXP for daily tasks completed.</p>
+<div class="pt-4 flex gap-1">
+<div class="h-1 flex-1 bg-primary-container"></div>
+<div class="h-1 flex-1 bg-surface-container-highest"></div>
+<div class="h-1 flex-1 bg-surface-container-highest"></div>
+</div>
+</div>
+</button>
+<!-- Rogue Class -->
+<button class="group relative flex flex-col bg-surface-container-low hover:bg-surface-container-high transition-all text-left p-0 overflow-hidden ring-1 ring-inset ring-transparent hover:ring-primary-container">
+<div class="h-32 w-full overflow-hidden bg-surface-container-highest relative">
+<img alt="stealth technology" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="abstract tech texture with carbon fiber patterns and sleek reflective surfaces in deep obsidian and crimson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuWvgsZR-rh9oGVfDBZnEHKQ0Z0XQq6VF7QWFxqegQYHGpGh8_ucU89UA1gaV9wDZqTOrjZ_gGTtwYx9GtD0gL1rwVmmWmx6ElWQUxBGNwK9fe1SX1PP_rsT5BJmcMb3go_DNRM2wsk0jFXMRNQkG8tGUNs4t1r6yghg-uHoyEc3c0-n6ogqVz8S6Aa61ximT8RZ3vIAdHbmXMtnLH0fJSSXQIfbcB1z3HeJXcVQNnN1ou6PD9kg_ftOaRhOeeUIiPFdBpF4rPA1I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex justify-between items-center">
+<h4 class="text-xl font-medium tracking-tight text-on-background">ROGUE</h4>
+<span class="material-symbols-outlined text-primary-container" data-icon="bolt">bolt</span>
+</div>
+<p class="text-xs text-secondary leading-relaxed">Specializes in Stealth and Criticals. +15% Gold drop from rare habits.</p>
+<div class="pt-4 flex gap-1">
+<div class="h-1 flex-1 bg-primary-container"></div>
+<div class="h-1 flex-1 bg-primary-container"></div>
+<div class="h-1 flex-1 bg-surface-container-highest"></div>
+</div>
+</div>
+</button>
+<!-- Mage Class -->
+<button class="group relative flex flex-col bg-surface-container-low hover:bg-surface-container-high transition-all text-left p-0 overflow-hidden ring-1 ring-inset ring-transparent hover:ring-primary-container">
+<div class="h-32 w-full overflow-hidden bg-surface-container-highest relative">
+<img alt="digital interface glowing" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="glowing blue and red digital circuit lines flowing through a dark transparent void with geometric particles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR5Wi_xczEsCwzQDIeKde_KaIS0PCmL0IVaPVRysuIWfLlyAZRulCPOtb5NE5lJn7RHqeu9GbC9sFu988P9BDJpFFhGHx30TZZ2AX6hhC761Q_qK57WcrGjaTx27s1iW4UKtuxuPHEQr-WOwRqIwJ6TOGeFKwoYUKNpVe3C8tdAv_O3slNZLVKoZ6yD0_BSb6mwI6voTRq4mudYpeBzyVtvwDLuLkWfKcU1sH9_BCrgNcagwxoRU0VvQyg65OmIhs3lFT7AA_Vl0c"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex justify-between items-center">
+<h4 class="text-xl font-medium tracking-tight text-on-background">MAGE</h4>
+<span class="material-symbols-outlined text-primary-container" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<p class="text-xs text-secondary leading-relaxed">Masters of Focus and Intelligence. +10% Mana regen for reading tasks.</p>
+<div class="pt-4 flex gap-1">
+<div class="h-1 flex-1 bg-primary-container"></div>
+<div class="h-1 flex-1 bg-primary-container"></div>
+<div class="h-1 flex-1 bg-primary-container"></div>
+</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
+<p class="text-[10px] text-secondary-fixed-dim uppercase tracking-widest max-w-xs">
+                    By initializing, you agree to the <span class="text-primary underline cursor-pointer">Protocol terms of engagement</span>.
+                </p>
+<button class="w-full md:w-auto px-12 py-5 bg-primary-container text-on-primary-container font-medium uppercase tracking-[0.1em] text-sm flex items-center justify-center gap-4 transition-all hover:opacity-90 active:scale-95">
+                    INITIALIZE_OPERATOR
+                    <span class="material-symbols-outlined text-lg" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Aesthetic Decorative Element -->
+<div class="fixed bottom-0 left-0 w-full h-1 bg-surface-container-highest overflow-hidden pointer-events-none">
+<div class="w-1/3 h-full bg-primary-container animate-pulse"></div>
+</div>
+</body></html>
