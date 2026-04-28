@@ -14,9 +14,7 @@ import { UsersDB } from '../../lib/db';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useUserStore } from '../../store/useUserStore';
 
-// For simplicity, hardcoding to localhost during dev. 
-// In prod, this should use process.env.NEXT_PUBLIC_API_URL
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = '/api/auth';
 
 export default function Login() {
   const [step, setStep] = useState<'base' | 'otp'>('base');

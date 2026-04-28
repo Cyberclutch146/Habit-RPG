@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     if (user && user.isAnonymous) {
       try {
         const token = await user.getIdToken();
-        await fetch('http://localhost:5000/api/auth/wipe-guest', {
+        await fetch('/api/auth/wipe-guest', {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         });

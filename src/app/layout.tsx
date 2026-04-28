@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Outfit } from "next/font/google";
 import "../index.css";
 import TopBar from "../components/layout/TopBar";
@@ -17,8 +17,26 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "SHADOW_OPERATIVE // Habit-RPG",
-  description: "Gamified productivity with stealth action vibes.",
+  title: "HabitQuest — Level Up Your Life",
+  description: "A gamified habit tracker with RPG mechanics. Build habits, earn XP, defeat bosses, and level up your real life.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "HabitQuest",
+  },
+  icons: {
+    icon: "/icon-512.png",
+    apple: "/icon-192.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#4f46e5",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 import FirebaseInitializer from "../components/FirebaseInitializer";
@@ -33,6 +51,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body
         className={`${spaceGrotesk.variable} ${outfit.variable} antialiased bg-slate-50 text-slate-900 selection:bg-indigo-200 selection:text-indigo-900 min-h-screen flex flex-col font-body`}
@@ -48,6 +67,20 @@ export default function RootLayout({
             <MissionBoard />
           </ThemeProvider>
         </FirebaseInitializer>
+        {/* Service Worker Registration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(reg) { console.log('SW registered:', reg.scope); })
+                    .catch(function(err) { console.log('SW registration failed:', err); });
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

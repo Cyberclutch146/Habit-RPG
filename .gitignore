@@ -1,14 +1,45 @@
 node_modules
 .next
+.turbo
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# OS Files
 .DS_Store
-*.local
+Thumbs.db
+
+# Build/Dist
 dist
 build
 .vercel
+out
+
+# Firebase
+.firebase
+.firebaserc
+serviceAccountKey.json
+service-account.json
+
+# Local Workspace
+*.local
+*.sublime-project
+*.sublime-workspace
+.vscode
+.idea
+
+# Deprecated Server
+server/node_modules
+server/.env
+server/serviceAccountKey.json
