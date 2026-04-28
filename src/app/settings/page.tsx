@@ -7,6 +7,7 @@ import { UsersDB } from '../../lib/db';
 import { m, AnimatePresence } from 'framer-motion';
 import { gameEngine } from '../../lib/gameEngine';
 import { AnimatedText } from '../../components/animations/AnimatedText';
+import { useNotifications } from '../../hooks/useNotifications';
 
 export default function SettingsPage() {
   const logout = useAuthStore(state => state.logout);
@@ -82,6 +83,44 @@ export default function SettingsPage() {
     </div>
   );
 
+  const NotificationToggle = () => {
+    const { isSupported, permission, requestPermission, sendNotification } = useNotifications();
+    if (!isSupported) return null;
+    
+    const isEnabled = permission === "granted";
+    
+    const handleToggle = async () => {
+      if (isEnabled) {
+        // Can't revoke programmatically, inform user
+        sendNotification("HabitQuest", { body: "Notifications are working! 🎉" });
+        return;
+      }
+      const granted = await requestPermission();
+      if (granted) {
+        sendNotification("HabitQuest", { body: "Notifications enabled! You'll receive habit reminders." });
+      }
+    };
+
+    return (
+      <div onClick={handleToggle} className="bg-surface-container p-4 rounded-xl flex items-center justify-between border border-surface-bright/20 cursor-pointer active:scale-[0.98] transition-transform">
+        <div>
+          <p className="font-bold text-on-surface">Push Notifications</p>
+          <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">
+            {permission === "denied" ? "Blocked by browser. Check site settings." : "Habit reminders and boss attack alerts."}
+          </p>
+        </div>
+        <div className={`w-12 h-6 rounded-full p-1 relative transition-colors ${isEnabled ? 'bg-primary border-primary' : 'bg-surface-container-highest border-outline-variant/30 border'}`}>
+          <m.div 
+            layout
+            initial={false}
+            animate={{ x: isEnabled ? 24 : 0 }}
+            className={`w-4 h-4 rounded-full ${isEnabled ? 'bg-on-primary' : 'bg-outline-variant'}`} 
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       
@@ -147,6 +186,8 @@ export default function SettingsPage() {
             label="Reduced Motion"
             description="Disables heavy animations for low-end devices."
           />
+
+          <NotificationToggle />
         </section>
 
         <section className="space-y-4 mt-8">

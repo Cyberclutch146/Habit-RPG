@@ -1,7 +1,7 @@
 import { logEvent } from "firebase/analytics";
 import { analytics } from "./firebase";
 
-type EventType = "habit_completed" | "streak_broken" | "level_up" | "habit_created" | "shop_purchase";
+type EventType = "habit_completed" | "streak_broken" | "level_up" | "habit_created" | "shop_purchase" | "negative_habit_tapped";
 
 export const trackEvent = (eventName: EventType, params?: Record<string, any>) => {
   if (analytics) {

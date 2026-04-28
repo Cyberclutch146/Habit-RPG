@@ -249,6 +249,52 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
 
     activeRequests.add(logId);
 
+    // -- NEGATIVE HABIT BRANCH --
+    if (habit.isNegative) {
+      const penalty = gameEngine.calculateNegativeHabitPenalty(habit.difficulty);
+      const newHp = Math.max(0, (user.hp || 100) - penalty.hpLoss);
+      const newGold = Math.max(0, (user.gold || 0) - penalty.goldLoss);
+      const newStreak = Math.max(0, (user.streak || 0) - penalty.streakPenalty);
+
+      const newLog: HabitLog = {
+        id: logId,
+        habitId,
+        timestamp: new Date(),
+        completed: true,
+        xpAwarded: 0,
+        goldAwarded: -penalty.goldLoss,
+        damageDealt: 0,
+        isCritical: false,
+        idempotencyKey: logId,
+        source: "HABIT"
+      };
+
+      const updatedUser = { ...user, hp: newHp, gold: newGold, streak: newStreak };
+      useUserStore.setState({ user: updatedUser });
+      set((state) => ({
+        logs: [...state.logs.filter(l => l.id !== logId), newLog],
+        syncStatus: { ...state.syncStatus, [logId]: "pending" }
+      }));
+
+      // Spawn damage floating text
+      if (clickEvent) {
+        useJuiceStore.getState().spawnFloatingXP(-penalty.hpLoss, clickEvent.clientX, clickEvent.clientY);
+      }
+
+      Promise.all([
+        habitsService.createLog(user.id, newLog),
+        usersService.updateUserStats(user.id, { hp: newHp, gold: newGold, streak: newStreak })
+      ]).then(() => {
+        set(state => { const s = { ...state.syncStatus }; delete s[logId]; return { syncStatus: s }; });
+        trackEvent("negative_habit_tapped", { habitId, hpLoss: penalty.hpLoss });
+      }).catch(e => {
+        console.error("Failed to sync negative habit", logId, e);
+        set(state => ({ syncStatus: { ...state.syncStatus, [logId]: "failed" } }));
+      }).finally(() => { activeRequests.delete(logId); });
+
+      return { didLevelUp: false, droppedLoot: false };
+    }
+
     // -- 1. Optimistic UI Update & Game Engine Math --
     // Get pet bonuses
     const petBonuses = gameEngine.getPetBonuses(user.equippedPet || null);

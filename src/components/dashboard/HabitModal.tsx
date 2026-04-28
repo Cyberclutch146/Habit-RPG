@@ -17,16 +17,19 @@ export const HabitModal: React.FC<HabitModalProps> = ({ isOpen, onClose, editing
   const [title, setTitle] = useState('');
   const [type, setType] = useState<Habit['type']>('Workout');
   const [difficulty, setDifficulty] = useState<Habit['difficulty']>('Medium');
+  const [isNegative, setIsNegative] = useState(false);
 
   React.useEffect(() => {
     if (editingHabit && isOpen) {
       setTitle(editingHabit.title);
       setType(editingHabit.type);
       setDifficulty(editingHabit.difficulty);
+      setIsNegative(editingHabit.isNegative || false);
     } else if (isOpen) {
       setTitle('');
       setType('Workout');
       setDifficulty('Medium');
+      setIsNegative(false);
     }
   }, [editingHabit, isOpen]);
 
@@ -43,14 +46,16 @@ export const HabitModal: React.FC<HabitModalProps> = ({ isOpen, onClose, editing
         title: title.trim(),
         type,
         difficulty,
-        xpReward
+        xpReward,
+        isNegative
       });
     } else {
       await addHabit({
         title: title.trim(),
         type,
         difficulty,
-        xpReward
+        xpReward,
+        isNegative
       });
     }
     
@@ -126,6 +131,26 @@ export const HabitModal: React.FC<HabitModalProps> = ({ isOpen, onClose, editing
                     <option value="Hard">Hard</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Negative Habit Toggle */}
+              <div className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isNegative ? 'bg-red-500/10 border-red-500/40' : 'bg-surface-container-highest border-outline-variant/30'}`}>
+                <div className="flex items-center gap-3">
+                  <span className={`material-symbols-outlined ${isNegative ? 'text-red-400' : 'text-on-surface-variant'}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                    {isNegative ? 'skull' : 'sentiment_satisfied'}
+                  </span>
+                  <div>
+                    <p className={`text-sm font-bold ${isNegative ? 'text-red-400' : 'text-on-surface'}`}>{isNegative ? 'Bad Habit' : 'Good Habit'}</p>
+                    <p className="text-[10px] text-on-surface-variant">{isNegative ? 'Tapping deals damage to YOU' : 'Tapping grants XP & Gold'}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsNegative(!isNegative)}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${isNegative ? 'bg-red-500' : 'bg-outline-variant/40'}`}
+                >
+                  <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform ${isNegative ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                </button>
               </div>
 
               <m.button 

@@ -229,7 +229,184 @@ export const gameEngine = {
       case "all": return { goldBonus: pet.bonusValue, xpBonus: pet.bonusValue, critBonus: pet.bonusValue, hpReduction: pet.bonusValue };
       default: return defaults;
     }
+  },
+
+  /**
+   * Gets aggregate bonuses from all unlocked skills.
+   */
+  getActiveSkillBonuses: (unlockedSkills: string[]): SkillBonuses => {
+    const bonuses: SkillBonuses = { goldPercent: 0, critPercent: 0, maxHpFlat: 0, xpPercent: 0, damagePercent: 0, hpReductionPercent: 0 };
+    
+    for (const tree of Object.values(CLASS_SKILL_TREES)) {
+      for (const skill of tree) {
+        if (unlockedSkills.includes(skill.id)) {
+          bonuses.goldPercent += skill.bonuses.goldPercent || 0;
+          bonuses.critPercent += skill.bonuses.critPercent || 0;
+          bonuses.maxHpFlat += skill.bonuses.maxHpFlat || 0;
+          bonuses.xpPercent += skill.bonuses.xpPercent || 0;
+          bonuses.damagePercent += skill.bonuses.damagePercent || 0;
+          bonuses.hpReductionPercent += skill.bonuses.hpReductionPercent || 0;
+        }
+      }
+    }
+    return bonuses;
+  },
+
+  /**
+   * Calculates penalty for tapping a negative habit.
+   */
+  calculateNegativeHabitPenalty: (difficulty: "Easy" | "Medium" | "Hard"): { hpLoss: number, goldLoss: number, streakPenalty: number } => {
+    switch (difficulty) {
+      case "Easy": return { hpLoss: 5, goldLoss: 10, streakPenalty: 0 };
+      case "Medium": return { hpLoss: 15, goldLoss: 25, streakPenalty: 1 };
+      case "Hard": return { hpLoss: 30, goldLoss: 50, streakPenalty: 2 };
+    }
+  },
+
+  /**
+   * Generates rewards for a completed pet adventure.
+   */
+  generateAdventureReward: (tier: "short" | "medium" | "long", petRarity: string): AdventureReward => {
+    const config = ADVENTURE_CONFIG[tier];
+    const rarityMultiplier = petRarity === "legendary" ? 3 : petRarity === "epic" ? 2.5 : petRarity === "rare" ? 1.5 : 1;
+    
+    const gold = Math.floor((config.baseGold + Math.random() * config.baseGold) * rarityMultiplier);
+    
+    // Material drop
+    const materialRoll = Math.random();
+    let materialRarity: "common" | "rare" | "epic" | "legendary" = "common";
+    if (materialRoll > 0.95) materialRarity = "legendary";
+    else if (materialRoll > 0.8) materialRarity = "epic";
+    else if (materialRoll > 0.5) materialRarity = "rare";
+
+    const MATERIAL_NAMES: Record<string, string[]> = {
+      common: ["Iron Ore", "Leather Scraps", "Cloth Remnants"],
+      rare: ["Moonstone Shard", "Shadow Silk", "Enchanted Bone"],
+      epic: ["Dragon Scale", "Void Crystal", "Phoenix Feather"],
+      legendary: ["Celestial Essence", "God Fragment", "Eternal Core"]
+    };
+
+    const materialNames = MATERIAL_NAMES[materialRarity];
+    const material = {
+      id: `mat_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      name: materialNames[Math.floor(Math.random() * materialNames.length)],
+      rarity: materialRarity,
+      quantity: materialRarity === "legendary" ? 1 : materialRarity === "epic" ? 1 : Math.floor(Math.random() * 3) + 1
+    };
+
+    return { gold, material, xp: Math.floor(config.baseXp * rarityMultiplier) };
+  },
+
+  /**
+   * Attempts to craft (upgrade) an item using materials and gold.
+   */
+  craftItem: (sourceItem: any, materials: any[], gold: number): { success: boolean, error?: string, cost?: CraftingCost, upgradedItem?: any } => {
+    const nextRarity = RARITY_UPGRADE_PATH[sourceItem.rarity as keyof typeof RARITY_UPGRADE_PATH];
+    if (!nextRarity) return { success: false, error: "Item is already at maximum rarity." };
+
+    const recipe = CRAFTING_RECIPES[sourceItem.rarity as keyof typeof CRAFTING_RECIPES];
+    if (!recipe) return { success: false, error: "No recipe found." };
+
+    // Check gold
+    if (gold < recipe.goldCost) return { success: false, error: `Need ${recipe.goldCost} gold.`, cost: recipe };
+
+    // Check materials
+    for (const req of recipe.materials) {
+      const owned = materials.find(m => m.rarity === req.rarity);
+      if (!owned || owned.quantity < req.quantity) {
+        return { success: false, error: `Need ${req.quantity}x ${req.rarity} material.`, cost: recipe };
+      }
+    }
+
+    const upgradedItem = {
+      ...sourceItem,
+      rarity: nextRarity,
+      name: sourceItem.name.replace(/^(Flaming|Abyssal|Radiant|Cursed|Ethereal|Hollow|Celestial|Corrupted)/, 
+        nextRarity === "legendary" ? "Celestial" : nextRarity === "epic" ? "Abyssal" : "Radiant"),
+    };
+
+    return { success: true, cost: recipe, upgradedItem };
   }
+};
+
+// -- Skill Bonuses Type --
+export interface SkillBonuses {
+  goldPercent: number;
+  critPercent: number;
+  maxHpFlat: number;
+  xpPercent: number;
+  damagePercent: number;
+  hpReductionPercent: number;
+}
+
+// -- Class Skill Tree --
+export interface ClassSkill {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  tier: 1 | 2 | 3;
+  cost: number; // skill points
+  requires?: string; // prerequisite skill id
+  bonuses: Partial<SkillBonuses>;
+}
+
+export const CLASS_SKILL_TREES: Record<string, ClassSkill[]> = {
+  warrior: [
+    { id: "w_t1_fury", name: "Fury", description: "+10% damage to bosses", icon: "local_fire_department", tier: 1, cost: 1, bonuses: { damagePercent: 10 } },
+    { id: "w_t1_iron_skin", name: "Iron Skin", description: "+50 Max HP", icon: "shield", tier: 1, cost: 1, bonuses: { maxHpFlat: 50 } },
+    { id: "w_t2_berserker", name: "Berserker", description: "+15% damage, -10% HP penalty", icon: "whatshot", tier: 2, cost: 2, requires: "w_t1_fury", bonuses: { damagePercent: 15, hpReductionPercent: 10 } },
+    { id: "w_t2_fortify", name: "Fortify", description: "-20% HP penalty from misses", icon: "security", tier: 2, cost: 2, requires: "w_t1_iron_skin", bonuses: { hpReductionPercent: 20 } },
+    { id: "w_t3_warlord", name: "Warlord", description: "+25% damage, +5% crit", icon: "military_tech", tier: 3, cost: 3, requires: "w_t2_berserker", bonuses: { damagePercent: 25, critPercent: 5 } },
+    { id: "w_t3_titan", name: "Titan", description: "+100 Max HP, -15% penalties", icon: "castle", tier: 3, cost: 3, requires: "w_t2_fortify", bonuses: { maxHpFlat: 100, hpReductionPercent: 15 } },
+  ],
+  mage: [
+    { id: "m_t1_arcane", name: "Arcane Mind", description: "+10% XP gains", icon: "auto_awesome", tier: 1, cost: 1, bonuses: { xpPercent: 10 } },
+    { id: "m_t1_alchemy", name: "Alchemy", description: "+10% gold drops", icon: "science", tier: 1, cost: 1, bonuses: { goldPercent: 10 } },
+    { id: "m_t2_scholar", name: "Scholar", description: "+20% XP gains", icon: "school", tier: 2, cost: 2, requires: "m_t1_arcane", bonuses: { xpPercent: 20 } },
+    { id: "m_t2_transmute", name: "Transmute", description: "+20% gold drops", icon: "diamond", tier: 2, cost: 2, requires: "m_t1_alchemy", bonuses: { goldPercent: 20 } },
+    { id: "m_t3_sage", name: "Sage", description: "+30% XP, +10% crit", icon: "psychology", tier: 3, cost: 3, requires: "m_t2_scholar", bonuses: { xpPercent: 30, critPercent: 10 } },
+    { id: "m_t3_midas", name: "Midas Touch", description: "+30% gold, +50 Max HP", icon: "toll", tier: 3, cost: 3, requires: "m_t2_transmute", bonuses: { goldPercent: 30, maxHpFlat: 50 } },
+  ],
+  rogue: [
+    { id: "r_t1_precision", name: "Precision", description: "+5% crit chance", icon: "target", tier: 1, cost: 1, bonuses: { critPercent: 5 } },
+    { id: "r_t1_stealth", name: "Stealth", description: "-10% HP penalty", icon: "visibility_off", tier: 1, cost: 1, bonuses: { hpReductionPercent: 10 } },
+    { id: "r_t2_assassin", name: "Assassin", description: "+10% crit, +10% damage", icon: "crisis_alert", tier: 2, cost: 2, requires: "r_t1_precision", bonuses: { critPercent: 10, damagePercent: 10 } },
+    { id: "r_t2_shadow", name: "Shadow Walk", description: "-20% HP penalty, +5% gold", icon: "dark_mode", tier: 2, cost: 2, requires: "r_t1_stealth", bonuses: { hpReductionPercent: 20, goldPercent: 5 } },
+    { id: "r_t3_deathblow", name: "Deathblow", description: "+15% crit, +20% damage", icon: "bolt", tier: 3, cost: 3, requires: "r_t2_assassin", bonuses: { critPercent: 15, damagePercent: 20 } },
+    { id: "r_t3_phantom", name: "Phantom", description: "-30% penalties, +10% gold", icon: "ghost", tier: 3, cost: 3, requires: "r_t2_shadow", bonuses: { hpReductionPercent: 30, goldPercent: 10 } },
+  ],
+};
+
+// -- Adventure Config --
+export const ADVENTURE_CONFIG: Record<string, { label: string, duration: number, baseGold: number, baseXp: number }> = {
+  short: { label: "Quick Scout (4h)", duration: 4 * 60 * 60 * 1000, baseGold: 30, baseXp: 20 },
+  medium: { label: "Expedition (8h)", duration: 8 * 60 * 60 * 1000, baseGold: 80, baseXp: 50 },
+  long: { label: "Grand Quest (24h)", duration: 24 * 60 * 60 * 1000, baseGold: 200, baseXp: 120 },
+};
+
+export interface AdventureReward {
+  gold: number;
+  material: { id: string; name: string; rarity: "common" | "rare" | "epic" | "legendary"; quantity: number };
+  xp: number;
+}
+
+// -- Crafting --
+export interface CraftingCost {
+  goldCost: number;
+  materials: { rarity: string; quantity: number }[];
+}
+
+export const CRAFTING_RECIPES: Record<string, CraftingCost> = {
+  common: { goldCost: 100, materials: [{ rarity: "common", quantity: 3 }] },
+  rare: { goldCost: 300, materials: [{ rarity: "rare", quantity: 3 }, { rarity: "common", quantity: 2 }] },
+  epic: { goldCost: 800, materials: [{ rarity: "epic", quantity: 2 }, { rarity: "rare", quantity: 3 }] },
+};
+
+const RARITY_UPGRADE_PATH: Record<string, string> = {
+  common: "rare",
+  rare: "epic",
+  epic: "legendary",
 };
 
 // -- Pet Roster --

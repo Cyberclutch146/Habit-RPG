@@ -5,20 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '../../store/useUserStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useHabitStore } from '../../store/useHabitStore';
-import { gameEngine } from '../../lib/gameEngine';
+import { gameEngine, CLASS_SKILL_TREES } from '../../lib/gameEngine';
 import { usersService } from '../../lib/services/users';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { RanksManual } from '../../components/rpg/RanksManual';
 import PetCollection from '../../components/rpg/PetCollection';
 import { PET_ROSTER } from '../../lib/gameEngine';
+import { AvatarDisplay } from '../../components/rpg/AvatarDisplay';
+import { PetAdventures } from '../../components/rpg/PetAdventures';
 
 const TABS = ["STATS", "GEAR", "SKILLS"];
-
-const ALL_SKILLS = [
-  { id: "s_gold", name: "Greed", desc: "Gold drops +10%", cost: 1, icon: "payments" },
-  { id: "s_crit", name: "Precision", desc: "Base crit +5%", cost: 1, icon: "target" },
-  { id: "s_hp", name: "Vitality", desc: "Max HP +50", cost: 2, icon: "favorite" }
-];
 
 export default function StatsPage() {
   const user = useUserStore(state => state.user);
@@ -31,6 +27,7 @@ export default function StatsPage() {
   const [activeTab, setActiveTab] = useState("STATS");
   const [isRanksManualOpen, setIsRanksManualOpen] = useState(false);
   const [isPetCollectionOpen, setIsPetCollectionOpen] = useState(false);
+  const [isPetAdventuresOpen, setIsPetAdventuresOpen] = useState(false);
   const { playClick, playSuccess, playError } = useSoundEffects();
 
   useEffect(() => {
@@ -131,21 +128,12 @@ export default function StatsPage() {
       <main className="pt-20 pb-32 px-4 w-full flex-1 overflow-y-auto space-y-6 custom-scrollbar">
         
         {/* Dynamic Avatar Block */}
-        <section className="bg-surface-container rounded-xl shadow-xl border border-outline-variant/10 relative overflow-hidden h-40 flex items-center justify-center">
+        <section className="bg-surface-container rounded-xl shadow-xl border border-outline-variant/10 relative overflow-hidden h-44 flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent z-10" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-pulse" />
             <div className="z-20 flex flex-col items-center">
-                <div className="w-16 h-16 bg-surface-container-highest border-2 border-primary rounded-full flex items-center justify-center flex-col blood-shadow mb-2 shadow-2xl relative">
-                  <span className="material-symbols-outlined text-4xl text-on-surface">person</span>
-                  
-                  {/* Equipped Weapon indicator overlays */}
-                  {user?.equippedWeapon && (
-                      <div className="absolute -right-2 -bottom-2 w-8 h-8 bg-primary rounded-full border-2 border-surface flex items-center justify-center shadow-lg">
-                          <span className="material-symbols-outlined text-white text-sm">swords</span>
-                      </div>
-                  )}
-                </div>
-                <h2 className="text-xl font-black text-on-surface tracking-tighter uppercase">{user?.name || "HERO"}</h2>
+                <AvatarDisplay size="md" showName={false} />
+                <h2 className="text-xl font-black text-on-surface tracking-tighter uppercase mt-2">{user?.name || "HERO"}</h2>
                 <div 
                   className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity active:scale-95 bg-surface-container-highest px-3 py-1 rounded-full border border-outline-variant/10 mt-1"
                   onClick={() => { playClick(); setIsRanksManualOpen(true); }}
@@ -357,6 +345,18 @@ export default function StatsPage() {
                 {isPetCollectionOpen && (
                   <PetCollection onClose={() => setIsPetCollectionOpen(false)} />
                 )}
+
+                {/* Pet Adventures Button */}
+                <button
+                  onClick={() => { playClick(); setIsPetAdventuresOpen(true); }}
+                  className="w-full py-3 text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-400/5 hover:bg-amber-400/10 border border-amber-400/20 rounded-xl transition-colors flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-sm">explore</span>
+                  Pet Adventures
+                  {user?.activeAdventure && <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />}
+                </button>
+
+                <PetAdventures isOpen={isPetAdventuresOpen} onClose={() => setIsPetAdventuresOpen(false)} />
             </div>
         )}
 
@@ -368,43 +368,89 @@ export default function StatsPage() {
                         <p className="text-[10px] text-primary uppercase font-bold tracking-widest">Available Points</p>
                         <p className="text-2xl font-black text-primary tracking-tighter">{user?.skillPoints || 0} SP</p>
                     </div>
+                    <div className="text-right">
+                        <p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest">Class</p>
+                        <p className="text-sm font-black text-on-surface uppercase">{user?.class === "none" ? "Choose a class!" : user?.class}</p>
+                    </div>
                  </div>
 
-                 <div className="space-y-3">
-                    {ALL_SKILLS.map(skill => {
-                        const isUnlocked = (user?.unlockedSkills || []).includes(skill.id);
-                        const canAfford = (user?.skillPoints || 0) >= skill.cost;
-                        
-                        return (
-                            <div key={skill.id} className={`flex items-center p-4 rounded-xl border-2 transition-all ${isUnlocked ? 'border-primary bg-primary/5' : 'border-outline-variant/10 bg-surface-container-high'}`}>
-                                <div className={`w-12 h-12 flex items-center justify-center rounded-lg shadow-inner mr-4 ${isUnlocked ? 'bg-primary text-white' : 'bg-surface-container-lowest text-secondary'}`}>
-                                    <span className="material-symbols-outlined">{skill.icon}</span>
-                                </div>
-                                <div className="flex-1">
-                                    <p className="font-black tracking-tighter text-on-surface">{skill.name}</p>
-                                    <p className="text-[10px] font-bold text-secondary">{skill.desc}</p>
-                                </div>
-                                <div>
-                                    {isUnlocked ? (
-                                        <span className="text-[10px] uppercase font-bold tracking-widest text-primary flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-sm">check_circle</span> Active
-                                        </span>
-                                    ) : (
-                                        <button 
-                                            onClick={() => unlockSkill(skill.id, skill.cost)}
-                                            disabled={!canAfford}
-                                            className={`px-3 py-1 text-[10px] uppercase font-bold tracking-widest rounded transition-all ${
-                                                canAfford ? 'bg-primary text-white hover:bg-primary/90 active:scale-95 shadow-md' : 'bg-surface-container text-secondary cursor-not-allowed'
-                                            }`}
-                                        >
-                                            {skill.cost} SP
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        )
-                    })}
-                 </div>
+                 {user?.class && user.class !== "none" && CLASS_SKILL_TREES[user.class] ? (
+                   <>
+                     {/* Skill Tree by Tier */}
+                     {[1, 2, 3].map(tier => {
+                       const tierSkills = CLASS_SKILL_TREES[user.class!].filter(s => s.tier === tier);
+                       return (
+                         <div key={tier}>
+                           <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-2 flex items-center gap-2">
+                             <span className="material-symbols-outlined text-sm">
+                               {tier === 1 ? "looks_one" : tier === 2 ? "looks_two" : "looks_3"}
+                             </span>
+                             Tier {tier}
+                           </p>
+                           <div className="grid grid-cols-1 gap-3">
+                             {tierSkills.map(skill => {
+                               const isUnlocked = (user?.unlockedSkills || []).includes(skill.id);
+                               const canAfford = (user?.skillPoints || 0) >= skill.cost;
+                               const hasPrereq = !skill.requires || (user?.unlockedSkills || []).includes(skill.requires);
+                               const isAvailable = canAfford && hasPrereq && !isUnlocked;
+
+                               return (
+                                 <div key={skill.id} className={`flex items-center p-4 rounded-xl border-2 transition-all ${
+                                   isUnlocked ? 'border-primary bg-primary/5' : 
+                                   !hasPrereq ? 'border-outline-variant/5 bg-surface-container opacity-40' :
+                                   'border-outline-variant/10 bg-surface-container-high'
+                                 }`}>
+                                   <div className={`w-12 h-12 flex items-center justify-center rounded-lg shadow-inner mr-4 ${
+                                     isUnlocked ? 'bg-primary text-white' : 'bg-surface-container-lowest text-secondary'
+                                   }`}>
+                                     <span className="material-symbols-outlined">{skill.icon}</span>
+                                   </div>
+                                   <div className="flex-1">
+                                     <p className="font-black tracking-tighter text-on-surface">{skill.name}</p>
+                                     <p className="text-[10px] font-bold text-secondary">{skill.description}</p>
+                                     {!hasPrereq && skill.requires && (
+                                       <p className="text-[9px] text-red-400 mt-1">
+                                         Requires: {CLASS_SKILL_TREES[user.class!].find(s => s.id === skill.requires)?.name}
+                                       </p>
+                                     )}
+                                   </div>
+                                   <div>
+                                     {isUnlocked ? (
+                                       <span className="text-[10px] uppercase font-bold tracking-widest text-primary flex items-center gap-1">
+                                         <span className="material-symbols-outlined text-sm">check_circle</span> Active
+                                       </span>
+                                     ) : (
+                                       <button
+                                         onClick={() => unlockSkill(skill.id, skill.cost)}
+                                         disabled={!isAvailable}
+                                         className={`px-3 py-1 text-[10px] uppercase font-bold tracking-widest rounded transition-all ${
+                                           isAvailable ? 'bg-primary text-white hover:bg-primary/90 active:scale-95 shadow-md' : 'bg-surface-container text-secondary cursor-not-allowed'
+                                         }`}
+                                       >
+                                         {skill.cost} SP
+                                       </button>
+                                     )}
+                                   </div>
+                                 </div>
+                               );
+                             })}
+                           </div>
+                           {tier < 3 && (
+                             <div className="flex justify-center my-2">
+                               <div className="w-px h-6 bg-outline-variant/30" />
+                             </div>
+                           )}
+                         </div>
+                       );
+                     })}
+                   </>
+                 ) : (
+                   <div className="text-center py-10 bg-surface-container-high rounded-xl border border-outline-variant/10">
+                     <span className="material-symbols-outlined text-4xl text-secondary/30 block mb-2">school</span>
+                     <p className="text-sm font-bold text-on-surface uppercase tracking-tight mb-1">Choose a Class First</p>
+                     <p className="text-xs text-secondary">Select Warrior, Mage, or Rogue in Settings to unlock your skill tree.</p>
+                   </div>
+                 )}
             </div>
         )}
 

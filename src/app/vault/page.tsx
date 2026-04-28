@@ -10,6 +10,7 @@ import { SpotlightCard } from '../../components/animations/SpotlightCard';
 import { trackEvent } from '../../lib/analytics';
 import { useHabitStore } from '../../store/useHabitStore';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { gameEngine } from '../../lib/gameEngine';
 
 interface ShopItem {
   id: string;
@@ -350,6 +351,102 @@ export default function VaultPage() {
             <span>Max HP: <strong className="text-on-surface">{maxHp}</strong></span>
             <span>HP: <strong className="text-red-400">{hp}/{maxHp}</strong></span>
             <span>Gold: <strong className="text-amber-500">{gold}</strong></span>
+          </div>
+        </section>
+
+        {/* ── Blacksmith / Crafting ── */}
+        <section className="bg-surface-container p-6 rounded-xl shadow-xl border border-purple-500/20 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <h2 className="text-sm font-bold tracking-widest text-purple-400 uppercase mb-4 relative z-10 flex items-center gap-2">
+            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>construction</span>
+            The Blacksmith
+          </h2>
+          <p className="text-[10px] text-on-surface-variant mb-4 relative z-10">
+            Upgrade your gear using crafting materials earned from <strong className="text-amber-400">Pet Adventures</strong>.
+          </p>
+
+          {/* Materials Inventory */}
+          <div className="mb-4 p-3 rounded-xl bg-surface-container-highest border border-outline-variant/10 relative z-10">
+            <p className="text-[9px] font-bold text-secondary uppercase tracking-widest mb-2">Your Materials</p>
+            {(!user?.materials || user.materials.length === 0) ? (
+              <p className="text-[10px] text-on-surface-variant text-center py-2">No materials. Send pets on adventures!</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {(user?.materials || []).map((mat, i) => {
+                  const rc: Record<string, string> = { common: "text-slate-400 bg-slate-400/10", rare: "text-blue-400 bg-blue-400/10", epic: "text-purple-400 bg-purple-400/10", legendary: "text-amber-400 bg-amber-400/10" };
+                  return (
+                    <div key={i} className={`flex items-center gap-1.5 px-2 py-1 rounded-lg ${rc[mat.rarity] || ''}`}>
+                      <span className="text-[10px] font-bold">{mat.quantity}x</span>
+                      <span className="text-[10px] font-bold">{mat.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Upgradable Items */}
+          <div className="space-y-2 relative z-10">
+            {(user?.inventory || []).filter(item => item.rarity !== "legendary").length === 0 ? (
+              <div className="text-center py-6">
+                <span className="material-symbols-outlined text-3xl text-secondary/30 block mb-2">hardware</span>
+                <p className="text-xs text-secondary font-bold uppercase tracking-widest">No upgradable gear</p>
+                <p className="text-[10px] text-secondary/60 mt-1">Defeat bosses to earn loot, then upgrade it here!</p>
+              </div>
+            ) : (
+              (user?.inventory || []).filter(item => item.rarity !== "legendary").map(item => {
+                const result = gameEngine.craftItem(item, user?.materials || [], user?.gold || 0);
+                const nextRarityLabel: Record<string, string> = { common: "Rare", rare: "Epic", epic: "Legendary" };
+                const rarityColor: Record<string, string> = { common: "text-slate-400", rare: "text-blue-400", epic: "text-purple-400" };
+                const nextColor: Record<string, string> = { common: "text-blue-400", rare: "text-purple-400", epic: "text-amber-400" };
+                const rarityBg: Record<string, string> = { common: "bg-slate-400/10", rare: "bg-blue-400/10", epic: "bg-purple-400/10" };
+
+                return (
+                  <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-surface-container-highest border border-outline-variant/10">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${rarityBg[item.rarity] || ''}`}>
+                        <span className={`material-symbols-outlined ${rarityColor[item.rarity] || ''}`}>
+                          {item.type === "weapon" ? "swords" : item.type === "armor" ? "shield" : "diamond"}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-on-surface">{item.name}</p>
+                        <p className="text-[9px] font-bold uppercase tracking-widest">
+                          <span className={rarityColor[item.rarity] || ''}>{item.rarity}</span>
+                          <span className="text-secondary mx-1">&rarr;</span>
+                          <span className={nextColor[item.rarity] || ''}>{nextRarityLabel[item.rarity] || ''}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!result.success || !result.upgradedItem || !result.cost) return;
+                        playLootDrop();
+                        let updatedMaterials = [...(user?.materials || [])];
+                        for (const req of result.cost.materials) {
+                          const mat = updatedMaterials.find(m => m.rarity === req.rarity);
+                          if (mat) {
+                            mat.quantity -= req.quantity;
+                            if (mat.quantity <= 0) updatedMaterials = updatedMaterials.filter(m => m !== mat);
+                          }
+                        }
+                        const updatedInventory = (user?.inventory || []).map(i => i.id === item.id ? result.upgradedItem : i);
+                        const newGoldVal = (user?.gold || 0) - result.cost.goldCost;
+                        useUserStore.setState({ user: { ...user!, gold: newGoldVal, materials: updatedMaterials, inventory: updatedInventory } });
+                        await usersService.updateUserStats(user!.id, { gold: newGoldVal, materials: updatedMaterials, inventory: updatedInventory });
+                        flash('Upgraded! ⚔️');
+                      }}
+                      disabled={!result.success}
+                      className={`px-3 py-1.5 text-[10px] uppercase font-bold tracking-widest rounded transition-all shrink-0 ${
+                        result.success ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 active:scale-95' : 'bg-surface-container text-secondary/40 cursor-not-allowed'
+                      }`}
+                    >
+                      {result.success ? `${result.cost?.goldCost}g` : (result.error || '').split('.')[0]}
+                    </button>
+                  </div>
+                );
+              })
+            )}
           </div>
         </section>
 

@@ -45,6 +45,20 @@ export const userSchema = z.object({
   pets: z.array(z.string()).optional().default([]),
   skillPoints: z.number().min(0).optional().default(0),
   unlockedSkills: z.array(z.string()).optional().default([]),
+  // -- Materials & Crafting --
+  materials: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    rarity: z.enum(["common", "rare", "epic", "legendary"]),
+    quantity: z.number().min(1),
+  })).optional().default([]),
+  // -- Pet Adventures --
+  activeAdventure: z.object({
+    petId: z.string(),
+    startedAt: z.number(),
+    duration: z.number(), // in milliseconds
+    rewardTier: z.enum(["short", "medium", "long"]),
+  }).nullable().optional().default(null),
 });
 export type User = z.infer<typeof userSchema>;
 
@@ -54,6 +68,7 @@ export const habitSchema = z.object({
   type: z.enum(["Workout", "Diet", "Steps", "Custom"]),
   difficulty: z.enum(["Easy", "Medium", "Hard"]),
   xpReward: z.number().min(10),
+  isNegative: z.boolean().optional().default(false),
   createdAt: z.any(), // ServerTimestamp
 });
 export type Habit = z.infer<typeof habitSchema>;
