@@ -29,8 +29,6 @@ export const useUserStore = create<UserStore>((set) => ({
         if (docSnap.exists()) {
           try {
             const parsedUser = userSchema.parse({ id: docSnap.id, ...docSnap.data() });
-            // TODO: Remove this override — infinite gold for testing
-            parsedUser.gold = 999999;
             set({ user: parsedUser, loading: false });
           } catch (e) {
             console.error("Zod Validation Failed on User fetch:", e);
