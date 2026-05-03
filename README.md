@@ -1,4 +1,4 @@
-# ⚡ HABIT TRACKER RPG
+# ⚡ HABIT TRACKER RPG (under development)
 
 ### *A Real-Life Progression Engine*
 
